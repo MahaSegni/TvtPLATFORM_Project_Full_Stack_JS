@@ -17,21 +17,12 @@ var Evaluationquestion = new Schema({
   responses: {
     type: [
       {
-        responsesId: {
-          type: String
-        },
-        texte: {
-          type: String
-        },
-        image: {
-          type: String
-        },
-        value: {
-          type: Number
-        },
-        refsubmitters: {
-          type: [String]
-        },
+        responsesId:String,
+
+        texte: String,
+        image: String,
+        value: Number,
+        refsubmitters:[String]
 
       }
     ],
