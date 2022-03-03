@@ -5,25 +5,39 @@ var Schema = mongoose.Schema;
 
 var Evaluationquestion = new Schema({
 
-    texte : String,
-    image : String,
-    responseType : String,
-    responses: {
-        type: [
-          {
-            responsesId:String,
-            texte : String,
-            image : String,
-            value : Number,
-            refsubmitters : {
-                type:[String]
-            }, 
-            
-          }
-        ],
-    }  
-    
+  texte: {
+    type: String
+  },
+  image: {
+    type: String
+  },
+  responseType: {
+    type: String
+  },
+  responses: {
+    type: [
+      {
+        responsesId: {
+          type: String
+        },
+        texte: {
+          type: String
+        },
+        image: {
+          type: String
+        },
+        value: {
+          type: Number
+        },
+        refsubmitters: {
+          type: [String]
+        },
+
+      }
+    ],
+  }
+
 
 });
 
-module.exports = mongoose.model('evaluationquestion',Evaluationquestion);
+module.exports = mongoose.model('evaluationquestion', Evaluationquestion);
