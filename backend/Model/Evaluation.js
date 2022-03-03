@@ -15,11 +15,15 @@ var Evaluation = new Schema({
     date : {
         type:Date
     },
+    refmodule : {
+        type:string
+    },
   
     refquestions : {
         type:[String]
     }, 
-    refmodule : string
+   
+    
 });
 
 module.exports = mongoose.model('evaluation',Evaluation);
