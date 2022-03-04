@@ -5,4 +5,4 @@ var Interestpoint = new Schema({
     value : String,
 });
 
-module.exports = mongoose.model('interestpoint',UserInterestpoint);
+module.exports = mongoose.model('interestpoint',Interestpoint);

@@ -1,8 +1,4 @@
 var mongoose = require('mongoose');
-const Conversation = require('./Conversation');
-const Interestpoint = require('./Interestpoint');
-const Friend = require('./Friend');
-const Module = require('./Module');
 var Schema = mongoose.Schema;
 
 var User = new Schema({
