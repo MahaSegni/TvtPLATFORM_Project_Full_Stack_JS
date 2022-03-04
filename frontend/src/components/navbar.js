@@ -38,7 +38,7 @@ export default function Navbar() {
                 <li><Link to={'/'}>Profile</Link></li>
                 <li><a onClick={() => {
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
-                }}>Disconnect</a></li>
+                }}>Sign Out</a></li>
               </ul>
             </li>
           </ul>
@@ -61,7 +61,7 @@ export default function Navbar() {
                 <li><Link to={'/'}>Profile</Link></li>
                 <li><Link onClick={() => {
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
-                }}>Disconnect</Link></li>
+                }}>Sign Out</Link></li>
               </ul>
             </li>
           </ul>
