@@ -1,4 +1,4 @@
-export default function Signup(props) {
+export default function Signup() {
     return (
             <div class="my-5">
                 <h1 class="logo mx-auto" style={{textAlign:"center",color:"#5fcf80"}}>Sign Up</h1>

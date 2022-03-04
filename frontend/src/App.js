@@ -6,10 +6,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.css'
 import './assets/css/style.css'
 const Navbar = React.lazy(() => import('./components/navbar'));
 const Signup = React.lazy(() => import('./components/user/signup'));
-
+const Signin = React.lazy(() => import('./components/user/signin'));
 function App() {
-  const user = { name: "test", lastname: "testlastname", type: "user" }
-  //localStorage.setItem('user', JSON.stringify(user));
   
   return (
     <>
@@ -29,7 +27,9 @@ function App() {
         <Suspense fallback={<h1>Loading...</h1>}>
           <Navbar />
           <Switch>
+
             <Route exact path='/signup' render={props => <Signup {...props} />}></Route>
+            <Route path='/signin' render={props => <Signin {...props} />}></Route>
           </Switch>
         </Suspense>
       </BrowserRouter>

@@ -1,42 +1,52 @@
 import { Link } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
+import { chnageConenctedUser, selectConnectedUser } from '../Redux/slices/sessionSlice';
+import { useDispatch } from 'react-redux';
 export default function Navbar() {
-  const [activePage,setActivePage] = useState('Home');
-  const [connectedUser, setconnectedUser] = useState(localStorage.getItem('user'));
 
-  useEffect(() => {
-  }, [connectedUser])
-  
-  return connectedUser != null? (
+  const dispatch = useDispatch();
+  var connectedUser = useSelector(selectConnectedUser);
+  return connectedUser.type == "disconnected" ? (
+    <div id="header">
+      <div class="container d-flex align-items-center">
+        <h1 class="logo me-auto"><a href="index.html">TvtPlatform</a></h1>
+        <nav id="navbar" class="navbar order-last order-lg-0">
+          <ul>
+            <li><Link to={'/'}>Home</Link></li>
+            <li><Link to={'/'}>About Us</Link></li>
+            <li><Link to={'/'}>Courses</Link></li>
+            <li><Link to={'/signin'}>Sign In</Link></li>
+            <li><Link to={'/signup'}>Sign Up</Link></li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+      </div>
+    </div>
+  ) : connectedUser.type == "admin" ? (
     <div id="header">
       <div class="container d-flex align-items-center">
 
         <h1 class="logo me-auto"><a href="index.html">TvtPlatform</a></h1>
         <nav id="navbar" class="navbar order-last order-lg-0">
           <ul>
-          <li><Link to={'/'}>Home</Link></li>
-            
-            <li><Link to={'/'}>About Us</Link></li>
+            <li><Link to={'/'}>Users</Link></li>
+            <li><Link to={'/'}>Modules</Link></li>
             <li><Link to={'/'}>Courses</Link></li>
-            <li><Link to={'/'}>Sign In</Link></li>
-            <li><Link to={'/signup'}>Sign Up</Link></li>
             <li class="dropdown"><a>More</a>
-            <ul>
-              <li><Link to={'/'}>Profile</Link></li>
-              <li><a onClick={()=>{
-                localStorage.clear()
-                setconnectedUser(null)
-              }}>Disconnect</a></li>
-            </ul>
-          </li>
-
-            
+              <ul>
+                <li><Link to={'/'}>Profile</Link></li>
+                <li><a onClick={() => {
+                  dispatch(chnageConenctedUser({ type: "disconnected" }))
+                }}>Disconnect</a></li>
+              </ul>
+            </li>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
       </div>
     </div>
-  ):(
+  ) : connectedUser.type == "user" ? (
     <div id="header">
       <div class="container d-flex align-items-center">
 
@@ -46,12 +56,20 @@ export default function Navbar() {
             <li><Link to={'/'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
             <li><Link to={'/'}>Courses</Link></li>
-            <li><Link to={'/'}>Sign In</Link></li>
-            <li><Link to={'/signup'}>Sign Up</Link></li>
+            <li class="dropdown"><a>More</a>
+              <ul>
+                <li><Link to={'/'}>Profile</Link></li>
+                <li><Link onClick={() => {
+                  dispatch(chnageConenctedUser({ type: "disconnected" }))
+                }}>Disconnect</Link></li>
+              </ul>
+            </li>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
       </div>
     </div>
-  );
+  ) : (
+    <h1>problem happened</h1>
+  )
 }
