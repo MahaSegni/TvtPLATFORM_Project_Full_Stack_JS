@@ -1,34 +1,143 @@
+import { useState } from "react";
+import { queryApi } from "../../utils/queryApi"
+import { useHistory } from "react-router-dom";
+
 export default function Signup() {
+
+    const history = useHistory();
+    const [errorDisplay, setErrorDisplay] = useState("");
+    const [formErrors, setFormErrors] = useState({})
+    const [formData, setFormData] = useState({
+        name: "",
+        lastname: "",
+        birthDate: "",
+        phone: "",
+        email: "",
+        password: "",
+        confirmp: "",
+        type: "user",
+
+    })
+
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
+
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        setFormErrors(validate(formData))
+    }
+
+    const validate = (values) => {
+        const errors = {};
+        let err = false;
+        if (!values.name) {
+            errors.name = "Name is required";
+            err = true;
+        }
+        if (!values.lastname) {
+            errors.lastname = "Last Name is required";
+            err = true;
+        }
+        if (!values.email) {
+            errors.email = "Email is required";
+            err = true;
+        }
+        if (!values.birthDate) {
+            errors.birthDate = "Birthdate is required";
+            err = true;
+        }
+        if (!values.phone) {
+            errors.phone = "Phone Number is required";
+            err = true;
+        }
+        if (!values.password) {
+            errors.password = "Password is required";
+            err = true;
+        }
+        if (values.password != values.confirmp) {
+            errors.confirmp = "Confirm your password please";
+            err = true;
+        }
+
+        if (err) {
+            console.log("error")
+        } else {
+            addUser()
+        }
+        return errors;
+    }
+
+    const addUser = async () => {
+        const [result, err] = await queryApi('user/check/'+formData.email, null, "GET", false)
+        if (err) {
+            console.log(err)
+        } else {
+            if (result == true) {
+                setErrorDisplay('Mail already exists')
+            }
+            else {
+                const [result, err2] = await queryApi('user/signup',formData, "POST", false)
+                if (err2){
+                    console.log(err2)
+                }else{
+                    history.push('/signin')
+                }
+            }
+        }
+    }
+
+
+
     return (
-            <div class="my-5">
-                <h1 class="logo mx-auto" style={{textAlign:"center",color:"#5fcf80"}}>Sign Up</h1>
-                <form class="w-50 mx-auto" action="signin.html">
-                    <div class="form-group">
-                        <label for="name" class="me-auto">Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter Name" />
-                    </div>
-                    <div class="form-group">
-                        <label for="lname">Last Name</label>
-                        <input type="text" class="form-control" id="lname" placeholder="Enter Last Name" />
-                    </div>
-                    <div class="form-group">
-                        <label for="bdate">Birth Date</label>
-                        <input type="date" class="form-control" id="bdate" />
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password" />
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword1">Password</label>
-                        <input type="password" class="form-control" id="confirmPassword1" placeholder="Confirm your Password" />
-                    </div>
-                    <button type="submit" class="ms-auto my-2 btn get-started-btn">Submit</button>
-                </form>
-            </div>
+        <div class="my-5">
+            <h1 class="logo mx-auto" style={{ textAlign: "center", color: "#5fcf80" }}>Sign Up</h1>
+            <form class="w-50 mx-auto" onSubmit={onSubmit}>
+                <div class="form-group">
+                    <label for="name" class="me-auto">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value={formData.name} onChange={(e) => onChange(e)} />
+                </div>
+                <div style={{ color: "red" }}>{formErrors.name}</div>
+
+                <div class="form-group">
+                    <label for="lname">Last Name</label>
+                    <input type="text" class="form-control" id="lname" name="lastname" placeholder="Enter Last Name" value={formData.lastname} onChange={(e) => onChange(e)} />
+                </div>
+                <div style={{ color: "red" }}>{formErrors.lastname}</div>
+
+                <div class="form-group">
+                    <label for="bdate">Birth Date</label>
+                    <input type="date" class="form-control" id="bdate" name="birthDate" value={formData.birthDate} onChange={(e) => onChange(e)} />
+                </div>
+                <div style={{ color: "red" }}>{formErrors.birthDate}</div>
+
+                <div class="form-group">
+                    <label for="name" class="me-auto">Phone</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone Number" value={formData.phone} onChange={(e) => onChange(e)} />
+                </div>
+                <div style={{ color: "red" }}>{formErrors.phone}</div>
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" name="email" value={formData.email} aria-describedby="emailHelp" placeholder="Enter email" onChange={(e) => onChange(e)} />
+                </div>
+                <div style={{ color: "red" }}>{formErrors.email}</div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="password" value={formData.password} placeholder="Enter Password" onChange={(e) => onChange(e)} />
+                </div>
+                <div style={{ color: "red" }}>{formErrors.password}</div>
+                <div class="form-group">
+                    <label for="confirmPassword1">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword1" name="confirmp" value={formData.confirmp} placeholder="Confirm your Password" onChange={(e) => onChange(e)} />
+                </div>
+                <div style={{ color: "red" }}>{formErrors.confirmp}</div>
+                <div style={{ textAlign: "center", color: "red" }}>{errorDisplay}</div>
+                <button type="submit" class="ms-auto my-2 btn get-started-btn">Submit</button>
+                
+            </form >
+        </div >
     );
 }

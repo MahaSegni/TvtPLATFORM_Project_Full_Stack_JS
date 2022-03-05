@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from 'react-redux';
+import { queryApi } from "../../utils/queryApi"
 import { chnageConenctedUser} from '../../Redux/slices/sessionSlice';
 
 export default function Signin() {
@@ -8,18 +9,28 @@ export default function Signin() {
     const dispatch = useDispatch();
 
     const history = useHistory();
+    const [errorDisplay, setErrorDisplay] = useState("");
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        type:""
       })
       const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
       }
       const onSubmit = async (e) => {
         e.preventDefault()
-        const user = {email : formData.email, password : formData.password, type : "user"}
-        dispatch(chnageConenctedUser(user))
+        const [result, err] = await queryApi('user/signin',formData, "POST", false)
+        
+        if ((result == 'Incorrect password')||( result == 'Incorrect email' )){
+          setErrorDisplay(result)
+        }else{
+          
+        let userResult = {id :result._id, email : result.email, type : result.typeUser , name : result.name, 
+                      lastname : result.lastname , phone :result.phone, birthDate : result.birthDate, image : result.image,
+                    token : result.token} 
+          dispatch(chnageConenctedUser(userResult))
+          history.push('/')
+        }
         
       }
     return (
@@ -36,6 +47,7 @@ export default function Signin() {
                         <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password" onChange={(e) => onChange(e)}/>
                     </div>
                     
+                <div style={{ textAlign: "center", color: "red" }}>{errorDisplay}</div>
                     <button type="submit" class="ms-auto my-2 btn get-started-btn">Submit</button>
                 </form>
             </div>

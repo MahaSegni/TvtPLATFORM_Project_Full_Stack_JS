@@ -41,8 +41,8 @@ var User = new Schema({
     reffriends : {
         type:[String]
     },   
-    typeUser:{
-    type:String,
+    typeUser : {
+        type:String,
     } 
 });
 

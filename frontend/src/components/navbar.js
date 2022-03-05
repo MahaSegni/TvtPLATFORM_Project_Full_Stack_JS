@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { queryApi } from "../utils/queryApi"
 import { useSelector } from 'react-redux';
 import { chnageConenctedUser, selectConnectedUser } from '../Redux/slices/sessionSlice';
 import { useDispatch } from 'react-redux';
@@ -31,12 +31,14 @@ export default function Navbar() {
         <nav id="navbar" class="navbar order-last order-lg-0">
           <ul>
             <li><Link to={'/'}>Users</Link></li>
+            <li><Link to={'/'}>Interest Points</Link></li>
             <li><Link to={'/'}>Modules</Link></li>
             <li><Link to={'/'}>Courses</Link></li>
             <li class="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/'}>Profile</Link></li>
-                <li><a onClick={() => {
+                <li><a onClick={async () => {
+                   const [res, err] = await queryApi('user/signout/'+connectedUser.id);
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                 }}>Sign Out</a></li>
               </ul>
@@ -59,7 +61,8 @@ export default function Navbar() {
             <li class="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/'}>Profile</Link></li>
-                <li><Link onClick={() => {
+                <li><Link onClick={async () => {   
+                  const [res, err] =  await queryApi('user/signout/'+connectedUser.id);
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                 }}>Sign Out</Link></li>
               </ul>
