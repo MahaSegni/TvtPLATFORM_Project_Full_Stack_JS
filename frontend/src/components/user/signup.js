@@ -2,7 +2,7 @@ import { useState } from "react";
 import { queryApi } from "../../utils/queryApi"
 import { useHistory } from "react-router-dom";
 
-export default function Signup() {
+export default function Signup(props) {
 
     const history = useHistory();
     const [errorDisplay, setErrorDisplay] = useState("");

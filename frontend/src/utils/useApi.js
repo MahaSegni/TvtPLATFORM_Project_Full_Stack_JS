@@ -12,7 +12,8 @@ export function useApi(
     endpoint,
     body = null,
     method = "GET",
-    transformBody = false
+    transformBody = false,
+    token = null
 ) {
 // Create state values
 // result, error and the body we will send
@@ -31,7 +32,8 @@ async function query(newBody) {
     endpoint,
     bodyUsed,
     method,
-    transformBody
+    transformBody,
+    token
 );
     setResult(res);
     setError(err);

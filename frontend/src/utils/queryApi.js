@@ -11,7 +11,8 @@ export async function queryApi(
     endpoint,
     body = null,
     method = "GET",
-    transformBody = false
+    transformBody = false,
+    token = null
 ) {
     let error = null;
     let result = null;
@@ -60,8 +61,10 @@ export async function queryApi(
             // Setting authorization token if available with each request
             // This example uses localStorage, feel free to change it to cookie storage or something else.
         // const token = localStorage.getItem("token");
-        // if (token)
-        // config.headers = { ...config.headers, Authorization: `Bearer ${token}` }
+         if (token != null){
+            config.headers = { ...config.headers, Authorization: `${token}` }
+            console.log(config)
+         }
         // console.log(`Requesting : ${config.url}`)
 
         // console.log(config)

@@ -2,6 +2,7 @@ require("dotenv").config({path : "./config/.env"})
 require('./Model/dbConfig')
 //Declaration de userrouters
 const userRoutes=require('./routes/userRoutes')
+const interestPointRoutes=require('./routes/interestPointRoutes')
 
 const cors = require('cors');
 
@@ -11,7 +12,7 @@ const app=express();
 var corsOptions = {
     origin: 'http://localhost:3001',
     credentials: true,
-    'allowedHeaders': ['sessionId', 'Content-Type'],
+    'allowedHeaders': ['sessionId', 'Content-Type', 'Authorization'],
     'exposedHeaders': ['sessionId'],
     'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
     'preflightContinue': false
@@ -24,6 +25,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 // fi /routes/userRoutes
 // el lienet el kol yabdw b /api 
 app.use('/api/user',userRoutes);
+app.use('/api/interestpoint',interestPointRoutes);
 
 
 

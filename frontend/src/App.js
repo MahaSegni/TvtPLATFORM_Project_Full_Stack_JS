@@ -7,6 +7,7 @@ import './assets/css/style.css'
 const Navbar = React.lazy(() => import('./components/navbar'));
 const Signup = React.lazy(() => import('./components/user/signup'));
 const Signin = React.lazy(() => import('./components/user/signin'));
+const Profile = React.lazy(() => import('./components/user/profile'));
 function App() {
   
   return (
@@ -27,9 +28,9 @@ function App() {
         <Suspense fallback={<h1>Loading...</h1>}>
           <Navbar />
           <Switch>
-
             <Route exact path='/signup' render={props => <Signup {...props} />}></Route>
             <Route path='/signin' render={props => <Signin {...props} />}></Route>
+            <Route path='/profile' render={props => <Profile {...props} />}></Route>
           </Switch>
         </Suspense>
       </BrowserRouter>

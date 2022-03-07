@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const userController = require('../controllers/usercontroller')
+const userController = require('../controllers/userController')
 
 
 router.get("/check/:email",userController.checkMail);

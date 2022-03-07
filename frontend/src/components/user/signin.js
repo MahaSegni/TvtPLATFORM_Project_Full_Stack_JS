@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { queryApi } from "../../utils/queryApi"
 import { chnageConenctedUser} from '../../Redux/slices/sessionSlice';
 
-export default function Signin() {
+export default function Signin(props) {
 
     const dispatch = useDispatch();
 
@@ -25,9 +25,7 @@ export default function Signin() {
           setErrorDisplay(result)
         }else{
           
-        let userResult = {id :result._id, email : result.email, type : result.typeUser , name : result.name, 
-                      lastname : result.lastname , phone :result.phone, birthDate : result.birthDate, image : result.image,
-                    token : result.token} 
+        let userResult = {id :result._id, email : result.email, type : result.typeUser , name : result.name,lastName : result.lastName , phone :result.phone, birthDate : result.birthDate, image : result.image,token : result.token} 
           dispatch(chnageConenctedUser(userResult))
           history.push('/')
         }
