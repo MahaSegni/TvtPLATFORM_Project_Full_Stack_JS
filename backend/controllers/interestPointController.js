@@ -10,22 +10,28 @@ module.exports.getAll = async (req, res) => {
 }
 
 module.exports.userInterestPoints = async (req, res) => {
-    console.log(req.headers['authorization'])
     const userips = [];
-    let user = await UserModel.findOne({ _id: req.params.id })
-    for (let i in user.refinterestpoints) {
-
-        let result = await interestPointModel.findOne({ _id: user.refinterestpoints[i] })
-        userips.push(result)
+    let user = await UserModel.findById(req.params.id)
+    if ((req.headers['authorization'] == user.token) && (user.state == 1)) {
+        for (let i in user.refinterestpoints) {
+            let result = await interestPointModel.findOne({ _id: user.refinterestpoints[i] })
+            userips.push(result)
+        }
+        res.status(200).send(userips)
+    } else {
+        res.status(401).send('failed')
     }
-    res.send(userips)
 }
 
+
 module.exports.removeFromUser = async (req, res) => {
-    let idu = req.params.idu;
-    let idip = req.params.idip;
-    let user = await UserModel.findOne({ _id: idu });
-    user.refinterestpoints.pull(idip)
-    user.save()
-    res.status(200).send()
+    UserModel.findById(req.params.idu, (err, user) => {
+        if ((req.headers['authorization'] == user.token) && (user.state == 1)) {
+            user.refinterestpoints.pull(req.params.idip)
+            user.save()
+            res.status(200).send()
+        } else {
+            res.status(401).send('failed')
+        }
+    })
 }

@@ -63,7 +63,7 @@ export async function queryApi(
         // const token = localStorage.getItem("token");
          if (token != null){
             config.headers = { ...config.headers, Authorization: `${token}` }
-            console.log(config)
+            //console.log(config)
          }
         // console.log(`Requesting : ${config.url}`)
 
