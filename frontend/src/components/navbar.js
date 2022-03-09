@@ -62,6 +62,8 @@ export default function Navbar() {
             <li><Link to={'/'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
             <li><Link to={'/'}>Courses</Link></li>
+            <li><Link to={'/suggestions'}>Friends Suggestions</Link></li>
+            
             <li className="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>

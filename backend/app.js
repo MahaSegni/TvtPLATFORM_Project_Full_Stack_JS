@@ -3,7 +3,7 @@ require('./Model/dbConfig')
 //Declaration de userrouters
 const userRoutes=require('./routes/userRoutes')
 const interestPointRoutes=require('./routes/interestPointRoutes')
-
+const friendRoutes=require('./routes/friendRoutes')
 const cors = require('cors');
 
 const bodyParser=require("body-parser")
@@ -28,7 +28,7 @@ app.use('/api/user',userRoutes);
 app.use('/api/interestpoint',interestPointRoutes);
 
 
-
+app.use('/api/friends',friendRoutes);
 
 app.listen(process.env.PORT,()=>{
     console.log(`listening on port ${process.env.PORT}`);

@@ -1,6 +1,9 @@
 .App {
   text-align: center;
 }
+body {
+  overflow-x:  hidden; /* Hide scrollbars */
+}
 
 .App-logo {
   height: 40vmin;
