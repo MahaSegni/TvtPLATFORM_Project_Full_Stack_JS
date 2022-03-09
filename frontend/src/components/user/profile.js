@@ -25,7 +25,7 @@ export default function Profile(props) {
     }
     async function onRemoveCP(cp) {
         const [, err] = await queryApi('user/removeCP/' + connectedUser.id + '/' + cp, null, 'GET', false, connectedUser.token);
-        reloadUserCPs()
+        reloadUserCPs();
     }
     async function onUpdateCP(cp) {
 

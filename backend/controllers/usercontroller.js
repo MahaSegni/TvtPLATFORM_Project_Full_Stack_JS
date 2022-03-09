@@ -17,7 +17,7 @@ var transporter = nodemailer.createTransport({
 module.exports.checkMail = async (req, res) => {
     await UserModel.exists({ email: req.params.email }, (err, result) => {
         if (result != null) {
-            res.send(true)
+            res.send(true);
         } else { res.send(false) }
     })
 }
