@@ -13,7 +13,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 export default function Profile(props) {
 
-    const history = useHistory()
+    const history = useHistory();
     var connectedUser = useSelector(selectConnectedUser);
     const [openModal, setOpenModal] = useState(false);
     const [openPasswordModal, setOpenPasswordModal] = useState(false);
