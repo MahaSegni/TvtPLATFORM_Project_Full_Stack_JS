@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 const Evaluation = require('./Evaluation');
-const Evquestionresponse = require('./Evquestionresponse');
 var Schema = mongoose.Schema;
 
 var Evaluationquestion = new Schema({
@@ -18,7 +17,6 @@ var Evaluationquestion = new Schema({
     type: [
       {
         responsesId:String,
-
         texte: String,
         image: String,
         value: Number,

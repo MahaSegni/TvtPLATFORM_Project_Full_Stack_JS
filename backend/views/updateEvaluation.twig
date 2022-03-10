@@ -1,0 +1,14 @@
+<html>
+    <body>
+        <form action="/api/evaluation/update" method="post" class="form-example">
+            <div class="form-example">
+                <label>Title: </label>
+                <input type="text" name="title" value={{docs.title}}>
+            </div>
+            <input type="hidden" name="id" value={{docs.id}}>
+            <div class="form-example">
+                <input type="submit" value="Add">
+            </div>
+        </form>
+    </body>
+</html>

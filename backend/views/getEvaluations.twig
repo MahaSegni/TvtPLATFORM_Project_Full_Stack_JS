@@ -1,0 +1,20 @@
+<a href="/api/evaluation/addForm">Add an evaluation</a>
+<table border="1 ">
+<tr>
+<td>ID</td>
+<td>Title</td>
+<td>Date</td>
+<td>Action</td>
+</tr>
+{% for item in docs %}
+<tr>
+<td>{{item._id}}</td>
+<td>{{item.title}}</td>
+<td>{{item.date}}</td>
+<td>
+    <a href="/api/evaluation/updateForm/{{item.id}}">Update<a/>
+    <a href="/api/evaluation/delete/{{item.id}}">Delete<a/>
+</td>
+</tr>
+{% endfor %}
+</table>

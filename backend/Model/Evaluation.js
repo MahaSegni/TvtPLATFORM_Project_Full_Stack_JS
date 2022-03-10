@@ -20,8 +20,11 @@ var Evaluation = new Schema({
         type:[String]
     }, 
     refmodule : {
-        type:[String]
+        type:String
     }, 
+    public :{
+        type:Boolean
+    }
   
 });
 
