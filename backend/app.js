@@ -3,7 +3,7 @@ require('./Model/dbConfig')
 //Declaration de userrouters
 const userRoutes=require('./routes/userRoutes')
 const interestPointRoutes=require('./routes/interestPointRoutes')
-
+const courRoutes = require('./routes/coursRoutes')
 const cors = require('cors');
 
 const bodyParser=require("body-parser")
@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 // el lienet el kol yabdw b /api 
 app.use('/api/user',userRoutes);
 app.use('/api/interestpoint',interestPointRoutes);
-
+app.use('/api/cours',courRoutes);
 
 
 
