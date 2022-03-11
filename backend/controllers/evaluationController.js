@@ -19,7 +19,8 @@ module.exports.getEvaluationById = (req, res) => {
       title: req.body.title,
       image: req.body.image,
       public: false,
-      date: req.body.date,
+      date: new Date(),
+      lastEdit: new Date(),
     }).save();
   };
 
@@ -50,22 +51,29 @@ module.exports.getEvaluationById = (req, res) => {
      }
    */
     let id = req.body._id;
+    console.log(new Date())
     EvaluationModel.findByIdAndUpdate(
       id,
-     
-       { title: req.body.title},
-    
+      { title: req.body.title, lastEdit: new Date()},
       { new: true },
       (err, docs) => {
         if (!err)
           return res.send(docs);
         else
           return res.status(400).send("No update here : ");
-
       });
-
-
   };
+
+  module.exports.updateStatus = async (req, res, next) => {
+    let id = req.params.id;
+    console.log(id)
+    const f=await EvaluationModel.findById(id);
+    f.public=!f.public; 
+    f.save()
+    return res.send(f);
+  };
+
+  
 
   module.exports.deleteEvaluation = (req, res) => {
     console.log("ok")

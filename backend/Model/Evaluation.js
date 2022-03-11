@@ -15,7 +15,9 @@ var Evaluation = new Schema({
     date : {
         type:Date
     },
-  
+    lastEdit: {
+        type:Date
+    },
     refquestions : {
         type:[String]
     }, 

@@ -8,10 +8,27 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+
+.btn-template{
+  background: #5fcf80;
+  opacity: 0.8;
+  color: white;
+  transition: 0.3s;
+
+}
+.btn-template:hover{
+  opacity: 1;
+  color: white;
+  border-radius: 20px;
+  transition: 0.3s;
+
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   color: #444444;
 }
+
 .block {
   display: block;
   width: 100%;

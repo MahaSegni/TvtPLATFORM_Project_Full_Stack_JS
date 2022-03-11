@@ -14,12 +14,12 @@ export default function UpdateEvaluation(props){
   */
   let { id }= useParams();
   console.log(id)
+  let myCurrentDate = new Date();
   const history = useHistory();
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [evaluation, setEvaluation] = useState({
-    
 
   });
     
@@ -39,25 +39,21 @@ export default function UpdateEvaluation(props){
       )
   }, [])
 
-       /*const[formData,setFormData] = useState({
-            _id:evaluation._id,
-            title:evaluation.title ,
-            image:evaluation.image,
-            date:evaluation.date          
-       }) */
        const[FormDataimage,setFormDataimage] = useState({}) 
        const [errors,setErrors] = useState({visbile:false,message:""});
        
        const onChange = (e) => {
-           setEvaluation({...evaluation,[e.target.name]:e.target.value})
+          setEvaluation({...evaluation,[e.target.name]:e.target.value})
        }
+       
        const onChangeFile = (e) => {
         //fileName ="../../assets/uploads/evaluation"+ Math.floor(Math.random()* Date.now())  + ".jpg";
         //setFormData({...formData,image:fileName})
        // setFormDataimage({...FormDataimage,image:e.target.files[0]})
        }
        const onSubmit = async (e) =>{
-        console.log(evaluation); 
+        //await setEvaluation({...evaluation,[e.target.lastEdit]:myCurrentDate.toDateString()})
+        
           e.preventDefault();
           await fetch(`${process.env.REACT_APP_API_URL}/evaluation/update`, { method: 'POST',   headers: {
             'Content-Type': 'application/json'
@@ -65,39 +61,35 @@ export default function UpdateEvaluation(props){
         body: JSON.stringify(evaluation) })
           //const [result,err] = await queryApi('evaluation/update',evaluation,"POST",false);
           history.push('/evaluations')
-          
        }
        
        const {title,date,image}= evaluation;
        const {}= FormDataimage;
    return (
-        <Wrapper>
-            <Form onSubmit={onSubmit}>
-                <FormGroup>
-                    {errors.visbile && <FormError>{errors.message}</FormError>}
-                </FormGroup>
-                <FormGroup>
-                    <FormField
-                        type='text'
-                        name="title"
-                        placeholder="title"
-                        value={title}
-                        onChange={(e)=>onChange(e)}
-                        >                   
-                    </FormField>
-                </FormGroup>
-          
-                <FormGroup>
-                    <FormField
-                        type='file'
-                        name="image"
-                        onChange={(e)=>onChangeFile(e)}
-                        >                   
-                    </FormField>
-                </FormGroup>
-                <FormButton>Save</FormButton>
-            </Form>
-        </Wrapper>
+    <Wrapper>
+    <h1 class="logo mx-auto" style={{ textAlign: "center", color: "#5fcf80" }}>Edit evaluation</h1>
+    <Form class="w-50 mx-auto" onSubmit={onSubmit}>
+        <div class="form-group">
+            {errors.visbile && <FormError>{errors.message}</FormError>}
+        </div>
+        <div class="form-group">
+          <input class="form-control" placeholder="Title" 
+                  type='text'
+                  name="title"
+                  value={title}
+                  onChange={(e)=>onChange(e)} />
+        </div>
+        <FormGroup>
+            <FormField
+                type='file'
+                name="image"
+                onChange={(e)=>onChangeFile(e)}
+                >                   
+            </FormField>
+        </FormGroup>
+        <button class="btn btn-template">Save</button>
+    </Form>
+  </Wrapper>
 
    );
 }

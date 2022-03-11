@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 export default function AddEvaluation(props){
  
   let myCurrentDate = new Date();
+  
   const history = useHistory();
  /* let fileName;
   console.log(req.file) ;
@@ -34,7 +35,7 @@ export default function AddEvaluation(props){
        // setFormDataimage({...FormDataimage,image:e.target.files[0]})
        }
        const onSubmit = async (e) =>{
-        
+        console.log(myCurrentDate.toDateString())
           e.preventDefault();
           history.push('/evaluations')
           const [result,err] = await queryApi('evaluation/add',formData,"POST",false);
@@ -44,34 +45,30 @@ export default function AddEvaluation(props){
        const {title,date,image}= formData;
        const {}= FormDataimage;
    return (
-        <Wrapper>
-            <Form onSubmit={onSubmit}>
-                <FormGroup>
-                    {errors.visbile && <FormError>{errors.message}</FormError>}
-                </FormGroup>
-                <FormGroup>
-                    <FormField
-                        type='text'
-                        name="title"
-                        placeholder="title"
-                        value={title}
-                        onChange={(e)=>onChange(e)}
-                        >                   
-                    </FormField>
-                </FormGroup>
-          
-                <FormGroup>
-                    <FormField
-                        type='file'
-                        name="image"
-                        onChange={(e)=>onChangeFile(e)}
-                        >                   
-                    </FormField>
-                </FormGroup>
-                <FormButton>Save</FormButton>
-            </Form>
-        </Wrapper>
-
+            <Wrapper>
+              <h1 class="logo mx-auto" style={{ textAlign: "center", color: "#5fcf80" }}>Add evaluation</h1>
+              <Form class="w-50 mx-auto" onSubmit={onSubmit}>
+                  <div class="form-group">
+                      {errors.visbile && <FormError>{errors.message}</FormError>}
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" placeholder="Title" 
+                            type='text'
+                            name="title"
+                            value={title}
+                            onChange={(e)=>onChange(e)} />
+                  </div>
+                  <FormGroup>
+                      <FormField
+                          type='file'
+                          name="image"
+                          onChange={(e)=>onChangeFile(e)}
+                          >                   
+                      </FormField>
+                  </FormGroup>
+                  <button class="btn btn-template">Save</button>
+              </Form>
+            </Wrapper>
    );
 }
 

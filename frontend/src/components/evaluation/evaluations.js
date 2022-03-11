@@ -5,18 +5,27 @@ import { queryApi } from "../../utils/queryApi";
 import { useApi } from "../../utils/useApi";
 import { render } from "@testing-library/react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 
 const Evaluations = (props) => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  let connectedUser = useSelector(selectConnectedUser)
+  console.log(connectedUser.type)
+
   const [evaluations, err, reloadEv] = useApi('evaluation/get', null, 'GET', false,);
 
   const deleteEvaluation = async (id) => {
     const [,err] = await queryApi('evaluation/delete/'+id,null,"GET", false);
     reloadEv();
-    
 }
 
+  async function updateStatus (id) {
+    console.log(id);
+    const [, err] = await queryApi('evaluation/updateStatus/'+id, null, 'POST', false);
+  reloadEv();
+}
 
   /*useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/evaluation/get`, { method: 'GET', })
@@ -34,11 +43,12 @@ const Evaluations = (props) => {
       )
   }, [])*/
 
- 
     return (
       <>
         <Footer>
+        {connectedUser.type!=="admin" &&
           <Button onClick={() => props.history.push("/addEvaluation")}>Add Evaluation</Button>
+        }
         </Footer>
       {evaluations && 
         <div class="container">
@@ -51,6 +61,7 @@ const Evaluations = (props) => {
                       <Evaluation evaluation={evaluation}
                         key={index}
                       deleteEvaluation={deleteEvaluation}
+                      updateStatus={updateStatus}
                       >
                       </Evaluation>
                     ))

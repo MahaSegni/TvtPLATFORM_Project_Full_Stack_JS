@@ -37,6 +37,7 @@ export default function Navbar() {
             <li><Link to={'/'}>Interest Points</Link></li>
             <li><Link to={'/'}>Modules</Link></li>
             <li><Link to={'/'}>Courses</Link></li>
+            <li><Link to={'/evaluations'}>Evaluations</Link></li>
             <li className="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>
