@@ -5,9 +5,28 @@ import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
 import { queryApi } from "../../utils/queryApi"
 import { chnageConenctedUser } from '../../Redux/slices/sessionSlice';
 import { useDispatch } from 'react-redux';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { chnageConenctedUserImage } from '../../Redux/slices/sessionSlice';
 export default function UpdateUser({ closeModal }) {
-
+    const [uploadImage, setUploadImage] = useState({
+        image: ""
+    })
+    const onChangeFile = (e) => {
+        setUploadImage({ ...uploadImage, image: e.target.files[0] })
+        //updateImage()
+    }
+    /*const updateImage = async () => {
+        console.log("entered")
+        const [result, err] = await queryApi('user/uploadPicture/' + connectedUser.id, uploadImage, "PUT", true, connectedUser.token)
+        dispatch(chnageConenctedUserImage(result))
+        setUploadImage({ ...uploadImage, image: "" })
+    }*/
+    /*useEffect(() => {
+        if (uploadImage.image != "") {
+            updateImage()
+        }
+    }, [uploadImage.image])*/
     const dispatch = useDispatch();
     var connectedUser = useSelector(selectConnectedUser);
     const [formErrors, setFormErrors] = useState({})
@@ -61,10 +80,12 @@ export default function UpdateUser({ closeModal }) {
         return errors;
     }
     const updateUser = async () => {
+
+        if (uploadImage.image != "") {
+            const [, err] = await queryApi('user/uploadPicture/' + connectedUser.id, uploadImage, "PUT", true, connectedUser.token)
+        }
         const [result, err2] = await queryApi('user/update', formData, "PUT", false, connectedUser.token)
-        if (err2) {
-            console.log(err2)
-        } else {
+        if (!err2) {
             let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token }
             dispatch(chnageConenctedUser(userResult))
             closeModal(false)
@@ -77,41 +98,53 @@ export default function UpdateUser({ closeModal }) {
                 <div className="title">
                     <h1>Profile Update</h1>
                 </div>
-                <div className="body">
-                    <form class="w-75 mx-auto" onSubmit={onSubmit}>
-                        <div class="form-group">
-                            <label for="name" style={{ float: "left" }}><h5>Name : </h5></label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value={formData.name} onChange={(e) => onChange(e)} />
+                <div className="body row">
+                    <div className="col-md-6">
+                        <form class="w-75 mx-auto" onSubmit={onSubmit}>
+                            <div class="form-group">
+                                <label for="name" style={{ float: "left" }}><h5>Name : </h5></label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value={formData.name} onChange={(e) => onChange(e)} />
+                            </div>
+                            <h5 style={{ color: "red" }}>{formErrors.name}</h5>
+
+                            <div class="form-group">
+                                <label for="name" style={{ float: "left" }}><h5>Last Name : </h5></label>
+                                <input type="text" class="form-control" id="lname" name="lastname" placeholder="Enter Last Name" value={formData.lastname} onChange={(e) => onChange(e)} />
+                            </div>
+                            <h5 style={{ color: "red" }}>{formErrors.lastname}</h5>
+
+                            <div class="form-group">
+                                <label for="name" style={{ float: "left" }}><h5>Birth Date : </h5></label>
+                                <input type="date" class="form-control" id="bdate" name="birthDate" value={formData.birthDate} onChange={(e) => onChange(e)} />
+                            </div>
+                            <h5 style={{ color: "red" }}>{formErrors.birthDate}</h5>
+
+                            <div class="form-group">
+                                <label for="name" style={{ float: "left" }}><h5>Phone : </h5></label>
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone Number" value={formData.phone} onChange={(e) => onChange(e)} />
+                            </div>
+                            <h5 style={{ color: "red" }}>{formErrors.phone}</h5>
+
+
+                            <div className="mt-5">
+                                <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
+                                <button type="submit" className="btn get-started-btn" >Submit</button>
+                            </div>
+
+                        </form >
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="d-flex flex-column align-items-center text-center">
+                            <div>
+                                <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="Admin" className="rounded-circle"
+                                    width="200" />
+                                <input type="file" id="profilepicture" name='image' onChange={(e) => onChangeFile(e)} />
+                                <label for="profilepicture" id="uploadPhotoBtn"><FontAwesomeIcon icon={faImage}></FontAwesomeIcon></label>
+                            </div>
                         </div>
-                        <h5 style={{ color: "red" }}>{formErrors.name}</h5>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="name" style={{ float: "left" }}><h5>Last Name : </h5></label>
-                            <input type="text" class="form-control" id="lname" name="lastname" placeholder="Enter Last Name" value={formData.lastname} onChange={(e) => onChange(e)} />
-                        </div>
-                        <h5 style={{ color: "red" }}>{formErrors.lastname}</h5>
-
-                        <div class="form-group">
-                            <label for="name" style={{ float: "left" }}><h5>Birth Date : </h5></label>
-                            <input type="date" class="form-control" id="bdate" name="birthDate" value={formData.birthDate} onChange={(e) => onChange(e)} />
-                        </div>
-                        <h5 style={{ color: "red" }}>{formErrors.birthDate}</h5>
-
-                        <div class="form-group">
-                            <label for="name" style={{ float: "left" }}><h5>Phone : </h5></label>
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone Number" value={formData.phone} onChange={(e) => onChange(e)} />
-                        </div>
-                        <h5 style={{ color: "red" }}>{formErrors.phone}</h5>
-
-
-                        <div className="mt-5">
-                            <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
-                            <button type="submit" className="btn get-started-btn" >Submit</button>
-                        </div>
-
-                    </form >
-
-                    
                 </div>
             </div>
         </div>

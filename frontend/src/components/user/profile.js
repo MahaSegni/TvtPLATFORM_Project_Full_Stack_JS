@@ -14,10 +14,18 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch } from 'react-redux';
 export default function Profile(props) {
 
-    const history = useHistory();
+    const dispatch = useDispatch();
     var connectedUser = useSelector(selectConnectedUser);
+    const history = useHistory();
+    const [openModal, setOpenModal] = useState(false);
+    const [openPasswordModal, setOpenPasswordModal] = useState(false);
+    const [userIPs, err, reloadUserIPs] = useApi('interestpoint/userInterestPoints/' + connectedUser.id, null, 'GET', false, connectedUser.token);
+    const [userCPs, err2, reloadUserCPs] = useApi('user/coursepreferences/' + connectedUser.id, null, 'GET', false, connectedUser.token);
+    const [allIPs, err3, reloadAllIPs] = useApi('interestpoint/getAll/', null, 'GET', false);
+    const [otherIPs, setOtherIPs] = useState([])
     const [addCP, setAddCP] = useState({
         id: connectedUser.id,
         inputDisplay: false,
@@ -34,12 +42,7 @@ export default function Profile(props) {
         listDisplay: false,
         IPid: "",
     })
-    const [openModal, setOpenModal] = useState(false);
-    const [openPasswordModal, setOpenPasswordModal] = useState(false);
-    const [userIPs, err, reloadUserIPs] = useApi('interestpoint/userInterestPoints/' + connectedUser.id, null, 'GET', false, connectedUser.token);
-    const [userCPs, err2, reloadUserCPs] = useApi('user/coursepreferences/' + connectedUser.id, null, 'GET', false, connectedUser.token);
-    const [allIPs, err3, reloadAllIPs] = useApi('interestpoint/getAll/', null, 'GET', false);
-    const [otherIPs, setOtherIPs] = useState([])
+
     async function onRemove(ip) {
         const [, err] = await queryApi('interestpoint/rvFromUser/' + connectedUser.id + '/' + ip._id, null, 'GET', false, connectedUser.token);
         setAddIP({ ...addIP, listDisplay: false, IPid: "" })
@@ -56,7 +59,7 @@ export default function Profile(props) {
     function openAddIP() {
         let myArray = allIPs.filter(x => !userIPs.find(u => (x._id == u._id)));
         setOtherIPs(myArray)
-        setAddIP({ ...addIP, listDisplay: true, IPid :myArray[0]._id })
+        setAddIP({ ...addIP, listDisplay: true, IPid: myArray[0]._id })
 
 
     }
@@ -68,7 +71,6 @@ export default function Profile(props) {
         setAddIP({ ...addIP, listDisplay: false, IPid: "" })
         reloadUserIPs();
         reloadAllIPs();
-        console.log(addIP)
     }
 
     function closeAddIP() {
@@ -110,8 +112,6 @@ export default function Profile(props) {
     function closeUpdateCP() {
         setUpdateCP({ ...addCP, inputDisplay: false, cp: "" })
     }
-
-
     return openModal == true ? (<UpdateUser closeModal={setOpenModal} />) :
         openPasswordModal == true ? (<UserSettings closeModal={setOpenPasswordModal} />) : (
             <>
@@ -122,9 +122,12 @@ export default function Profile(props) {
                                 <div className="col-md-4 mb-3">
                                     <div className="card">
                                         <div className="card-body">
+
                                             <div className="d-flex flex-column align-items-center text-center">
-                                                <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="Admin" className="rounded-circle"
-                                                    width="242" />
+                                                <div>
+                                                    <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="Admin" className="rounded-circle"
+                                                        width="300" />
+                                                </div>
                                                 <div className="mt-3">
                                                     <h4>{connectedUser.name} {connectedUser.lastName} </h4>
                                                 </div>
@@ -271,7 +274,7 @@ export default function Profile(props) {
                                                         }
                                                         {updateCP.inputDisplay == true && updateCP.cp == cp &&
                                                             <>
-                                                                
+
                                                                 <div className='col-9'>
                                                                     <input type="text" className="form-control" id="inputValue" name="inputValue" value={updateCP.inputValue} placeholder="Enter a new course preference" onChange={(e) => onUpdateCPinput(e)} onKeyPress={(e) => handleKeyPressUpdate(e)} />
                                                                 </div>
@@ -298,7 +301,7 @@ export default function Profile(props) {
                                                             <input type="text" className="form-control" id="inputValue" name="inputValue" value={addCP.inputValue} placeholder="Enter a new course preference" onChange={(e) => onChangeCP(e)} onKeyPress={(e) => handleKeyPress(e)} />
                                                         </div>
                                                         <div className='col-3'>
-                                                            <button onClick={() => closeAddCP()} className="btn get-started-btn" style={{ float: "right",background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
+                                                            <button onClick={() => closeAddCP()} className="btn get-started-btn" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
                                                         </div>
                                                     </>
                                                 }

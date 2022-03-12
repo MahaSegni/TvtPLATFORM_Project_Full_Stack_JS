@@ -16,6 +16,7 @@
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.0",
+    "multer": "^1.4.4",
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
     "validator": "^13.7.0"

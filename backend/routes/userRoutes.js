@@ -1,6 +1,15 @@
 const router = require('express').Router();
 const userController = require('../controllers/userController')
-
+const multer = require('multer')
+const storage = multer.diskStorage({
+    destination: function(req,file,cb) {
+        cb(null,'D:/PiMern/Project_Full_Stack_JS/frontend/src/assets/uploads/user');
+    },
+    filename: function(req,file,cb) {
+        cb(null, (Math.random() + 1).toString(36).substring(7)+file.originalname)
+    } 
+})
+const upload = multer({storage:storage})
 
 router.get("/check/:email",userController.checkMail);
 router.post("/signup",userController.signUp);
@@ -17,4 +26,5 @@ router.put("/changeEmailAction",userController.changeEmailAction);
 router.post("/deleteUser",userController.deleteUser);
 router.get("/sendMail/:email",userController.sendMail);
 router.put("/forgetPassword",userController.forgetPassword);
+router.put("/uploadPicture/:id",upload.single('image'),userController.uploadPicture);
 module.exports=router;

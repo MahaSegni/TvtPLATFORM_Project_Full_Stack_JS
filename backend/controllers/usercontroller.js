@@ -2,6 +2,8 @@
 
 //Fonction bech t ajouti user 
 require('dotenv').config()
+const multer = require('multer')
+const upload = multer({dest: 'D:/PiMern/Project_Full_Stack_JS/frontend/src/assets/uploads/user'})
 var nodemailer = require('nodemailer');
 const UserModel = require('../Model/User');
 const bcrypt = require('bcrypt');
@@ -317,6 +319,22 @@ module.exports.updateUserCoursePreferences = async (req, res) => {
 
     } catch (err) {
         res.send(err)
+    }
+}
+
+module.exports.uploadPicture = async (req,res) => {
+    try{
+        UserModel.findById(req.params.id,(err,user)=>{
+            if ((req.headers['authorization'] == user.token) && (user.state == 1)) {
+                user.image = req.file.filename
+                user.save()
+                res.status(200).send('success')
+            } else {
+                res.status(401).send('failed')
+            }
+        })
+    }catch(err){
+        console.log(err)
     }
 }
 

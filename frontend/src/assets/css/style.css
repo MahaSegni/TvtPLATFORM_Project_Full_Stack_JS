@@ -1377,3 +1377,10 @@ section {
   color: #fff;
   text-decoration: none;
 }
+
+#profilepicture{
+  display: none;
+}
+#uploadPhotoBtn{
+position: absolute;
+}
