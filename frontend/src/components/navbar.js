@@ -18,7 +18,7 @@ export default function Navbar() {
           <ul>
             <li><Link to={'/'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
-            <li><Link to={'/'}>Courses</Link></li>
+            <li><Link to={'/modulefront'}>Courses</Link></li>
             <li><Link to={'/signin'}>Sign In</Link></li>
             <li><Link to={'/signup'}>Sign Up</Link></li>
           </ul>
@@ -35,7 +35,7 @@ export default function Navbar() {
           <ul>
             <li><Link to={'/'}>Users</Link></li>
             <li><Link to={'/'}>Interest Points</Link></li>
-            <li><Link to={'/'}>Modules</Link></li>
+            <li><Link to={'/category/add'}>Category</Link></li>
             <li><Link to={'/'}>Courses</Link></li>
             <li className="dropdown"><a>More</a>
               <ul>
@@ -61,7 +61,7 @@ export default function Navbar() {
           <ul>
             <li><Link to={'/'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
-            <li><Link to={'/'}>Courses</Link></li>
+            <li><Link to={'/module'}>Module</Link></li>
             <li className="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>
