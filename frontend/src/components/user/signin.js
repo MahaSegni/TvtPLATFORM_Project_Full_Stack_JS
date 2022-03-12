@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { queryApi } from "../../utils/queryApi"
 import { chnageConenctedUser } from '../../Redux/slices/sessionSlice';
-
+import { Link } from "react-router-dom";
 export default function Signin(props) {
 
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ export default function Signin(props) {
           <label for="exampleInputPassword1">Password</label>
           <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password" onChange={(e) => onChange(e)} />
         </div>
-
+        <Link to={'/forgetPassword'}>Forget Password</Link>
         <div style={{ textAlign: "center", color: "red" }}>{errorDisplay}</div>
         <button type="submit" class="ms-auto my-2 btn get-started-btn">Submit</button>
       </form>

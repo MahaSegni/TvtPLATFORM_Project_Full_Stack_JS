@@ -18,10 +18,10 @@ export default function UserSettings({ closeModal }) {
     const [errorDeletelDisplay, setErrorDeleteDisplay] = useState("");
     const [secondFormErrors, setsecondFormErrors] = useState({})
     const [emailFormErrors, setEmailFormErrors] = useState({})
-    const [deleteFormErrors,setDeleteFormErrors] = useState({})
-    const [formDelete,setFormDelete] = useState({
-        id : connectedUser.id,
-        currentPassword : ""
+    const [deleteFormErrors, setDeleteFormErrors] = useState({})
+    const [formDelete, setFormDelete] = useState({
+        id: connectedUser.id,
+        currentPassword: ""
     })
     const [codeForEmail, setcodeForEmail] = useState({
         sent: false,
@@ -37,12 +37,12 @@ export default function UserSettings({ closeModal }) {
     })
     const [formEmail, setFormEmail] = useState({
         id: connectedUser.id,
-        newEmail: "",
+        email: "",
         currentPassword: "",
     })
 
     const onChangeDelete = (e) => {
-        setFormDelete({...formDelete, [e.target.name]: e.target.value})
+        setFormDelete({ ...formDelete, [e.target.name]: e.target.value })
     }
 
     const onSubmitDelete = (e) => {
@@ -90,8 +90,8 @@ export default function UserSettings({ closeModal }) {
             setcodeForEmail({ ...codeForEmail, error: "Incorrect verification code" })
         }
     }
-    
-    
+
+
     const validateDelete = (values) => {
         const errors = {};
         let err = false;
@@ -107,10 +107,10 @@ export default function UserSettings({ closeModal }) {
         return errors;
     }
 
-    
+
     const deleteUser = async () => {
         const [result, err2] = await queryApi('user/deleteUser', formDelete, "POST", false, connectedUser.token)
-        
+
         if (result == "Incorrect Current password") {
             setErrorDeleteDisplay(result)
         }
@@ -124,8 +124,8 @@ export default function UserSettings({ closeModal }) {
     const validateEmail = (values) => {
         const errors = {};
         let err = false;
-        if (!values.newEmail) {
-            errors.newEmail = "New Email address is required";
+        if (!values.email) {
+            errors.email = "New Email address is required";
             err = true;
         }
         if (!values.currentPassword) {
@@ -140,13 +140,19 @@ export default function UserSettings({ closeModal }) {
         return errors;
     }
     const updateEmail = async () => {
-        const [result, err2] = await queryApi('user/changeEmail', formEmail, "POST", false, connectedUser.token)
-        if (result == "Incorrect Current password") {
-            setErrorEmailDisplay(result)
-        }
-        else if (result != "failed") {
-            console.log(result)
-            setcodeForEmail({ ...codeForEmail, sent: true, value: result })
+        const [resultCheck, err] = await queryApi('user/check/' + formEmail.email, null, "GET", false)
+        console.log(resultCheck)
+        if (resultCheck == false) {
+            const [result, err2] = await queryApi('user/changeEmail', formEmail, "POST", false, connectedUser.token)
+            if (result == "Incorrect Current password") {
+                setErrorEmailDisplay(result)
+            }
+            else if (result != "failed") {
+                console.log(result)
+                setcodeForEmail({ ...codeForEmail, sent: true, value: result })
+            }
+        }else {
+            setErrorEmailDisplay("An account with this email address already exists")
         }
     }
 
@@ -249,10 +255,10 @@ export default function UserSettings({ closeModal }) {
                                         <form class="w-75 mx-auto" onSubmit={onSubmitEmail}>
 
                                             <div class="form-group">
-                                                <label for="newEmail" style={{ float: "left" }}><h5>New Email : </h5></label>
-                                                <input type="text" class="form-control" id="newEmail" name="newEmail" value={formEmail.newEmail} placeholder="Enter Your new Email address" onChange={(e) => onChangeEmail(e)} />
+                                                <label for="email" style={{ float: "left" }}><h5>New Email : </h5></label>
+                                                <input type="text" class="form-control" id="email" name="email" value={formEmail.email} placeholder="Enter Your new Email address" onChange={(e) => onChangeEmail(e)} />
                                             </div>
-                                            <h5 style={{ color: "red" }}>{emailFormErrors.newEmail}</h5>
+                                            <h5 style={{ color: "red" }}>{emailFormErrors.email}</h5>
                                             <div class="form-group">
                                                 <label for="currentPassword" style={{ float: "left" }}><h5>Current Password : </h5></label>
                                                 <input type="password" class="form-control" id="currentPassword" name="currentPassword" value={formEmail.currentPassword} placeholder="Enter Password" onChange={(e) => onChangeEmail(e)} />
