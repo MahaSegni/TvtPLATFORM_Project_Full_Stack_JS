@@ -420,6 +420,21 @@ h1, h2, h3, h4, h5, h6 {
   background: #5fcf80;
   border: 2px solid #5fcf80;
 }
+.btn-template{
+  background: #5fcf80;
+  opacity: 0.8;
+  color: white;
+  transition: 0.3s;
+
+}
+.btn-template:hover{
+  opacity: 1;
+  color: white;
+  border-radius: 20px;
+  transition: 0.3s;
+
+}
+
 @media (min-width: 1024px) {
   #hero {
     background-attachment: fixed;

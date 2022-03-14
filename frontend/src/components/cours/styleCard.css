@@ -40,7 +40,7 @@
   .post-content .post-container .post-detail .post-comment{
     display: inline-flex;
     margin: 10px auto;
-    width: 100%;
+    width: 90%;
   }
   
   .post-content .post-container .post-detail .post-comment img.profile-photo-sm{
@@ -79,4 +79,8 @@
       color: #8dc63f;
       font-size: 12px;
       margin-left: 20px;
+  }
+  .actionclass {
+    display: flex;
+    align-items:flex-end;
   }

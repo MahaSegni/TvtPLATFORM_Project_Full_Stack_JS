@@ -2,7 +2,14 @@ import { Route, useParams } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import CoursfrontCard from "./CoursfrontCard";
 import AjouterCour from "./AjouterCommentaire";
+import { Card } from "react-bootstrap";
+
+import { useSelector } from 'react-redux';
+import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
+import { queryApi } from "../../utils/queryApi";
 const Coursfront = () => {
+    var connectedUser= useSelector(selectConnectedUser)
+
     let { idModule } = useParams();
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -11,6 +18,7 @@ const Coursfront = () => {
     const [owner,setOwner]=useState();
     const [ownerLoaded,setOwnerLoaded]=useState(false);
     const [ownerId,setOwnerId]=useState("");
+    const [addClicked,setaddClicked]=useState(false)
     async function getData(){
         await fetch(`${process.env.REACT_APP_API_URL}/cours/getModuleofcours/${idModule}`, {
             method: 'GET',
@@ -50,7 +58,15 @@ const Coursfront = () => {
         }
 
     }
+    async function clickAlert(data,idmodule,ckeditordata){
     
+     const [, err] =  await queryApi('cours/'+ idmodule+'/create' ,{
+         title:data.title,
+         texte:ckeditordata
+     }
+    , 'POST', false);
+    setIsLoaded(false);
+    }
     useEffect(() => {
         
         getData();
@@ -71,12 +87,17 @@ const Coursfront = () => {
              
             <div class="row my-4">
                 <div class="col-4">
+                    
                 </div>
 
                 <div class="col-7">
-                    <AjouterCour></AjouterCour>
+                    
+                   {owner.id==connectedUser._id && connectedUser.type!="disconnected"&& 
+                    <AjouterCour idmodule={idModule} onChildClick={clickAlert} ></AjouterCour>
+                }
+                  
                     {
-
+                        
                         cours.map((refcour, index) => (
 
                             <CoursfrontCard refcour={refcour} owner={(owner)}
@@ -86,7 +107,7 @@ const Coursfront = () => {
                             </CoursfrontCard>
 
 
-                        ))}
+                        )).reverse()}
                 </div>
             </div>
 

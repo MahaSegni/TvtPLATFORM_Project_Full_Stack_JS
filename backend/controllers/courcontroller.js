@@ -27,8 +27,13 @@ module.exports.create = async(req,res)=>{
   if (!ObjectID.isValid(req.params.idModule))
   return res.status(400).send("ID unknown : " + req.params.idModule);
 const{title,texte} = req.body
-  
-    const cour=await CoursModel.create({title,texte})
+const newCour = new CoursModel({
+  title: req.body.title,
+  texte: req.body.texte,
+  date_creation: new Date().toDateString()
+});
+const cour = await newCour.save();
+
      ModuleModel.findByIdAndUpdate(
       req.params.idModule,
       {
@@ -50,9 +55,20 @@ module.exports.delete = (req, res) => {
     return res.status(400).send("ID unknown : " + req.params.id);
 
   CoursModel.findByIdAndRemove(req.params.id, (err, docs) => {
-    if (!err) res.send(docs);
-    else console.log("Delete error : " + err);
+    if (err) console.log("Delete error : " + err);
   });
+  ModuleModel.findByIdAndUpdate(
+    req.params.idModule,
+    {
+      $pull: { refCours: req.params.id },
+    },
+    { new: true },
+    (err, docs) => {
+      if (!err) res.send(docs);
+      else 
+      return res.status(500).send(err);
+    });
+
 };
 
 module.exports.find = (req, res) => {
@@ -138,32 +154,47 @@ module.exports.findOwner=async(req,res)=>
   })
 }
 
-/* 
-  title: {
-    type: String
-  },
-  file: {
-    type: [
+module.exports.createComment = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("ID unknown : " + req.params.id);
+     CoursModel.findByIdAndUpdate(
+        req.params.id,
         {
-          fileId:String,
-          typeFile: String,
-          lienFile: String,
+          $push: {
+            comments: {
+              ownerComment:req.body.ownerComment,
+              nomUser: req.body.nomUser,
+              imageUser:req.body.imageUser,
+              texte: req.body.texte,
+              dateComment: new Date().toDateString(),
+            },
+          },
+        },
+        { new: true },
+        (err, docs) => {
+          if (!err) return res.send(docs);
+          else return res.status(400).send(err);
         }
-      ],
-  },
-  comments: {
-    type: [
+      )
+    
+  
+};
+module.exports.deleteComment = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("ID unknown : " + req.params.id);
+    CoursModel.findByIdAndUpdate(
+      req.params.id,
       {
-        commenterId:String,
-        nomUser: String,
-        text: String,
-        dateComment: Date,
+        $pull: { comments:{ _id: req.body.id } },
+      },
+      { new: true },
+      (err, docs) => {
+        if (!err) 
+        return res.send(docs);
+        else 
+        return res.status(400).send("No update here : " + req.params.id);
+
       }
-    ],
-  },
-  Texte:{
-      type:String
-  },
-  likers: {
-    type: [String],
-  },*/
+    );
+    
+};
