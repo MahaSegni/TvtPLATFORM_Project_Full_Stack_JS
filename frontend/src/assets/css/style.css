@@ -8,6 +8,20 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+.btn-template{
+  background: #5fcf80;
+  opacity: 0.8;
+  color: white;
+  transition: 0.3s;
+
+}
+.btn-template:hover{
+  opacity: 1;
+  color: white;
+  border-radius: 20px;
+  transition: 0.3s;
+
+}
 body {
   font-family: "Open Sans", sans-serif;
   color: #444444;
@@ -137,6 +151,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0px 0 18px rgba(55, 66, 59, 0.08);
 }
 #header .logo {
+  
   font-size: 30px;
   margin: 0;
   padding: 0;
@@ -147,6 +162,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Poppins", sans-serif;
 }
 #header .logo a {
+
   color: #5fcf80;
 }
 #header .logo img {
@@ -384,10 +400,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 #hero .container {
   padding-top: 72px;
+  z-index: 996;
 }
 @media (max-width: 992px) {
   #hero .container {
     padding-top: 62px;
+    
   }
 }
 #hero h1 {

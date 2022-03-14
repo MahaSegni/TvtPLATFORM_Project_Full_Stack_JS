@@ -12,7 +12,7 @@ export default function Navbar() {
   var connectedUser = useSelector(selectConnectedUser);
   return connectedUser.type == "disconnected" ? (
     <div id="header">
-      <div className="container d-flex align-items-center">
+      <div className="container d-flex align-items-center  ">
         <h1 class="logo me-auto"><a href="index.html">TvtPlatform</a></h1>
         <nav id="navbar" className="navbar order-last order-lg-0">
           <ul>
@@ -53,8 +53,8 @@ export default function Navbar() {
       </div>
     </div>
   ) : connectedUser.type == "user" ? (
-    <div id="header">
-      <div className="container d-flex align-items-center">
+    <div id="header " >
+      <div className="container d-flex align-items-center ">
 
         <h1 className="logo me-auto"><a href="index.html">TvtPlatform</a></h1>
         <nav id="navbar" className="navbar order-last order-lg-0">
@@ -62,7 +62,7 @@ export default function Navbar() {
             <li><Link to={'/'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
             <li><Link to={'/'}>Courses</Link></li>
-            <li><Link to={'/suggestions'}>Friends Suggestions</Link></li>
+            <li><Link to={'/SocialMedia'}>Social Media</Link></li>
             
             <li className="dropdown"><a>More</a>
               <ul>

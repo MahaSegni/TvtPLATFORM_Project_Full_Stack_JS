@@ -9,7 +9,7 @@ const Signup = React.lazy(() => import('./components/user/signup'));
 const Signin = React.lazy(() => import('./components/user/signin'));
 const Profile = React.lazy(() => import('./components/user/profile'));
 const Suggestions = React.lazy(() => import('./components/friends/suggestions'));
-const SendRequest = React.lazy(() => import('./components/friends/sendRequest'));
+const SocialMedia = React.lazy(() => import('./components/friends/socialMediaMenu'));
 
 function App() {
 
@@ -24,8 +24,8 @@ function App() {
             <Route exact path='/signup' render={props => <Signup {...props} />}></Route>
             <Route path='/signin' render={props => <Signin {...props} />}></Route>
             <Route path='/profile' render={props => <Profile {...props} />}></Route>
-            <Route path='/suggestions' render={props => <Suggestions {...props} />}></Route>
-            <Route path='/sendRequest/:id' render={props => <SendRequest {...props} />}></Route>
+            <Route path='/SocialMedia' render={props => <SocialMedia {...props} />}></Route>
+           
           </Switch>
         </Suspense>
       </BrowserRouter>
