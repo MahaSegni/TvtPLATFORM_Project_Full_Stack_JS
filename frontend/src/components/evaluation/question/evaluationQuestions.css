@@ -1,0 +1,242 @@
+    #custombackground{
+        background-image: no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    .btn-primary {
+        margin-top: 1%;
+        background-color: #5CB85C !important;
+        border-color: #5CB85C !important;
+        border-radius: 6px;
+    }
+    .btn-primary:hover {
+        opacity: 0.8;
+        background-color: #5CB85C !important;
+        border-color: #5CB85C !important;
+        border-radius: 6px;
+    }
+    .btn-primary:active {
+        background-color: #5CB85C !important;
+        border-color: #5CB85C !important;
+        border-radius: 6px;
+    }
+    /* The popup form - hidden by default */
+    .form-popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 15px;
+        border: 3px solid #f1f1f1;
+        z-index: 9;
+    }
+    /* Add styles to the form container */
+    .form-container {
+        width: 430px!important;
+        padding: 10px;
+        background-color: white;
+    }
+    /* Full-width input fields */
+    .form-container input[type=text], .form-container input[type=password] {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        border: none;
+        background: #f1f1f1;
+    }
+    /* When the inputs get focus, do something */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+        background-color: #ddd;
+        outline: none;
+    }
+    /* Set a style for the submit/login button */
+    .form-container .btn {
+        background-color: #04AA6D;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom:10px;
+        opacity: 0.8;
+    }
+    /* Add a red background color to the cancel button */
+    .form-container .cancel {
+        background-color: red;
+    }
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover, .open-button:hover {
+        opacity: 1;
+    }
+
+
+
+/*<div class="container mt-5" >
+    <div class="d-flex justify-content-center row" >
+        <div class="col-md-10 col-lg-10" >
+            <div class="border"  id="custombackground" >
+                <div class="question p-3 border-bottom" style="background-color: rgba(255,255,255,0.8);">
+                    <div  class="d-flex flex-row justify-content-between align-items-center mcq">
+                        <h4 id="target" style="color: Black"> number of question: </h4>
+                        <center style="text-transform: uppercase; font-family: 'Microsoft Tai Le'  ; font-size: x-large ;color: black;">Title</center>
+                      
+                     <a  class="btn btn-template">Add question</a>    
+                    </div>
+                </div>
+
+                <div class="question bg-transparent p-3 border-bottom" >
+
+                    <div class=" container mt-5">
+                        <div class="d-flex justify-content-center row">
+                            <div class="col-md-10 col-lg-10">
+                                <div class="collapse" id="addQuestion">
+                                    <div class=border>
+                                        <div class="question p-3 border-bottom"  style="background-color: rgba(255,255,255,0.6);">
+                                       form
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                            <div class=" container mt-5">
+                                <div class="d-flex justify-content-center row">
+                                    <div class="col-md-10 col-lg-10">
+                          
+                                        <div  style={{backgroundColor: rgba(255,255,255,0.7); maxHeight: 50px}}>
+                                            <div >
+                                                <a class="btn-primary" style={{padding: 0.7%; backgroundColor: rgba(96,105,111,0.8); fontSize: large; marginLeft: 1%; border:none}}    type:submit> Consult Choices <i style={{color:white}} class="ki ki-double-arrow-next "></i> </a>
+
+                                                <a  class="open-button btn btn-sm btn-white font-weight-bold"  style="background-color: rgba(255,255,255,0.0); border:none;margin-left: 65%">
+                                                    <i class="ki ki-gear text-success"  title="Edit"></i>
+                                                </a>
+                                                <a style={{backgroundColor: rgba(255,255,255,0.0); border:none;}}  class="btn btn-sm btn-white font-weight-bold" onclick="return confirm('Are you sure you want to delete this item?');">
+                                                    <i class="flaticon2-trash text-danger" title="Delete" ></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                               
+                                        <div class="border">
+                                            <div class="question  p-3 border-bottom" style="background-color: rgba(255,255,255,0.7);">
+                                                <div class="d-flex flex-row justify-content-between align-items-center mcq" >
+                                                    <span>num question</span>
+                                                </div>
+                                            </div>
+                                            <div class="question p-3 border-bottom"  style="background-color: rgba(255,255,255,0.6);">
+                                                <div class="d-flex flex-row align-items-center question-title">
+                                                    <h3 class="text-danger">Q.</h3>
+                                                    <h5 class="mt-1 ml-2">questionquestionquestionquestionquestionquestion?</h5>
+                                                </div>
+  
+
+                                                    <ul class="list-group">
+                                                    
+                                                            <li class="list-group-item" style= {{backgroundColor:#5CB85C; color:white; marginBottom: 10}}>reponse</li>
+                                                         
+                                                        
+                                                    </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                        {% endif %}
+                        {% if q.answerType =="image" %}
+                            <div class="container mt-5">
+                                <div class="d-flex justify-content-center row">
+                                    <div class="col-md-10 col-lg-10">
+                                        {% if quiz.public==false %}
+                                        <div  style="background-color: rgba(255,255,255,0.7);" >
+                                            <div >
+                                                <a class="btn-primary" style="padding: 0.7%; background-color: rgba(96,105,111,0.8)!important; font-size: large; margin-left: 1%; border:none;" href="{{ path('DisplayChoices',{id:q.id,idquiz:quiz.id}) }}" type="submit"> Consult Choices <i style="color:white!important;" class="ki ki-double-arrow-next "></i> </a>
+
+                                                <a id="{{ q.id }}" class="open-button btn btn-sm btn-white font-weight-bold"  style="background-color: rgba(255,255,255,0.0); border:none; margin-left: 65%"  >
+                                                    <i class="ki ki-gear text-success" title="Edit"></i>
+                                                </a>
+                                                <a  style="background-color: rgba(255,255,255,0.0); border:none; "href="{{path('DeleteQuestion',{'id':q.id,'idquiz':quiz.id})}}"  class="btn btn-sm btn-white font-weight-bold" onclick="return confirm('Are you sure you want to delete this item?');">
+                                                    <i class="flaticon2-trash text-danger" title="Delete" ></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="border">
+
+                                            <div class="question p-3 border-bottom"  style="background-color: rgba(255,255,255,0.7);">
+                                                <div class="d-flex flex-row justify-content-between align-items-center mcq">
+
+                                                    {% if q.imageLink!=null %}
+                                                    <img style="height: 180px; width: 250px ;margin-bottom: 10px;margin-right: 5px" src="{{ asset('uploads/' ~ q.imageLink)}}">
+                                                    {% else %}
+                                                        <span></span>
+                                                    {% endif%}
+                                                        <span>({{ Row }} of {{ rows }} )</span>
+                                                </div>
+                                            </div>
+                                            <div class="question p-3 border-bottom"  style="background-color: rgba(255,255,255,0.8);">
+                                                <div class="d-flex flex-row align-items-center question-title">
+                                                    <h3 class="text-danger">Q.</h3>
+                                                    <h5 class="mt-1 ml-2">{{ q.question }}</h5>
+                                                </div>
+                                                {% set k=0 %}
+                                                {% for a in q.getChoices() %}
+
+                                                    <img style="height: 180px; width: 250px ;margin-bottom: 10px;margin-right: 5px" src="{{ asset('uploads/' ~ a.getChoice())}}">
+                                                    {% if a.state==true %}
+                                                        {% set k=k+1 %}
+                                                        <i style="color: #5CB85C; margin-right: 5px ;" class="fas fa-check-circle "></i>
+                                                    {% elseif a.state==false %}
+                                                        {% set k=k+1 %}
+                                                        <i style="margin-right: 5px" class="fa fa-times-circle text-danger mr-5" aria-hidden="true"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if k==0 %}
+                                                    {% set validQuiz = 0 %}
+                                                    {{ validQuiz }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <br>
+                            <br>
+                        {% endif %}
+
+
+                        <div class="form-popup" id="myForm">
+
+                        </div>
+
+
+
+                    {% endfor %}
+                    <div class="d-flex justify-content-center row">
+                        <div class="col-md-10 col-lg-10">
+                    <a type="submit" href="{{path('DisplayPersonalInfo',{idquiz:quiz.id})}}" class="btn-primary" style=" padding-right:1%; padding-left:1%; font-size:large;margin-left:3%; " >Personal Information</a>
+
+                    {% if rows>=1 and validQuiz==1 and PI!=0 %}
+
+                        {% if quiz.public==false %}
+                        <a type="submit" href="{{path('Publish',{idquiz:quiz.id})}}" class="btn-primary" style=" padding-right:1%; padding-left:1%; font-size:large; margin-left:60%;" onclick="return confirm('Are you sure you want to pubish this Quiz ? The link of your quiz will be :  http://127.0.0.1:8000/QuizFront/{{ quiz.id }}')" >Publish</a>
+                        {% else %}
+                        <a type="submit" href="{{path('Publish',{idquiz:quiz.id})}}" class="btn-primary" style=" padding-right:1%; padding-left:1%; font-size:large; margin-left:58%;" >Unpublish</a>
+                        {% endif %}
+                    {% else %}
+                        <button title="You should have at least one or more valid Question" class="btn-primary" style=" background-color:grey!important; border-color: grey!important; padding-right:1%; padding-left:1%; font-size:large; margin-left:60%;" >Publish</button>
+                    {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*/

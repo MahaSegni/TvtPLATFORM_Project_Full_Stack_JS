@@ -7,9 +7,9 @@ import {format} from "date-fns";
 import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 
-export default function Evaluation(props){
+export default function Evaluation({props, idUpdate, update, ev, deleteEvaluation, updateStatus}){
   const history = useHistory();
-  const [evaluation, setEvaluation] = useState(props.evaluation);
+  const [evaluation, setEvaluation] = useState(ev);
   let connectedUser = useSelector(selectConnectedUser)
 
   return (
@@ -19,7 +19,7 @@ export default function Evaluation(props){
                                 <td>
                                     <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
                                     <a href="#" class="user-link">{evaluation.title}</a>
-                                    <span class="user-subhead">Module Name</span>
+                                    <span class="user-subhead">Module: {evaluation.nomModule}</span>
                                 </td>
                                 <td>
                                     <a href="#"><span style={{color:"black"}}>Created at </span> {evaluation.date.substring(0, 10)}</a>
@@ -29,25 +29,32 @@ export default function Evaluation(props){
                                 </td>
                                 <td style={{width: "20%"}}>
                                     {connectedUser.type!=="admin" && evaluation.public===false &&
-                                    <a onClick={() => history.push(`/updateEvaluation/${evaluation._id}`)} style={{border:0, background:"transparent", color:"#5FCF80"}} class="table-link">
+                                    <a onClick={() => {update(true); idUpdate(evaluation._id)}} style={{border:0, background:"transparent", color:"#5FCF80"}} class="table-link">
                                         <span class="fa-stack">
                                             <i class="fa fa-square fa-stack-2x"></i>
                                             <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                         </span>
                                     </a>}
-                                    <a onClick={() => props.deleteEvaluation(evaluation._id)} style={{border:0, background:"transparent", color:"red"}} class="table-link">
+                                    {connectedUser.type!=="admin" && evaluation.public===true &&
+                                    <a  style={{border:0, background:"transparent", color:"#5FCF80", opacity:0.6}} class="table-link">
+                                        <span class="fa-stack">
+                                            <i class="fa fa-square fa-stack-2x"></i>
+                                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>}
+                                    <a onClick={() => deleteEvaluation(evaluation._id)} style={{border:0, background:"transparent", color:"red"}} class="table-link">
                                         <span class="fa-stack">
                                           <i class="fa fa-square fa-stack-2x"></i>
                                           <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                                         </span>
                                     </a>
-                                    {connectedUser.type==="user" &&
-                                    <a onClick={() => props.updateStatus(evaluation._id)} style={{border:0, background:"transparent", color:"black"}} class="table-link">
+                                    {connectedUser.type!=="admin" &&
+                                    <a onClick={() => updateStatus(evaluation._id)} style={{border:0, background:"transparent", color:"black"}} class="table-link">
                                         <span class="fa-stack">
                                             <i class="fa fa-square fa-stack-2x"></i>
-                                            {evaluation.public===true &&
-                                            <i class="fa fa-lock fa-stack-1x fa-inverse"></i>}
                                             {evaluation.public===false &&
+                                            <i class="fa fa-lock fa-stack-1x fa-inverse"></i>}
+                                            {evaluation.public===true &&
                                             <i class="fa fa-unlock fa-stack-1x fa-inverse"></i>}
                                         </span>
                                     </a>}
@@ -55,9 +62,9 @@ export default function Evaluation(props){
                                     <a style={{border:0, background:"transparent", color:"black"}} class="table-link">
                                         <span class="fa-stack">
                                             <i class="fa fa-square fa-stack-2x"></i>
-                                            {evaluation.public===true &&
-                                            <i class="fa fa-lock fa-stack-1x fa-inverse"></i>}
                                             {evaluation.public===false &&
+                                            <i class="fa fa-lock fa-stack-1x fa-inverse"></i>}
+                                            {evaluation.public===true &&
                                             <i class="fa fa-unlock fa-stack-1x fa-inverse"></i>}
                                         </span>
                                     </a>}

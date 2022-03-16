@@ -9,8 +9,6 @@ const Signup = React.lazy(() => import('./components/user/signup'));
 const Signin = React.lazy(() => import('./components/user/signin'));
 const Profile = React.lazy(() => import('./components/user/profile'));
 const Evaluations = React.lazy(() => import('./components/evaluation/evaluations'));
-const AddEvaluation = React.lazy(() => import('./components/evaluation/addEvaluation'));
-const UpdateEvaluation = React.lazy(() => import('./components/evaluation/updateEvaluation'));
 
 
 function App() {
@@ -27,8 +25,6 @@ function App() {
             <Route path='/signin' render={props => <Signin {...props} />}></Route>
             <Route path='/profile' render={props => <Profile {...props} />}></Route>
             <Route path="/evaluations" render={(props) => <Evaluations {...props} />}></Route>
-            <Route path="/addEvaluation" render={(props) => <AddEvaluation {...props} />}></Route>
-            <Route path="/updateEvaluation/:id" render={(props) => <UpdateEvaluation {...props} />}></Route>
           </Switch>
         </Suspense>
       </BrowserRouter>

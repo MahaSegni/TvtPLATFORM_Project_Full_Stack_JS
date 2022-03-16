@@ -4,7 +4,7 @@ import { queryApi } from "../../utils/queryApi";
 import { useHistory,useParams } from "react-router-dom";
 
 
-export default function UpdateEvaluation(props){
+export default function UpdateEvaluation({props, update, idU, reload}){
  /* let fileName;
   console.log(req.file) ;
   if (req.file !== null) {
@@ -12,8 +12,8 @@ export default function UpdateEvaluation(props){
  
   file !== null ? "assets/uploads/evaluation" + fileName : ""
   */
-  let { id }= useParams();
-  console.log(id)
+  let id = idU;
+  console.log(idU)
   let myCurrentDate = new Date();
   const history = useHistory();
 
@@ -60,7 +60,8 @@ export default function UpdateEvaluation(props){
         },
         body: JSON.stringify(evaluation) })
           //const [result,err] = await queryApi('evaluation/update',evaluation,"POST",false);
-          history.push('/evaluations')
+          reload();
+          update(false)
        }
        
        const {title,date,image}= evaluation;
@@ -88,6 +89,7 @@ export default function UpdateEvaluation(props){
             </FormField>
         </FormGroup>
         <button class="btn btn-template">Save</button>
+        <button class="btn btn-cancel-template mt-2" onClick={()=> update(false)}>Cancel</button>
     </Form>
   </Wrapper>
 
@@ -99,7 +101,6 @@ const FormButton = styled.button`
   background: ${(props) => (props.primary ? "palevioletred" : "white")
   };
   color: #5FCF80;
-
   font-size: 1.5em;
   margin: 1em;
   padding: 0.25em 1em;

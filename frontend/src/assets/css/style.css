@@ -14,14 +14,27 @@
   opacity: 0.8;
   color: white;
   transition: 0.3s;
-
 }
 .btn-template:hover{
   opacity: 1;
   color: white;
   border-radius: 20px;
   transition: 0.3s;
+}
 
+.btn-cancel-template{
+  background:  white;
+  opacity: 0.8;
+  color: #5fcf80;
+  transition: 0.3s;
+  border:1px solid #5fcf80 !important;
+}
+
+.btn-cancel-template:hover{
+  opacity: 1;
+  color: #5fcf80;
+  border-radius: 20px;
+  transition: 0.3s;
 }
 
 body {

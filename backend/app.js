@@ -4,7 +4,7 @@ require('./Model/dbConfig')
 const userRoutes=require('./routes/userRoutes')
 const interestPointRoutes=require('./routes/interestPointRoutes')
 const evaluationRoutes=require('./routes/evaluationRoutes')
-
+const uploadRoutes=require('./routes/uploadRoutes')
 const cors = require('cors');
 
 const bodyParser=require("body-parser")
@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use('/api/user',userRoutes);
 app.use('/api/interestpoint',interestPointRoutes);
 app.use('/api/evaluation',evaluationRoutes);
-
+app.use('/api/upload',uploadRoutes);
 
 
 

@@ -1,10 +1,13 @@
 const EvaluationModel = require('../Model/Evaluation');
+const ModuleModel = require('../Model/Module' );
 
-module.exports.getEvaluation = (req, res) => {
-  EvaluationModel.find((err, docs) => {
-    if (!err) res.send(docs);
-    else console.log("Error to get data : " + err);
-  }).sort({ createdAt: -1 });
+module.exports.getEvaluation = async (req, res) => {
+  const idModule=req.params.idModule;
+  if(req.params.idModule!=="null"){
+  ev=await EvaluationModel.find({refmodule: idModule});
+   }
+  else{ ev=await EvaluationModel.find(); }
+  res.send(ev)
 };
 
 module.exports.getEvaluationById = (req, res) => {
@@ -15,13 +18,18 @@ module.exports.getEvaluationById = (req, res) => {
 };
 
   module.exports.addEvaluation = async (req, res) => {
-    new EvaluationModel({
+  let m= await ModuleModel.findById(req.params.idModule);
+  console.log("ok",m)
+  new EvaluationModel({
       title: req.body.title,
       image: req.body.image,
       public: false,
       date: new Date(),
       lastEdit: new Date(),
+      refmodule:m._id,
+      nomModule: m.label
     }).save();
+   res.send("ok")
   };
 
   module.exports.updateEvaluation = async (req, res, next) => {
@@ -73,14 +81,11 @@ module.exports.getEvaluationById = (req, res) => {
     return res.send(f);
   };
 
-  
-
   module.exports.deleteEvaluation = (req, res) => {
     console.log("ok")
     EvaluationModel.findByIdAndRemove(req.params.id, (err, docs) => {
        if (!err) res.send(docs);
        else console.log("Delete error : " + err);
-  
       //res.redirect('/api/evaluation/get')
     });
   };

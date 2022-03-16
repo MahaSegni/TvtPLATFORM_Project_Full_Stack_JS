@@ -2,19 +2,14 @@ import styled from "styled-components";
 import { useState } from 'react';
 import { queryApi } from "../../utils/queryApi";
 import { useHistory } from "react-router-dom";
+import axios from 'axios';
 
-export default function AddEvaluation(props){
- 
+export default function AddEvaluation({props, add, reload}){
+  var fileName = ""; 
   let myCurrentDate = new Date();
-  
+  let idModule="622e1c68ecacff8056ddbc18"
   const history = useHistory();
- /* let fileName;
-  console.log(req.file) ;
-  if (req.file !== null) {
-  fileName = Math.floor(Math.random()* Date.now())  + ".jpg";
- 
-  file !== null ? "assets/uploads/evaluation" + fileName : ""
-  */
+
  
 
        const[formData,setFormData] = useState({
@@ -22,28 +17,39 @@ export default function AddEvaluation(props){
             date:myCurrentDate.toDateString(),
             image:"",
        }) 
-       const[FormDataimage,setFormDataimage] = useState({
-       image:"",
-   }) 
-       const [errors,setErrors] = useState({visbile:false,message:""});
+      
+  
+     const [errors,setErrors] = useState({visbile:false,message:""});
        const onChange = (e) => {
            setFormData({...formData,[e.target.name]:e.target.value})
        }
-       const onChangeFile = (e) => {
-        //fileName ="../../assets/uploads/evaluation"+ Math.floor(Math.random()* Date.now())  + ".jpg";
-        //setFormData({...formData,image:fileName})
-       // setFormDataimage({...FormDataimage,image:e.target.files[0]})
-       }
+       const onChangeFile =async (e) => {
+        fileName=  Date.now() +  ".png";
+         setFormData({...formData,image:fileName})
+
+       
+    
+        }
        const onSubmit = async (e) =>{
-        console.log(myCurrentDate.toDateString())
-          e.preventDefault();
-          history.push('/evaluations')
-          const [result,err] = await queryApi('evaluation/add',formData,"POST",false);
-          //console.log(formData);  
+        e.preventDefault();
+
+      
+        /*if(formData.image!=""){
+        var formDataimage=new FormData();
+        formDataimage.append('file',e.target.image.files[0])
+        formDataimage.append('filename',formData.image)
+      console.log(formDataimage.get('file'))
+          
+        await queryApi('upload/evaluation',formDataimage,"POST",false);
+      }*/
+       
+          const [result,err] = await queryApi('evaluation/add/'+ idModule,formData,"POST",false);
+          reload();
+         add(false);
        }
        
        const {title,date,image}= formData;
-       const {}= FormDataimage;
+;
    return (
             <Wrapper>
               <h1 class="logo mx-auto" style={{ textAlign: "center", color: "#5fcf80" }}>Add evaluation</h1>

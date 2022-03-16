@@ -25,8 +25,6 @@ var Evaluationquestion = new Schema({
       }
     ],
   }
-
-
 });
 
 module.exports = mongoose.model('evaluationquestion', Evaluationquestion);

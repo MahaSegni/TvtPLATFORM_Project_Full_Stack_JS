@@ -7,25 +7,36 @@ import { render } from "@testing-library/react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
+import AddEvaluation  from "./addEvaluation";
+import UpdateEvaluation from "./updateEvaluation";
 
 const Evaluations = (props) => {
+  var idModule="null";
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [add, setAdd] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [idUpdate, setIdUpdate] = useState();
+
   let connectedUser = useSelector(selectConnectedUser)
-  console.log(connectedUser.type)
 
-  const [evaluations, err, reloadEv] = useApi('evaluation/get', null, 'GET', false,);
 
+  if(connectedUser.type!=="admin"){
+    idModule="622e1c68ecacff8056ddbc18";
+  }
+  const [evaluations, err, reloadEv] =  useApi('evaluation/get/'+idModule, null, 'GET', false);
+   //console.log(evaluations)
   const deleteEvaluation = async (id) => {
     const [,err] = await queryApi('evaluation/delete/'+id,null,"GET", false);
-    reloadEv();
+    reloadEv()
 }
 
   async function updateStatus (id) {
     console.log(id);
     const [, err] = await queryApi('evaluation/updateStatus/'+id, null, 'POST', false);
-  reloadEv();
+    reloadEv();
 }
+
 
   /*useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/evaluation/get`, { method: 'GET', })
@@ -43,11 +54,12 @@ const Evaluations = (props) => {
       )
   }, [])*/
 
-    return (
+  return add == true ? (<AddEvaluation add={setAdd} reload={reloadEv}/>):
+  update == true ?(<UpdateEvaluation idU={idUpdate} update={setUpdate} reload={reloadEv}/>):(
       <>
         <Footer>
         {connectedUser.type!=="admin" &&
-          <Button onClick={() => props.history.push("/addEvaluation")}>Add Evaluation</Button>
+          <Button onClick={() => setAdd(true)}>Add Evaluation</Button>
         }
         </Footer>
       {evaluations && 
@@ -58,11 +70,13 @@ const Evaluations = (props) => {
                 <tbody>
                   {
                     evaluations.map((evaluation, index) => (
-                      <Evaluation evaluation={evaluation}
-                        key={index}
+                      <Evaluation ev={evaluation}
+                      key={index}
                       deleteEvaluation={deleteEvaluation}
                       updateStatus={updateStatus}
-                      >
+                      idUpdate={setIdUpdate}
+                      update={setUpdate}
+                    >
                       </Evaluation>
                     ))
                   }
@@ -74,8 +88,6 @@ const Evaluations = (props) => {
         }                
         </>
     );
- 
-
 }
 
 export default Evaluations;
