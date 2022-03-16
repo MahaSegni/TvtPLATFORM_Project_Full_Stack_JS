@@ -13,6 +13,6 @@ router.patch('/unlike-cours/:id', coursRoutes.unlikeCours);
 router.get('/getModuleowner/:id',coursRoutes.findOwner);
 router.post('/:id/addComment',coursRoutes.createComment);
 router.patch('/:id/deleteComment', coursRoutes.deleteComment);
-
+router.patch('/:id/UpdateComment', coursRoutes.UpdateComment);
 
 module.exports=router;

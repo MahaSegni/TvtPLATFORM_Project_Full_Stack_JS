@@ -85,7 +85,7 @@ module.exports.update = (req, res) => {
     const updatedRecord = {};
 
   if(req.body.texte!=null){
-  updatedRecord["text"]=req.body.text;
+  updatedRecord["texte"]=req.body.texte;
   }
   if(req.body.title!=null){
   updatedRecord["title"]=req.body.title;
@@ -197,4 +197,21 @@ module.exports.deleteComment = async (req, res) => {
       }
     );
     
+};
+
+module.exports.UpdateComment = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+  return res.status(400).send("ID unknown : " + req.params.id);
+  CoursModel.findById(req.params.id, (err, docs) => {
+    const comment = docs.comments.find((comment) =>
+      comment._id.equals(req.body.id)
+    );
+
+    if (!comment) return res.status(404).send("Comment not found");
+    comment.texte = req.body.texte; 
+    docs.save((err) => {
+      if (!err) return res.status(200).send(docs);
+      return res.status(500).send(err);
+    });
+  });
 };

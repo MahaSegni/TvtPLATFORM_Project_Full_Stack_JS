@@ -1,12 +1,13 @@
 import { Route, useParams } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import CoursfrontCard from "./CoursfrontCard";
-import AjouterCour from "./AjouterCommentaire";
+import AjouterCour from "./AjouterCours";
 import { Card } from "react-bootstrap";
 
 import { useSelector } from 'react-redux';
 import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
 import { queryApi } from "../../utils/queryApi";
+import CourList from "./CourList";
 const Coursfront = () => {
     var connectedUser= useSelector(selectConnectedUser)
 
@@ -84,13 +85,26 @@ const Coursfront = () => {
     else {
 
         return (
+            
              
-            <div class="row my-4">
+            <div class="row my-4 mx-auto" style={{width:"90%" }}>
+               
                 <div class="col-4">
-                    
+                <div class="main-card mb-3 card">
+<div class="card-body">
+    <h5 class="card-title text-center">Course Timeline</h5>
+    <div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+    {cours.map((refcour, index) => (
+
+<CourList refcour={refcour} key={index}></CourList>
+
+
+
+)).reverse()}
+                    </div></div></div>
                 </div>
 
-                <div class="col-7">
+                <div class="col ">
                     
                    {owner.id==connectedUser._id && connectedUser.type!="disconnected"&& 
                     <AjouterCour idmodule={idModule} onChildClick={clickAlert} ></AjouterCour>

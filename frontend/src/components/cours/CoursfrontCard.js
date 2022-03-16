@@ -10,15 +10,52 @@ import { queryApi } from "../../utils/queryApi";
 import { useApi } from "../../utils/useApi";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 import PostComment from "./PostComment";
 import CardComment from "./CardComment";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import EditCour from "./EditCour";
+
 const CoursfrontCard = (props) => {
   const [showComments,setShowComments]=useState(false);
   var connectedUser = useSelector(selectConnectedUser)
   const [cour, err, reloadCours] = useApi('cours/find/' + props.refcour, null, 'GET', false);
+  const[editCOur,setEditCour]=useState(false);
   let { idModule } = useParams();
+  async function confirmDelete(id){
+    confirmAlert({
+      title: 'Confirm to Delete',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => Delete(id)
+        },
+        {
+          label: 'No',
+          onClick: () => {
+
+          }
+        }
+      ]
+    });
+  } 
+  async function submitEditCour(data,ckeditordata){
+     console.log("submitEditorCour")
+     console.log(cour._id,data.title,ckeditordata)
+    const [, err] =  await queryApi('cours/update/'+ cour._id,{
+        title:data.title,
+        texte:ckeditordata
+    }
+   , 'PUT', false);
+   setEditCour(false)
+   reloadCours();
+
+   }
+ 
   async function Delete(id){
 
     const [, err] = await queryApi('cours/delete/' + idModule +'/'+id, null
@@ -51,10 +88,10 @@ const CoursfrontCard = (props) => {
       , 'POST', false);
   
     reloadCours();
+    setShowComments(true)
 
    }
    async function CommentDelete(id){
-    console.log("try to delete "+ id);
     const [, err] = await queryApi('cours/'+ props.refcour+'/deleteComment', {
       id:id
     }
@@ -62,10 +99,31 @@ const CoursfrontCard = (props) => {
   
     reloadCours();
    }
+   async function CommentUpdate(texte,id){
+    const [, err] = await queryApi('cours/'+ props.refcour+'/UpdateComment', {
+      id:id,
+      texte:texte
+    }
+      , 'PATCH', false);
+  
+    
+    console.log("try to update "+ id + texte);
+  
+    reloadCours();
+   }
     return (
       
-      <div class="post-content">
-       {cour && 
+      <div>
+       {cour && editCOur==true &&
+       <div>
+      
+       <EditCour titlecour={cour.title} textecour={cour.texte} onEditCour={submitEditCour} onCloseEdit={()=>setEditCour(false)}></EditCour>
+       </div>
+      }
+      {cour && editCOur==false&&
+      
+        <div class="post-content" id={cour._id}>
+      
         <div class="post-container">
           <img src={require("../../assets/uploads/user/" + props.owner.image)} alt="user" class="profile-photo-md pull-left" />
           <div class="post-detail">
@@ -76,7 +134,11 @@ const CoursfrontCard = (props) => {
             
             <div class="reaction">
               {connectedUser.id==props.owner._id&&
-              <a onClick={()=>Delete(cour._id)}> <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon> </a>
+              <a onClick={()=>  setEditCour(true)  }> <FontAwesomeIcon icon={faGear}></FontAwesomeIcon> </a>
+              
+            } {connectedUser.id==props.owner._id&&
+              <a onClick={()=>confirmDelete(cour._id)}> <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon> </a>
+              
             }
               {cour.likers.includes(connectedUser.id) && connectedUser.type!="disconnected"&&connectedUser.id!=props.owner._id&&
                 <a onClick={() => unlike(cour._id)} class="btn text-green"><i class="fa fa-thumbs-up"></i> {cour.likers.length}</a>
@@ -110,7 +172,7 @@ const CoursfrontCard = (props) => {
             
                         cour.comments.map((comment, index) => (
 
-                            <CardComment comment={comment} onCommentDelete={CommentDelete}
+                            <CardComment comment={comment} onCommentDelete={CommentDelete} onCommentUpdate={CommentUpdate}
                                 key={index}
                             //deleteProduct={deleteEvaluation}
                             >
@@ -124,8 +186,10 @@ const CoursfrontCard = (props) => {
            <PostComment onCommentClick={clickAlert2}/>
 
           </div>
-        </div>}
+        </div>
       </div>
+    }
+    </div>
 
     );
 
