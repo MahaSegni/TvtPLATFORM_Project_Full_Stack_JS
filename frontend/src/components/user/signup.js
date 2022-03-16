@@ -39,6 +39,10 @@ export default function Signup(props) {
 
     const validate = (values) => {
         const errors = {};
+        const isContainsUppercase = /^(?=.*[A-Z])/;
+        const isContainsLowercase = /^(?=.*[a-z])/;
+        const isContainsNumber = /^(?=.*[0-9])/;
+        const isValidLength = /^.{8,16}$/;
         let err = false;
         if (!values.name) {
             errors.name = "Name is required";
@@ -52,12 +56,8 @@ export default function Signup(props) {
             errors.email = "Email is required";
             err = true;
         }
-        if (!values.birthDate) {
-            errors.birthDate = "Birthdate is required";
-            err = true;
-        }
-        if (!values.phone) {
-            errors.phone = "Phone Number is required";
+        if ((!isContainsUppercase.test(values.password))||(!isContainsLowercase.test(values.password))||(!isContainsNumber.test(values.password))||(!isValidLength.test(values.password))) {
+            errors.password =  "Password must contain betwwen 8 and 16 characters and at least 1 Upper Case character, 1 Lower Case character, 1 number";
             err = true;
         }
         if (!values.password) {

@@ -1,11 +1,14 @@
 //ONLY FOR TEST
 
 //Fonction bech t ajouti user 
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.REACT_APP_TVT_PLATFORM_GOOGLE_CLIENT_ID)
 require('dotenv').config()
 const multer = require('multer')
-const upload = multer({dest: 'D:/PiMern/Project_Full_Stack_JS/frontend/src/assets/uploads/user'})
+const upload = multer({ dest: 'D:/PiMern/Project_Full_Stack_JS/frontend/src/assets/uploads/user' })
 var nodemailer = require('nodemailer');
 const UserModel = require('../Model/User');
+const ModuleModel = require('../Model/Module');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var transporter = nodemailer.createTransport({
@@ -15,6 +18,16 @@ var transporter = nodemailer.createTransport({
         pass: 'tvtplatformforpi'
     }
 });
+
+const checkIfGoogle = async (email) => {
+    await UserModel.findOne({ email: email }, async (err, result) => {
+            if (result.typeUser == "googleUser"){
+                return true;
+            }else{
+                return false;
+            }
+    }).clone()
+}
 
 module.exports.checkMail = async (req, res) => {
     try {
@@ -82,15 +95,19 @@ module.exports.signIn = async (req, res) => {
     try {
         UserModel.findOne({ email: req.body.email }, async (err, user) => {
             if (user) {
-                let auth = await bcrypt.compare(req.body.password, user.password);
-                if (auth) {
-                    let uForJwt = { id: user._id }
-                    user.state = 1
-                    user.token = jwt.sign(uForJwt, process.env.ACCESS_TOKEN_SECRET);
-                    user.save()
-                    res.status(200).send(user)
-                } else {
-                    res.send('Incorrect password');
+                if(user.password){
+                    let auth = await bcrypt.compare(req.body.password, user.password);
+                    if (auth) {
+                        let uForJwt = { id: user._id }
+                        user.state = 1
+                        user.token = jwt.sign(uForJwt, process.env.ACCESS_TOKEN_SECRET);
+                        user.save()
+                        res.status(200).send(user)
+                    } else {
+                        res.send('Incorrect password');
+                    }
+                }else {
+                    res.send('You are Trying to connect with a google account');
                 }
             }
             else {
@@ -154,13 +171,16 @@ module.exports.removeUserCoursePreferences = async (req, res) => {
 
 module.exports.updateUser = async (req, res) => {
     try {
-        UserModel.findById(req.body.id, (err, user) => {
+        UserModel.findById(req.body.id, async (err, user) => {
             if ((req.headers['authorization'] == user.token) && (user.state == 1)) {
                 user.name = req.body.name
                 user.lastName = req.body.lastname
                 user.birthDate = req.body.birthDate
                 user.phone = req.body.phone
-                user.save()
+                await user.save()
+                if(user.typeUser == "googleUser"){
+                    user.typeUser = "user"
+                }
                 res.status(200).send(user)
             } else {
                 res.status(401).send('failed')
@@ -176,7 +196,9 @@ module.exports.forgetPassword = async (req, res) => {
         UserModel.findOne({ email: req.body.email }, async (err, user) => {
             bcrypt.hash(req.body.password, 10, function (err, hash) {
                 user.password = hash
-
+                if(checkIfGoogle(user.email)){
+                    user.typeUser= "user"
+                }
                 user.save()
                 res.send('success')
             });
@@ -271,6 +293,18 @@ module.exports.deleteUser = async (req, res) => {
             if ((req.headers['authorization'] == user.token) && (user.state == 1)) {
                 let auth = await bcrypt.compare(req.body.currentPassword, user.password);
                 if (auth) {
+                    await ModuleModel.find({idowner : user.id},(error,modules) => {
+                        modules.forEach((e)=> {
+                            UserModel.updateMany({refmodules : e._id},{
+                                $pull: { refmodules: e._id },
+                            },(err,result)=> {
+                                if(err){
+                                    res.send('failed')
+                                }
+                            })
+                            e.remove()
+                        })
+                    }).clone()
                     user.remove()
                     res.send('success')
                 }
@@ -322,9 +356,9 @@ module.exports.updateUserCoursePreferences = async (req, res) => {
     }
 }
 
-module.exports.uploadPicture = async (req,res) => {
-    try{
-        UserModel.findById(req.params.id,(err,user)=>{
+module.exports.uploadPicture = async (req, res) => {
+    try {
+        UserModel.findById(req.params.id, (err, user) => {
             if ((req.headers['authorization'] == user.token) && (user.state == 1)) {
                 user.image = req.file.filename
                 user.save()
@@ -333,8 +367,88 @@ module.exports.uploadPicture = async (req,res) => {
                 res.status(401).send('failed')
             }
         })
-    }catch(err){
+    } catch (err) {
         console.log(err)
+    }
+}
+
+
+
+module.exports.googleLogin = async (req, res) => {
+
+    const { token } = req.body
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.CLIENT_ID,
+    });
+    const googleUser = { given_name, family_name, email, picture } = ticket.getPayload();
+    await UserModel.findOne({ email: googleUser.email }, async (err, result) => {
+        if (result) {
+            let uForJwt = { id: result._id }
+            result.state = 1
+            result.token = jwt.sign(uForJwt, process.env.ACCESS_TOKEN_SECRET);
+            await result.save()
+            result.typeUser = "user"
+            res.send(result)
+        } else {
+
+            let uForJwt = { id: googleUser.email }
+            let user = new UserModel(
+                {
+                    name: googleUser.given_name,
+                    lastName: googleUser.family_name,
+                    email: googleUser.email,
+                    image: googleUser.picture,
+                    typeUser: "googleUser",
+                    state: 1,
+                    token: jwt.sign(uForJwt, process.env.ACCESS_TOKEN_SECRET)
+                })
+            await user.save()
+            user.typeUser = "user"
+            user.phone = ""
+            user.birthDate = ""
+            res.send(user)
+        }
+    }).clone()
+
+}
+
+
+module.exports.getModulesByOwner = async (req,res) => {
+    try{    
+        UserModel.findById(req.params.id, async (err, user) => {
+            if ((req.headers['authorization'] == user.token) && (user.state == 1)) {
+                await ModuleModel.find({idowner : req.params.id},(errM,modules)=>{
+                    res.send(modules);
+                }).clone()
+            }else {
+                res.status(401).send('failed')
+            }
+        })
+
+    }catch(err){
+        res.send(err)
+    }
+}
+
+module.exports.getModulesBySubscriber = async (req,res) => {
+    try{    
+        const userModules = [];
+        UserModel.findById(req.params.id, async (err, user) => {
+            if ((req.headers['authorization'] == user.token) && (user.state == 1)) {
+                for (let i in user.refmodules) {
+                    let result = await ModuleModel.findOne({ _id: user.refmodules[i] })
+                    userModules.push(result)
+                    
+                }
+                res.status(200).send(userModules)
+            }else {
+                res.status(401).send('failed')
+            }
+        })
+
+    }catch(err){
+        res.send(err)
     }
 }
 

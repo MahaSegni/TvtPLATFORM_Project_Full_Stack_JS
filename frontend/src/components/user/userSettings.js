@@ -82,7 +82,7 @@ export default function UserSettings({ closeModal }) {
         else if (codeForEmail.value == codeForEmail.enteredValue) {
             const [result, err2] = await queryApi('user/changeEmailAction', formEmail, "PUT", false, connectedUser.token)
             if (result != "failed") {
-                let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token }
+                let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token,connectionType: connectedUser.connectionType, pictureType: connectedUser.pictureType }
                 dispatch(chnageConenctedUser(userResult))
                 closeModal(false)
             }
@@ -115,9 +115,9 @@ export default function UserSettings({ closeModal }) {
             setErrorDeleteDisplay(result)
         }
         else if (result == "success") {
-            console.log(result)
-            dispatch(chnageConenctedUser({ type: "disconnected" }))
             history.push('/signin')
+            dispatch(chnageConenctedUser({ type: "disconnected" }))
+
         }
     }
 
@@ -151,16 +151,25 @@ export default function UserSettings({ closeModal }) {
                 console.log(result)
                 setcodeForEmail({ ...codeForEmail, sent: true, value: result })
             }
-        }else {
+        } else {
             setErrorEmailDisplay("An account with this email address already exists")
         }
     }
 
     const validate = (values) => {
         const errors = {};
+        const isContainsUppercase = /^(?=.*[A-Z])/;
+        const isContainsLowercase = /^(?=.*[a-z])/;
+        const isContainsNumber = /^(?=.*[0-9])/;
+        const isValidLength = /^.{8,16}$/;
         let err = false;
+        
         if (!values.currentPassword) {
             errors.currentPassword = "Your current Password is required";
+            err = true;
+        }
+        if ((!isContainsUppercase.test(values.newPassword))||(!isContainsLowercase.test(values.newPassword))||(!isContainsNumber.test(values.newPassword))||(!isValidLength.test(values.newPassword))) {
+            errors.newPassword =  "Password must contain betwwen 8 and 16 characters and at least 1 Upper Case character, 1 Lower Case character, 1 number";
             err = true;
         }
         if (!values.newPassword) {
@@ -198,129 +207,142 @@ export default function UserSettings({ closeModal }) {
                 <div className="title">
                     <h1>User Settings</h1>
                 </div>
-                <div id="accordion" style={{ display: "block" }}>
-                    <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h5 class="mb-0">
-                                <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Password Settings
-                                </button>
-                            </h5>
-                        </div>
+                {connectedUser.connectionType == "default" &&
+                    <>
+                        <div id="accordion" style={{ display: "block" }}>
 
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="card-body">
-                                <div className="body">
-                                    <form class="w-75 mx-auto" onSubmit={onSubmitPassword}>
-                                        <div class="form-group">
-                                            <label for="currentPassword" style={{ float: "left" }}><h5>Current Password : </h5></label>
-                                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" value={formPassword.currentPassword} placeholder="Enter Password" onChange={(e) => onChangePassword(e)} />
-                                        </div>
-                                        <h5 style={{ color: "red" }}>{secondFormErrors.currentPassword}</h5>
-
-                                        <div class="form-group">
-                                            <label for="newPassword" style={{ float: "left" }}><h5>New Password</h5></label>
-                                            <input type="password" class="form-control" id="newPassword" name="newPassword" value={formPassword.newPassword} placeholder="Enter Password" onChange={(e) => onChangePassword(e)} />
-                                        </div>
-                                        <h5 style={{ color: "red" }}>{secondFormErrors.newPassword}</h5>
-
-                                        <div class="form-group">
-                                            <label for="passwordConfirmation" style={{ float: "left" }}><h5>Confirm Password</h5></label>
-                                            <input type="password" class="form-control" id="passwordConfirmation" name="passwordConfirmation" value={formPassword.passwordConfirmation} placeholder="Confirm your Password" onChange={(e) => onChangePassword(e)} />
-                                        </div>
-                                        <h5 style={{ color: "red" }}>{secondFormErrors.passwordConfirmation}</h5>
-                                        <h5 style={{ textAlign: "center", color: "red" }}>{errorDisplay}</h5>
-                                        <div className="mt-5">
-                                            <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
-                                            <button type="submit" className="btn get-started-btn" >Continue</button>
-                                        </div>
-                                    </form >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingTwo">
-                            <h5 class="mb-0">
-                                <button class="btn collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Email Settings
-                                </button>
-                            </h5>
-                        </div>
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                            <div class="card-body">
-                                <div className="body">
-
-                                    {!codeForEmail.sent &&
-                                        <form class="w-75 mx-auto" onSubmit={onSubmitEmail}>
-
-                                            <div class="form-group">
-                                                <label for="email" style={{ float: "left" }}><h5>New Email : </h5></label>
-                                                <input type="text" class="form-control" id="email" name="email" value={formEmail.email} placeholder="Enter Your new Email address" onChange={(e) => onChangeEmail(e)} />
-                                            </div>
-                                            <h5 style={{ color: "red" }}>{emailFormErrors.email}</h5>
-                                            <div class="form-group">
-                                                <label for="currentPassword" style={{ float: "left" }}><h5>Current Password : </h5></label>
-                                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" value={formEmail.currentPassword} placeholder="Enter Password" onChange={(e) => onChangeEmail(e)} />
-                                            </div>
-                                            <h5 style={{ color: "red" }}>{emailFormErrors.currentPassword}</h5>
-                                            <h5 style={{ textAlign: "center", color: "red" }}>{errorEmailDisplay}</h5>
-                                            <div className="mt-5">
-                                                <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
-                                                <button type="submit" className="btn get-started-btn" >Continue</button>
-                                            </div>
-
-                                        </form >
-                                    }
-
-                                    {codeForEmail.sent &&
-                                        <form class="w-75 mx-auto" onSubmit={codeVerification}>
-                                            <h4>A verification code was sent to you new email address</h4>
-                                            <div class="form-group">
-                                                <label for="enteredValue" style={{ float: "left" }}><h5>Verification Code : </h5></label>
-                                                <input type="text" class="form-control" id="enteredValue" name="enteredValue" value={codeForEmail.enteredValue} placeholder="Enter Your Verification code" onChange={(e) => onChangeCE(e)} />
-
-                                            </div>
-                                            <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{codeForEmail.error}</h5>
-                                            <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
-                                            <button type="submit" className="btn get-started-btn">Continue</button>
-                                        </form>
-
-                                    }
+                            <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <h5 class="mb-0">
+                                        <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Password Settings
+                                        </button>
+                                    </h5>
                                 </div>
 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingThree">
-                            <h5 class="mb-0">
-                                <button class="btn collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Account deletion
-                                </button>
-                            </h5>
-                        </div>
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                            <div class="card-body">
-                                <div className="body">
-                                    <form class="w-75 mx-auto" onSubmit={onSubmitDelete}>
-                                        <div class="form-group">
-                                            <label for="currentPassword" style={{ float: "left" }}><h5>Current Password : </h5></label>
-                                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" value={formDelete.currentPassword} placeholder="Enter Password" onChange={(e) => onChangeDelete(e)} />
+                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div className="body">
+                                            <form class="w-75 mx-auto" onSubmit={onSubmitPassword}>
+                                                <div class="form-group">
+                                                    <label for="currentPassword" style={{ float: "left" }}><h5>Current Password : </h5></label>
+                                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" value={formPassword.currentPassword} placeholder="Enter Password" onChange={(e) => onChangePassword(e)} />
+                                                </div>
+                                                <h5 style={{ color: "red" }}>{secondFormErrors.currentPassword}</h5>
+
+                                                <div class="form-group">
+                                                    <label for="newPassword" style={{ float: "left" }}><h5>New Password</h5></label>
+                                                    <input type="password" class="form-control" id="newPassword" name="newPassword" value={formPassword.newPassword} placeholder="Enter Password" onChange={(e) => onChangePassword(e)} />
+                                                </div>
+                                                <h5 style={{ color: "red" }}>{secondFormErrors.newPassword}</h5>
+
+                                                <div class="form-group">
+                                                    <label for="passwordConfirmation" style={{ float: "left" }}><h5>Confirm Password</h5></label>
+                                                    <input type="password" class="form-control" id="passwordConfirmation" name="passwordConfirmation" value={formPassword.passwordConfirmation} placeholder="Confirm your Password" onChange={(e) => onChangePassword(e)} />
+                                                </div>
+                                                <h5 style={{ color: "red" }}>{secondFormErrors.passwordConfirmation}</h5>
+                                                <h5 style={{ textAlign: "center", color: "red" }}>{errorDisplay}</h5>
+                                                <div className="mt-5">
+                                                    <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
+                                                    <button type="submit" className="btn get-started-btn" >Continue</button>
+                                                </div>
+                                            </form >
                                         </div>
-                                        <h5 style={{ color: "red" }}>{deleteFormErrors.currentPassword}</h5>
-                                        <h5 style={{ textAlign: "center", color: "red" }}>{errorDeletelDisplay}</h5>
-                                        <div className="mt-5">
-                                            <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
-                                            <button type="submit" className="btn get-started-btn" >Continue</button>
-                                        </div>
-                                    </form >
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h5 class="mb-0">
+                                        <button class="btn collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            Email Settings
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div className="body">
 
+                                            {!codeForEmail.sent &&
+                                                <form class="w-75 mx-auto" onSubmit={onSubmitEmail}>
+
+                                                    <div class="form-group">
+                                                        <label for="email" style={{ float: "left" }}><h5>New Email : </h5></label>
+                                                        <input type="text" class="form-control" id="email" name="email" value={formEmail.email} placeholder="Enter Your new Email address" onChange={(e) => onChangeEmail(e)} />
+                                                    </div>
+                                                    <h5 style={{ color: "red" }}>{emailFormErrors.email}</h5>
+                                                    <div class="form-group">
+                                                        <label for="currentPassword" style={{ float: "left" }}><h5>Current Password : </h5></label>
+                                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" value={formEmail.currentPassword} placeholder="Enter Password" onChange={(e) => onChangeEmail(e)} />
+                                                    </div>
+                                                    <h5 style={{ color: "red" }}>{emailFormErrors.currentPassword}</h5>
+                                                    <h5 style={{ textAlign: "center", color: "red" }}>{errorEmailDisplay}</h5>
+                                                    <div className="mt-5">
+                                                        <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
+                                                        <button type="submit" className="btn get-started-btn" >Continue</button>
+                                                    </div>
+
+                                                </form >
+                                            }
+
+                                            {codeForEmail.sent &&
+                                                <form class="w-75 mx-auto" onSubmit={codeVerification}>
+                                                    <h4>A verification code was sent to you new email address</h4>
+                                                    <div class="form-group">
+                                                        <label for="enteredValue" style={{ float: "left" }}><h5>Verification Code : </h5></label>
+                                                        <input type="text" class="form-control" id="enteredValue" name="enteredValue" value={codeForEmail.enteredValue} placeholder="Enter Your Verification code" onChange={(e) => onChangeCE(e)} />
+
+                                                    </div>
+                                                    <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{codeForEmail.error}</h5>
+                                                    <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
+                                                    <button type="submit" className="btn get-started-btn">Continue</button>
+                                                </form>
+
+                                            }
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header" id="headingThree">
+                                    <h5 class="mb-0">
+                                        <button class="btn collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                            Account deletion
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div className="body">
+                                            <form class="w-75 mx-auto" onSubmit={onSubmitDelete}>
+                                                <div class="form-group">
+                                                    <label for="currentPassword" style={{ float: "left" }}><h5>Current Password : </h5></label>
+                                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" value={formDelete.currentPassword} placeholder="Enter Password" onChange={(e) => onChangeDelete(e)} />
+                                                </div>
+                                                <h5 style={{ color: "red" }}>{deleteFormErrors.currentPassword}</h5>
+                                                <h5 style={{ textAlign: "center", color: "red" }}>{errorDeletelDisplay}</h5>
+                                                <div className="mt-5">
+                                                    <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
+                                                    <button type="submit" className="btn get-started-btn" >Continue</button>
+                                                </div>
+                                            </form >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </>}
+                {connectedUser.connectionType == "google" &&
+                    <div className="alert alert-danger my-3" role="alert">
+                        Sorry you log in using your google account and for security reasons this page is only accessible by accounts that log in with their email and password, 
+                        if you have already added a password to your account please connect through the signin form to get access to this page, 
+                        otherwise you can add a password to your account by disconnecting and clicking on Forget Password, a verification code will be sent to your email address, add it and create a password, 
+                        You can continue to connect using your google account even if you added a password, you can login with two ways.
+                    </div>
+                }
             </div>
         </div>
     )

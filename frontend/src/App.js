@@ -9,6 +9,7 @@ const Signup = React.lazy(() => import('./components/user/signup'));
 const Signin = React.lazy(() => import('./components/user/signin'));
 const Profile = React.lazy(() => import('./components/user/profile'));
 const ForgetPassword = React.lazy(() => import('./components/user/forgetPassword'));
+const Library = React.lazy(() => import('./components/user/library'));
 function App() {
 
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path='/signin' render={props => <Signin {...props} />}></Route>
             <Route path='/profile' render={props => <Profile {...props} />}></Route>
             <Route path='/forgetPassword' render={props => <ForgetPassword {...props} />}></Route>
+            <Route path='/library' render={props => <Library {...props} />}></Route>
           </Switch>
         </Suspense>
       </BrowserRouter>

@@ -1384,3 +1384,7 @@ section {
 #uploadPhotoBtn{
 position: absolute;
 }
+
+body{
+  overflow-x:hidden;
+}

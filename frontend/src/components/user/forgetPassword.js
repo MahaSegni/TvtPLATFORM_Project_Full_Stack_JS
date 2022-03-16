@@ -31,12 +31,19 @@ export default function ForgetPassword() {
                 console.log(err)
             } else {
                 if (result == true) {
-                    const [result, err2] = await queryApi('user/sendMail/' + formEmail.email, null, "GET", false)
-                    if (err2) {
-                        console.log(err2)
-                    } else {
-                        setcodeForEmail({ ...codeForEmail, sent: true, value: result })
-                    }
+                   /* const [resultGoogleCheck, err] = await queryApi('user/checkIfGoogle/' + formEmail.email, null, "GET", false)
+                    if (resultGoogleCheck == false) 
+                    {*/
+                        const [result, err2] = await queryApi('user/sendMail/' + formEmail.email, null, "GET", false)
+                        if (err2) {
+                            console.log(err2)
+                        } else {
+                            setcodeForEmail({ ...codeForEmail, sent: true, value: result })
+                        }
+
+                   /* }else{
+                        setFormEmail({ ...formEmail, error: "You are Trying to connect with a google account" })
+                    }*/
                 }
                 else {
                     setFormEmail({ ...formEmail, error: "Mail does not exist" })
@@ -59,7 +66,7 @@ export default function ForgetPassword() {
         }
         else if (codeForEmail.value == codeForEmail.enteredValue) {
             setcodeForEmail({ ...codeForEmail, changePassDisplay: true })
-            setFormPass({...formPass, email : formEmail.email})
+            setFormPass({ ...formPass, email: formEmail.email })
         } else {
             setcodeForEmail({ ...codeForEmail, error: "Incorrect verification code" })
         }
@@ -70,8 +77,12 @@ export default function ForgetPassword() {
 
     const changePass = async (e) => {
         e.preventDefault()
-        if (formPass.password == "") {
-            setFormPass({ ...formPass, passwordError: "Enter a new password" })
+        const isContainsUppercase = /^(?=.*[A-Z])/;
+        const isContainsLowercase = /^(?=.*[a-z])/;
+        const isContainsNumber = /^(?=.*[0-9])/;
+        const isValidLength = /^.{8,16}$/;
+        if ((formPass.password == "")||(!isContainsUppercase.test(formPass.password))||(!isContainsLowercase.test(formPass.password))||(!isContainsNumber.test(formPass.password))||(!isValidLength.test(formPass.password))) {
+            setFormPass({ ...formPass, passwordError: "Password must contain betwwen 8 and 16 characters and at least 1 Upper Case character, 1 Lower Case character, 1 number" })
             return;
         }
         else if (formPass.confirmp != formPass.password) {
@@ -80,7 +91,7 @@ export default function ForgetPassword() {
         }
         else {
             const [res, err] = await queryApi('user/forgetPassword/', formPass, 'PUT', false);
-            if(res == 'success'){
+            if (res == 'success') {
                 history.push('/signin')
             }
         }

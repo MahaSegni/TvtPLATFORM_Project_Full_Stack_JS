@@ -14,6 +14,7 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 export default function Profile(props) {
 
@@ -109,8 +110,11 @@ export default function Profile(props) {
             reloadUserCPs();
         }
     }
-    function closeUpdateCP() {
+    const closeUpdateCP = () => {
         setUpdateCP({ ...addCP, inputDisplay: false, cp: "" })
+    }
+    const toLibrary = async () => {
+        history.push('/library')
     }
     return openModal == true ? (<UpdateUser closeModal={setOpenModal} />) :
         openPasswordModal == true ? (<UserSettings closeModal={setOpenPasswordModal} />) : (
@@ -125,8 +129,13 @@ export default function Profile(props) {
 
                                             <div className="d-flex flex-column align-items-center text-center">
                                                 <div>
-                                                    <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="Admin" className="rounded-circle"
+                                                    {connectedUser.pictureType == "external" &&
+                                                        <img src={connectedUser.image} className="rounded-circle"
+                                                            width="300"></img>
+                                                    }
+                                                    {connectedUser.pictureType == "internal" && <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="Admin" className="rounded-circle"
                                                         width="300" />
+                                                    }
                                                 </div>
                                                 <div className="mt-3">
                                                     <h4>{connectedUser.name} {connectedUser.lastName} </h4>
@@ -161,7 +170,11 @@ export default function Profile(props) {
                                                     <h6 className="mb-0">Birth date</h6>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    {connectedUser.birthDate.substring(0, 10)}
+                                                    {connectedUser.birthDate != null &&
+                                                        <>
+                                                            {connectedUser.birthDate.substring(0, 10)}
+                                                        </>
+                                                    }
                                                 </div>
                                             </div>
                                             <hr />
@@ -193,21 +206,10 @@ export default function Profile(props) {
                                                     setOpenPasswordModal(true)
                                                 }}><FontAwesomeIcon icon={faGear}></FontAwesomeIcon></button>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-12 my-3">
-                                    <div className="card mb-3">
-                                        <div className="mx-auto my-auto">
-                                            <h3 className="my-3">My Library</h3>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="row">
-                                                <div className="col-sm-12">
-                                                    <p>To do later</p>
-                                                    <p>To do later</p>
-                                                    <p>To do later</p>
-                                                </div>
+                                            <div className="mx-auto" style={{ float: "right" }}>
+                                                <button type="submit" className="btn get-started-btn" onClick={() => {
+                                                    toLibrary()
+                                                }}><FontAwesomeIcon icon={faBook}></FontAwesomeIcon></button>
                                             </div>
                                         </div>
                                     </div>

@@ -27,4 +27,8 @@ router.post("/deleteUser",userController.deleteUser);
 router.get("/sendMail/:email",userController.sendMail);
 router.put("/forgetPassword",userController.forgetPassword);
 router.put("/uploadPicture/:id",upload.single('image'),userController.uploadPicture);
+router.post("/googleLogin",userController.googleLogin);
+//router.get("/checkIfGoogle/:email",userController.checkIfGoogle);
+router.get("/getModulesByOwner/:id",userController.getModulesByOwner);
+router.get("/getModulesBySubscriber/:id",userController.getModulesBySubscriber);
 module.exports=router;
