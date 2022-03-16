@@ -52,7 +52,7 @@ export default function AddEvaluation({props, add, reload}){
 ;
    return (
             <Wrapper>
-              <h1 class="logo mx-auto" style={{ textAlign: "center", color: "#5fcf80" }}>Add evaluation</h1>
+              <h1 class="logo mx-auto " style={{ textAlign: "center", color: "#5fcf80" }}>Add evaluation</h1>
               <Form class="w-50 mx-auto" onSubmit={onSubmit}>
                   <div class="form-group">
                       {errors.visbile && <FormError>{errors.message}</FormError>}
@@ -73,6 +73,7 @@ export default function AddEvaluation({props, add, reload}){
                       </FormField>
                   </FormGroup>
                   <button class="btn btn-template">Save</button>
+                  <button class="btn btn-cancel-template mt-2" onClick={()=> add(false)}>Cancel</button>
               </Form>
             </Wrapper>
    );

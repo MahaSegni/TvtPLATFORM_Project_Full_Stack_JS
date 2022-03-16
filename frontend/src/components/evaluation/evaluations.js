@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import AddEvaluation  from "./addEvaluation";
 import UpdateEvaluation from "./updateEvaluation";
+import Questions from "./question/questions";
 
 const Evaluations = (props) => {
   var idModule="null";
@@ -16,7 +17,10 @@ const Evaluations = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [add, setAdd] = useState(false);
   const [update, setUpdate] = useState(false);
-  const [idUpdate, setIdUpdate] = useState();
+  const [consult, setConsult] = useState(false);
+  const [evaluationq, setEvaluationq] = useState();
+  const [idev, setIdev] = useState();
+ 
 
   let connectedUser = useSelector(selectConnectedUser)
 
@@ -24,7 +28,12 @@ const Evaluations = (props) => {
   if(connectedUser.type!=="admin"){
     idModule="622e1c68ecacff8056ddbc18";
   }
-  const [evaluations, err, reloadEv] =  useApi('evaluation/get/'+idModule, null, 'GET', false);
+  const [evaluations, err, reloadEv] =  useApi('evaluation/get/'+ connectedUser.id+'/'+ idModule, null, 'GET', false);
+  const [owner=null, errOwner, reloadOwner] =  useApi('evaluation/getOwner/'+ connectedUser.id +'/' +idModule , null, 'GET', false);
+
+
+
+
    //console.log(evaluations)
   const deleteEvaluation = async (id) => {
     const [,err] = await queryApi('evaluation/delete/'+id,null,"GET", false);
@@ -54,15 +63,19 @@ const Evaluations = (props) => {
       )
   }, [])*/
 
-  return add == true ? (<AddEvaluation add={setAdd} reload={reloadEv}/>):
-  update == true ?(<UpdateEvaluation idU={idUpdate} update={setUpdate} reload={reloadEv}/>):(
+  return owner!==null && consult == true ? (<Questions evq={evaluationq} owner={owner} idev={idev}  consult={setConsult}/>):
+   add == true ? (<AddEvaluation add={setAdd} reload={reloadEv}/>):
+  update == true ?(<UpdateEvaluation idU={idev} update={setUpdate} reload={reloadEv}/>):
+   (
       <>
-        <Footer>
-        {connectedUser.type!=="admin" &&
-          <Button onClick={() => setAdd(true)}>Add Evaluation</Button>
+           {owner==true &&
+          <Button  style={{marginLeft:"77.8%"}} onClick={() => setAdd(true)}>Add Evaluation</Button>
         }
-        </Footer>
-      {evaluations && 
+        
+      
+       
+      {evaluations  && owner!==null &&
+       
         <div class="container">
           <div class="row">
             <div class="table-responsive">
@@ -74,8 +87,11 @@ const Evaluations = (props) => {
                       key={index}
                       deleteEvaluation={deleteEvaluation}
                       updateStatus={updateStatus}
-                      idUpdate={setIdUpdate}
+                      id={setIdev}
                       update={setUpdate}
+                      consult={setConsult}
+                      owner={owner}
+                      evq={setEvaluationq}
                     >
                       </Evaluation>
                     ))

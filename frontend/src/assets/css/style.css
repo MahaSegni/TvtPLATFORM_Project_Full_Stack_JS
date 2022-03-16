@@ -11,7 +11,6 @@
 
 .btn-template{
   background: #5fcf80;
-  opacity: 0.8;
   color: white;
   transition: 0.3s;
 }
@@ -23,16 +22,16 @@
 }
 
 .btn-cancel-template{
-  background:  white;
+  background:  red;
   opacity: 0.8;
-  color: #5fcf80;
+  color:white;
   transition: 0.3s;
-  border:1px solid #5fcf80 !important;
+  border:1px solid red !important;
 }
 
 .btn-cancel-template:hover{
   opacity: 1;
-  color: #5fcf80;
+  color:white;
   border-radius: 20px;
   transition: 0.3s;
 }

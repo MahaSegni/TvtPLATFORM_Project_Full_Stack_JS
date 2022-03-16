@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Module = new Schema({
-    idwoner : {
+    idowner : {
         type:String
     },
     label : {

@@ -2,15 +2,16 @@ import styled from "styled-components";
 import { useState } from 'react';
 import { queryApi } from "../../utils/queryApi";
 import { useHistory } from "react-router-dom";
-import "./evaluations.css";
+import "../../assets/css/evaluations.css"
 import {format} from "date-fns";
 import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 
-export default function Evaluation({props, idUpdate, update, ev, deleteEvaluation, updateStatus}){
+export default function Evaluation({props, id, update, ev, deleteEvaluation, updateStatus, consult ,owner, evq}){
   const history = useHistory();
   const [evaluation, setEvaluation] = useState(ev);
   let connectedUser = useSelector(selectConnectedUser)
+ 
 
   return (
     
@@ -28,27 +29,35 @@ export default function Evaluation({props, idUpdate, update, ev, deleteEvaluatio
                                     <a href="#"><span style={{color:"black"}}>Last edit </span> {evaluation.lastEdit.substring(0, 10)}</a>
                                 </td>
                                 <td style={{width: "20%"}}>
-                                    {connectedUser.type!=="admin" && evaluation.public===false &&
-                                    <a onClick={() => {update(true); idUpdate(evaluation._id)}} style={{border:0, background:"transparent", color:"#5FCF80"}} class="table-link">
+                                    {owner==true && evaluation.public==false &&
+                                    <a onClick={() => {update(true); id(evaluation._id)}} style={{border:0, background:"transparent", color:"#5FCF80"}} class="table-link">
                                         <span class="fa-stack">
                                             <i class="fa fa-square fa-stack-2x"></i>
                                             <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                         </span>
                                     </a>}
-                                    {connectedUser.type!=="admin" && evaluation.public===true &&
+                                    {owner==true && evaluation.public==true &&
                                     <a  style={{border:0, background:"transparent", color:"#5FCF80", opacity:0.6}} class="table-link">
                                         <span class="fa-stack">
                                             <i class="fa fa-square fa-stack-2x"></i>
                                             <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                         </span>
                                     </a>}
+                                    {owner==true && 
                                     <a onClick={() => deleteEvaluation(evaluation._id)} style={{border:0, background:"transparent", color:"red"}} class="table-link">
                                         <span class="fa-stack">
                                           <i class="fa fa-square fa-stack-2x"></i>
                                           <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                                         </span>
-                                    </a>
-                                    {connectedUser.type!=="admin" &&
+                                    </a>}
+                                    {connectedUser.type==="admin" &&
+                                    <a onClick={() => deleteEvaluation(evaluation._id)} style={{border:0, background:"transparent", color:"red"}} class="table-link">
+                                        <span class="fa-stack">
+                                          <i class="fa fa-square fa-stack-2x"></i>
+                                          <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>}
+                                    {owner==true &&
                                     <a onClick={() => updateStatus(evaluation._id)} style={{border:0, background:"transparent", color:"black"}} class="table-link">
                                         <span class="fa-stack">
                                             <i class="fa fa-square fa-stack-2x"></i>
@@ -68,7 +77,7 @@ export default function Evaluation({props, idUpdate, update, ev, deleteEvaluatio
                                             <i class="fa fa-unlock fa-stack-1x fa-inverse"></i>}
                                         </span>
                                     </a>}
-                                    <a class="btn btn-sm pull-right btn-template" >
+                                    <a onClick={() => {consult(true); id(evaluation._id); evq(evaluation) }} class="btn btn-sm pull-right btn-template" >
                                         Consulter 
                                     </a>
                                 </td>

@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var Evaluationquestion = new Schema({
 
-  texte: {
+  text: {
     type: String
   },
   image: {
@@ -17,8 +17,7 @@ var Evaluationquestion = new Schema({
     type: [
       {
         responsesId:String,
-        texte: String,
-        image: String,
+        text: String,
         value: Number,
         refsubmitters:[String]
 
