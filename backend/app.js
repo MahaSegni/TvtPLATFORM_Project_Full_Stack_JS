@@ -4,6 +4,7 @@ require('./Model/dbConfig')
 const userRoutes=require('./routes/userRoutes')
 const interestPointRoutes=require('./routes/interestPointRoutes')
 const evaluationRoutes=require('./routes/evaluationRoutes')
+const evquestionRoutes=require('./routes/evaluationquestionRoutes')
 const uploadRoutes=require('./routes/uploadRoutes')
 const cors = require('cors');
 
@@ -28,6 +29,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use('/api/user',userRoutes);
 app.use('/api/interestpoint',interestPointRoutes);
 app.use('/api/evaluation',evaluationRoutes);
+app.use('/api/evquestion',evquestionRoutes);
 app.use('/api/upload',uploadRoutes);
 
 

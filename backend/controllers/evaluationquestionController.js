@@ -1,97 +1,88 @@
-const EvaluationquestionModel = require('../Model/Evaluationquestion');
+const EvaluationModel = require('../Model/Evaluation');
+const ModuleModel = require('../Model/Module');
+const QuestionModel = require('../Model/Evaluationquestion');
 
-/*module.exports.getEvaluation = (req, res) => {
-    EvaluationModel.find((err, docs) => {
-      if (!err) res.send(docs);
-      else console.log("Error to get data : " + err);
-    }).sort({ createdAt: -1 });
-  };
-  
-  module.exports.addEvaluation = async (req, res) => {
-    let fileName;
-  
-    if (req.file !== null) {
-      try {
-        if (
-          req.file.detectedMimeType != "image/jpg" &&
-          req.file.detectedMimeType != "image/png" &&
-          req.file.detectedMimeType != "image/jpeg"
-        )
-          throw Error("invalid file");
-  
-        if (req.file.size > 500000) throw Error("max size");
-      } catch (err) {
-        const errors = uploadErrors(err);
-        return res.status(201).json({ errors });
-      }
-      fileName = Math.floor(Math.random()* Date.now()) + Date.now() + ".jpg";
-  
-      await pipeline(
-        req.file.stream,
-        fs.createWriteStream(
-          `${__dirname}/../public/uploads/evaluation/${fileName}`
-        )
-      );
-    }
-  
-    const newEvaluation = new EvaluationModel({
-      title: req.body.title,
-      image: req.file !== null ? "./uploads/evaluation/" + fileName : "",
-      date: today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(),
-      refquestions: [],
-      refmodule: [],
-    });
-  
-    try {
-      const evaluation = await newEvaluation.save();
-      return res.status(201).json(post);
-    } catch (err) {
-      return res.status(400).send(err);
-    }
-  };
-  
 
-  module.exports.updateEvaluation= async (req,res)=>{
-    let fileName;
-  
-    if (req.file !== null) {
-      try {
-        if (
-          req.file.detectedMimeType != "image/jpg" &&
-          req.file.detectedMimeType != "image/png" &&
-          req.file.detectedMimeType != "image/jpeg"
-        )
-          throw Error("invalid file");
-  
-        if (req.file.size > 500000) throw Error("max size");
-      } catch (err) {
-        const errors = uploadErrors(err);
-        return res.status(201).json({ errors });
-      }
-      fileName = Math.floor(Math.random()* Date.now()) + Date.now() + ".jpg";
-  
-      await pipeline(
-        req.file.stream,
-        fs.createWriteStream(
-          `${__dirname}/../public/uploads/evaluation/${fileName}`
-        )
-      );
+module.exports.addEvaluationQuestion = async (req, res) => {
+  let e = await EvaluationModel.findById(req.params.idev);
+  let type=req.body.type;
+
+  let rep1= "Very satisfied";
+  let rep2= "Satisfied";
+  let rep3= "Neutral";
+  let rep4= "Dissatisfied";
+  let rep5= "Very dissatisfied";
+ 
+  if(type=="importance"){
+    rep1= "Strongly important";
+    rep2= "Important";
+    rep3= "Neutral";
+    rep4= "Not important";
+    rep5= "Not important at all";
+  }
+  if(type=="agreement"){
+    rep1= "Strongly agree";
+    rep2= "Agree";
+    rep3= "Neutral";
+    rep4= "Disagree";
+    rep5= "Strongly disagree";
+  }
+  if(type=="utility"){
+    rep1= "Very useful";
+    rep2= "Useful";
+    rep3= "Neutral";
+    rep4= "Not useful";
+    rep5= "Not useful at all";
+  }
+
+  let q= await new QuestionModel({
+    text: req.body.text,
+    responseType: type
+  }).save();
+
+  e.refquestions.push(q.id);
+  e.save();
+
+  QuestionModel.findByIdAndUpdate(
+    q._id,
+    {
+        responses:[ {
+          text: rep1,
+          value:5,
+        }, 
+        {
+          text: rep2,
+          value:4,
+        },
+        {
+          text: rep3,
+          value:3,
+        },
+        {
+          text: rep4,
+          value:2,
+        },
+        {
+          text:rep5,
+          value:1,
+        },
+      ]
+    },
+    { new: true },
+    (err, docs) => {
+      if (!err) return res.send(docs);
+      else return res.status(400).send(err);
     }
-  
-    let id=req.body.id;
-    Contact.findById({_id:id}, (err,doc)=>{
-        doc.title= req.body.title;
-        doc.image= req.file !== null ? "./uploads/evaluation/" + fileName : "",
-        doc.save();
-    })
+  )
 };
-  
-  module.exports.deleteEvaluation = (req, res) => {
-    if (!ObjectID.isValid(req.params.id))
-      return res.status(400).send("ID unknown : " + req.params.id);
-  
-    EvaluationModel.findByIdAndRemove(req.params.id, (err, docs) => {
-      if (!err) res.send(docs);
-      else console.log("Delete error : " + err);
-    });
-  };*/
+
+module.exports.getQuestions = async (req, res) => {
+  let idev = req.params.idev;
+  let questions=[]
+  ev=await EvaluationModel.findById(idev)
+  for(let i in ev.refquestions){
+    q=await QuestionModel.findById(ev.refquestions[i]);
+    questions.push(q);
+  }
+  res.send(questions);
+};

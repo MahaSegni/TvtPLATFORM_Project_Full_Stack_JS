@@ -7,9 +7,6 @@ var Evaluationquestion = new Schema({
   text: {
     type: String
   },
-  image: {
-    type: String
-  },
   responseType: {
     type: String
   },
@@ -20,7 +17,6 @@ var Evaluationquestion = new Schema({
         text: String,
         value: Number,
         refsubmitters:[String]
-
       }
     ],
   }

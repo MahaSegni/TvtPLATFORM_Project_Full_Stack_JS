@@ -67,16 +67,6 @@ export default function Evaluation({props, id, update, ev, deleteEvaluation, upd
                                             <i class="fa fa-unlock fa-stack-1x fa-inverse"></i>}
                                         </span>
                                     </a>}
-                                    {connectedUser.type==="admin" &&
-                                    <a style={{border:0, background:"transparent", color:"black"}} class="table-link">
-                                        <span class="fa-stack">
-                                            <i class="fa fa-square fa-stack-2x"></i>
-                                            {evaluation.public===false &&
-                                            <i class="fa fa-lock fa-stack-1x fa-inverse"></i>}
-                                            {evaluation.public===true &&
-                                            <i class="fa fa-unlock fa-stack-1x fa-inverse"></i>}
-                                        </span>
-                                    </a>}
                                     <a onClick={() => {consult(true); id(evaluation._id); evq(evaluation) }} class="btn btn-sm pull-right btn-template" >
                                         Consulter 
                                     </a>

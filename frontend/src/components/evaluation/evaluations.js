@@ -29,7 +29,7 @@ const Evaluations = (props) => {
     idModule="622e1c68ecacff8056ddbc18";
   }
   const [evaluations, err, reloadEv] =  useApi('evaluation/get/'+ connectedUser.id+'/'+ idModule, null, 'GET', false);
-  const [owner=null, errOwner, reloadOwner] =  useApi('evaluation/getOwner/'+ connectedUser.id +'/' +idModule , null, 'GET', false);
+  const [owner, errOwner, reloadOwner] =  useApi('evaluation/getOwner/'+ connectedUser.id +'/' +idModule , null, 'GET', false);
 
 
 
@@ -45,7 +45,7 @@ const Evaluations = (props) => {
     const [, err] = await queryApi('evaluation/updateStatus/'+id, null, 'POST', false);
     reloadEv();
 }
-
+console.log(owner)
 
   /*useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/evaluation/get`, { method: 'GET', })
@@ -63,7 +63,7 @@ const Evaluations = (props) => {
       )
   }, [])*/
 
-  return owner!==null && consult == true ? (<Questions evq={evaluationq} owner={owner} idev={idev}  consult={setConsult}/>):
+  return owner!==null && consult == true ? (<Questions evq={evaluationq} owner={owner} consult={setConsult}/>):
    add == true ? (<AddEvaluation add={setAdd} reload={reloadEv}/>):
   update == true ?(<UpdateEvaluation idU={idev} update={setUpdate} reload={reloadEv}/>):
    (
@@ -74,7 +74,7 @@ const Evaluations = (props) => {
         
       
        
-      {evaluations  && owner!==null &&
+      {evaluations  && owner!=null &&
        
         <div class="container">
           <div class="row">
