@@ -49,7 +49,8 @@ module.exports.addEvaluation = async (req, res) => {
     date: new Date(),
     lastEdit: new Date(),
     refmodule: m._id,
-    nomModule: m.label
+    nomModule: m.label,
+    containsQuestions: false
   }).save();
   res.send("ok")
 };
@@ -81,7 +82,6 @@ module.exports.updateEvaluation = async (req, res, next) => {
    }
  */
   let id = req.body._id;
-  console.log(new Date())
   EvaluationModel.findByIdAndUpdate(
     id,
     { title: req.body.title, lastEdit: new Date() },
@@ -96,7 +96,6 @@ module.exports.updateEvaluation = async (req, res, next) => {
 
 module.exports.updateStatus = async (req, res, next) => {
   let id = req.params.id;
-  console.log(id)
   const f = await EvaluationModel.findById(id);
   f.public = !f.public;
   f.save()
@@ -104,11 +103,9 @@ module.exports.updateStatus = async (req, res, next) => {
 };
 
 module.exports.deleteEvaluation = (req, res) => {
-  console.log("ok")
   EvaluationModel.findByIdAndRemove(req.params.id, (err, docs) => {
     if (!err) res.send(docs);
     else console.log("Delete error : " + err);
-    //res.redirect('/api/evaluation/get')
   });
 };
 

@@ -29,7 +29,22 @@ var Evaluation = new Schema({
     },
     public :{
         type:Boolean
-    }
+    },
+    containsQuestions:{
+        type: Boolean
+    },
+
+    submissions: {
+        type: [
+          {
+            submissionsId:String,
+            idSubmitter: String,
+            result: Number,
+          
+          }
+        ],
+      }
+   
   
 });
 

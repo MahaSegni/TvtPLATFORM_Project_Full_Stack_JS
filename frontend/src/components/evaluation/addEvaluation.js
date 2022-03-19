@@ -52,13 +52,13 @@ export default function AddEvaluation({props, add, reload}){
 ;
    return (
             <Wrapper>
-              <h1 class="logo mx-auto " style={{ textAlign: "center", color: "#5fcf80" }}>Add evaluation</h1>
-              <Form class="w-50 mx-auto" onSubmit={onSubmit}>
+              <Form class="w-50 mx-auto" onSubmit={onSubmit} style={{border: "2px solid #5FCF80" ,padding:40, borderRadius:30, width:"84%", marginBottom:15, boxShadow:"2px 2px 2px #5FCF80"}}>
+              <h4 class="logo  " style={{ textAlign: "center", color: "#5fcf80" }}>Add evaluation</h4>
                   <div class="form-group">
                       {errors.visbile && <FormError>{errors.message}</FormError>}
                   </div>
                   <div class="form-group">
-                    <input class="form-control" placeholder="Title" 
+                    <input style={{ marginTop:30 }} class="form-control" placeholder="Title" 
                             type='text'
                             name="title"
                             value={title}
@@ -72,8 +72,10 @@ export default function AddEvaluation({props, add, reload}){
                           >                   
                       </FormField>
                   </FormGroup>
-                  <button class="btn btn-template">Save</button>
-                  <button class="btn btn-cancel-template mt-2" onClick={()=> add(false)}>Cancel</button>
+                  <div className="mt-3 text-center" >
+                    <button type="submit" className="btn btn-md btn-template" style={{marginRight:"2%"}}>Save</button>
+                    <button className="btn btn-md btn-template" id="cancelBtn" type="reset" onClick={()=> add(false)}>Cancel</button>
+                  </div>
               </Form>
             </Wrapper>
    );
@@ -95,6 +97,9 @@ const Wrapper = styled.div`
  height: 100%;
  display: flex;
  flex-direction: column;
+
+
+ 
 `;
 const Title = styled.h2`
  text-transform: uppercase;

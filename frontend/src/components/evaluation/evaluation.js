@@ -40,7 +40,7 @@ export default function Evaluation({props, id, update, ev, deleteEvaluation, upd
                                     <a  style={{border:0, background:"transparent", color:"#5FCF80", opacity:0.6}} class="table-link">
                                         <span class="fa-stack">
                                             <i class="fa fa-square fa-stack-2x"></i>
-                                            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                            <i class="fa fa-pencil fa-stack-1x fa-inverse" title="You should unpublish before editing"></i>
                                         </span>
                                     </a>}
                                     {owner==true && 
@@ -57,7 +57,9 @@ export default function Evaluation({props, id, update, ev, deleteEvaluation, upd
                                           <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                                         </span>
                                     </a>}
-                                    {owner==true &&
+                                    {owner==true && 
+                                    <>
+                                    {evaluation.containsQuestions===true &&
                                     <a onClick={() => updateStatus(evaluation._id)} style={{border:0, background:"transparent", color:"black"}} class="table-link">
                                         <span class="fa-stack">
                                             <i class="fa fa-square fa-stack-2x"></i>
@@ -67,11 +69,23 @@ export default function Evaluation({props, id, update, ev, deleteEvaluation, upd
                                             <i class="fa fa-unlock fa-stack-1x fa-inverse"></i>}
                                         </span>
                                     </a>}
+                                    {evaluation.containsQuestions===false &&
+                                    <a  style={{border:0, background:"transparent", color:"black",opacity:0.4}} class="table-link" >
+                                        <span class="fa-stack">
+                                            <i class="fa fa-square fa-stack-2x"></i>
+                                            {evaluation.public===false &&
+                                            <i class="fa fa-lock fa-stack-1x fa-inverse" title="You should add at least one question to publish the evaluation"></i>}
+                                            {evaluation.public===true &&
+                                            <i class="fa fa-unlock fa-stack-1x fa-inverse"></i>}
+                                        </span>
+                                    </a>}
+                                    </>}
                                     <a onClick={() => {consult(true); id(evaluation._id); evq(evaluation) }} class="btn btn-sm pull-right btn-template" >
                                         Consulter 
                                     </a>
                                 </td>
                             </tr>
+                            
     </>
 );
 }

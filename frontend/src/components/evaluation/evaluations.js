@@ -31,9 +31,6 @@ const Evaluations = (props) => {
   const [evaluations, err, reloadEv] =  useApi('evaluation/get/'+ connectedUser.id+'/'+ idModule, null, 'GET', false);
   const [owner, errOwner, reloadOwner] =  useApi('evaluation/getOwner/'+ connectedUser.id +'/' +idModule , null, 'GET', false);
 
-
-
-
    //console.log(evaluations)
   const deleteEvaluation = async (id) => {
     const [,err] = await queryApi('evaluation/delete/'+id,null,"GET", false);
@@ -45,7 +42,7 @@ const Evaluations = (props) => {
     const [, err] = await queryApi('evaluation/updateStatus/'+id, null, 'POST', false);
     reloadEv();
 }
-console.log(owner)
+
 
   /*useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/evaluation/get`, { method: 'GET', })
@@ -63,15 +60,18 @@ console.log(owner)
       )
   }, [])*/
 
-  return owner!==null && consult == true ? (<Questions evq={evaluationq} owner={owner} consult={setConsult}/>):
-   add == true ? (<AddEvaluation add={setAdd} reload={reloadEv}/>):
+  return owner!==null && consult == true ? (<Questions evq={evaluationq} owner={owner} consult={setConsult} rlEv={reloadEv}/>):
   update == true ?(<UpdateEvaluation idU={idev} update={setUpdate} reload={reloadEv}/>):
    (
       <>
+    
+
            {owner==true &&
-          <Button  style={{marginLeft:"77.8%"}} onClick={() => setAdd(true)}>Add Evaluation</Button>
+          <Button  style={{marginLeft:"77.8%"}} onClick={() => setAdd(!add)}>Add Evaluation</Button>
         }
-        
+         {add==true &&
+         <AddEvaluation add={setAdd} reload={reloadEv}/>
+         }
       
        
       {evaluations  && owner!=null &&
