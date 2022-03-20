@@ -31,4 +31,7 @@ router.post("/googleLogin",userController.googleLogin);
 //router.get("/checkIfGoogle/:email",userController.checkIfGoogle);
 router.get("/getModulesByOwner/:id",userController.getModulesByOwner);
 router.get("/getModulesBySubscriber/:id",userController.getModulesBySubscriber);
+router.get("/allUsers/:id",userController.getAllUsers)
+router.get("/ban/:aid/:id",userController.ban)
+router.get("/unban/:aid/:id",userController.unban)
 module.exports=router;

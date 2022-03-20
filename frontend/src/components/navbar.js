@@ -33,8 +33,8 @@ export default function Navbar() {
         <h1 className="logo me-auto"><a href="index.html">TvtPlatform</a></h1>
         <nav id="navbar" className="navbar order-last order-lg-0">
           <ul>
-            <li><Link to={'/'}>Users</Link></li>
-            <li><Link to={'/'}>Interest Points</Link></li>
+            <li><Link to={'/users'}>Users</Link></li>
+            <li><Link to={'/interestpoints'}>Interest Points</Link></li>
             <li><Link to={'/'}>Modules</Link></li>
             <li><Link to={'/'}>Courses</Link></li>
             <li className="dropdown"><a>More</a>

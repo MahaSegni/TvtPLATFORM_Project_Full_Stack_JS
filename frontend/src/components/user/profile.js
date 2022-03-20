@@ -17,15 +17,22 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 export default function Profile(props) {
-
+    const history = useHistory();
     const dispatch = useDispatch();
     var connectedUser = useSelector(selectConnectedUser);
-    const history = useHistory();
+    useEffect(()=> {
+        if(connectedUser.type == "disconnected"){
+            history.push('/signin')
+        }
+    },[])
+    
+    
     const [openModal, setOpenModal] = useState(false);
     const [openPasswordModal, setOpenPasswordModal] = useState(false);
-    const [userIPs, err, reloadUserIPs] = useApi('interestpoint/userInterestPoints/' + connectedUser.id, null, 'GET', false, connectedUser.token);
-    const [userCPs, err2, reloadUserCPs] = useApi('user/coursepreferences/' + connectedUser.id, null, 'GET', false, connectedUser.token);
-    const [allIPs, err3, reloadAllIPs] = useApi('interestpoint/getAll/', null, 'GET', false);
+    
+    var [userIPs, err, reloadUserIPs] = useApi('interestpoint/userInterestPoints/' + connectedUser.id, null, 'GET', false, connectedUser.token);
+    var [userCPs, err2, reloadUserCPs] = useApi('user/coursepreferences/' + connectedUser.id, null, 'GET', false, connectedUser.token);
+    var [allIPs, err3, reloadAllIPs] = useApi('interestpoint/getAll/', null, 'GET', false);
     const [otherIPs, setOtherIPs] = useState([])
     const [addCP, setAddCP] = useState({
         id: connectedUser.id,
@@ -130,7 +137,8 @@ export default function Profile(props) {
                                             <div className="d-flex flex-column align-items-center text-center">
                                                 <div>
                                                     {connectedUser.pictureType == "external" &&
-                                                        <img src={connectedUser.image} className="rounded-circle"
+                                                     
+                                                        <img src={`${connectedUser.image}`} className="rounded-circle"
                                                             width="300"></img>
                                                     }
                                                     {connectedUser.pictureType == "internal" && <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="Admin" className="rounded-circle"

@@ -22,8 +22,7 @@ export default function Signin(props) {
     e.preventDefault()
     const [result, err] = await queryApi('user/signin', formData, "POST", false)
 
-    if ((result == 'Incorrect password') || (result == 'Incorrect email')|| (result == 'You are Trying to connect with a google account')) {
-      console.log(result)
+    if ((result == 'Incorrect password') || (result == 'Incorrect email')|| (result == 'You are Trying to connect with a google account')||(result == 'Account Banned')) {
       setErrorDisplay(result)
     } else {
       if(result.image.startsWith('https')){
@@ -50,7 +49,10 @@ export default function Signin(props) {
     }), "POST", false)
     console.log("sent")
     if(resultGoogleLogin){
-      if(resultGoogleLogin.image.startsWith('https')){
+      if(resultGoogleLogin == "Account Banned"){
+        setErrorDisplay(resultGoogleLogin)
+      }
+      else if(resultGoogleLogin.image.startsWith('https')){
         let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType : "google", pictureType : "external" }
         dispatch(chnageConenctedUser(googleUserResult))
         history.push('/')
@@ -69,11 +71,9 @@ export default function Signin(props) {
       <form class="w-50 mx-auto" onSubmit={onSubmit}>
 
         <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" onChange={(e) => onChange(e)} />
+          <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email" onChange={(e) => onChange(e)} />
         </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
+        <div class="form-group my-2">
           <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password" onChange={(e) => onChange(e)} />
         </div>
         <Link to={'/forgetPassword'}>Forget Password</Link>

@@ -7,8 +7,6 @@ import { chnageConenctedUser } from '../../Redux/slices/sessionSlice';
 import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImage } from '@fortawesome/free-solid-svg-icons';
-import { chnageConenctedUserImage } from '../../Redux/slices/sessionSlice';
-import { faX } from '@fortawesome/free-solid-svg-icons';
 export default function UpdateUser({ closeModal }) {
     const [uploadImage, setUploadImage] = useState({
         image: ""
@@ -21,7 +19,7 @@ export default function UpdateUser({ closeModal }) {
     var connectedUser = useSelector(selectConnectedUser);
     const [formErrors, setFormErrors] = useState({})
     //const [birthdate, setBirthdate] = useState(new Date(connectedUser.birthDate))
-    
+
     const [formData, setFormData] = useState({
         id: connectedUser.id,
         name: connectedUser.name,
@@ -35,12 +33,11 @@ export default function UpdateUser({ closeModal }) {
     }
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
-        console.log(formData)
+        
 
     }
 
     const onSubmit = (e) => {
-        console.log(formData.birthDate)
         e.preventDefault();
         setFormErrors(validate(formData))
 
@@ -48,6 +45,8 @@ export default function UpdateUser({ closeModal }) {
 
     const validate = (values) => {
         const errors = {};
+        var onlyNumbers = /^-?\d*\.?\d*$/
+
         let err = false;
         if (!values.name) {
             errors.name = "Name is required";
@@ -57,25 +56,34 @@ export default function UpdateUser({ closeModal }) {
             errors.lastname = "Last Name is required";
             err = true;
         }
+        if (!onlyNumbers.test(values.phone) && values.phone != null) {
+            errors.phone = "Only numbers"
+            err = true;
+        }
         if (err) {
             console.log("error")
         } else {
-            console.log("sent")
             updateUser()
         }
         return errors;
     }
     const updateUser = async () => {
-        let picChange = connectedUser.pictureType;
         if (uploadImage.image != "") {
             const [, err] = await queryApi('user/uploadPicture/' + connectedUser.id, uploadImage, "PUT", true, connectedUser.token)
-            picChange = "internal";
+            const [result, err2] = await queryApi('user/update', formData, "PUT", false, connectedUser.token)
+            if (!err2) {
+                let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: connectedUser.connectionType, pictureType: "internal" }
+                dispatch(chnageConenctedUser(userResult))
+                closeModal(false)
+            }
         }
-        const [result, err2] = await queryApi('user/update', formData, "PUT", false, connectedUser.token)
-        if (!err2) {
-            let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: connectedUser.connectionType, pictureType: picChange }
-            dispatch(chnageConenctedUser(userResult))
-            closeModal(false)
+        else {
+            const [result, err2] = await queryApi('user/update', formData, "PUT", false, connectedUser.token)
+            if (!err2) {
+                let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: connectedUser.connectionType, pictureType: connectedUser.pictureType }
+                dispatch(chnageConenctedUser(userResult))
+                closeModal(false)
+            }
         }
     }
     return (
@@ -89,25 +97,21 @@ export default function UpdateUser({ closeModal }) {
                     <div className="col-md-6">
                         <form class="w-75 mx-auto" onSubmit={onSubmit}>
                             <div class="form-group">
-                                <label for="name" style={{ float: "left" }}><h5>Name : </h5></label>
                                 <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value={formData.name} onChange={(e) => onChange(e)} />
                             </div>
                             <h5 style={{ color: "red" }}>{formErrors.name}</h5>
 
                             <div class="form-group">
-                                <label for="name" style={{ float: "left" }}><h5>Last Name : </h5></label>
                                 <input type="text" class="form-control" id="lname" name="lastname" placeholder="Enter Last Name" value={formData.lastname} onChange={(e) => onChange(e)} />
                             </div>
                             <h5 style={{ color: "red" }}>{formErrors.lastname}</h5>
 
                             <div class="form-group">
-                                <label for="name" style={{ float: "left" }}><h5>Birth Date : </h5></label>  
                                 <input type="date" class="form-control" id="bdate" name="birthDate" value={formData.birthDate} onChange={(e) => onChange(e)} />
                             </div>
                             <h5 style={{ color: "red" }}>{formErrors.birthDate}</h5>
 
                             <div class="form-group">
-                                <label for="name" style={{ float: "left" }}><h5>Phone : </h5></label>
                                 <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone Number" value={formData.phone} onChange={(e) => onChange(e)} />
                             </div>
                             <h5 style={{ color: "red" }}>{formErrors.phone}</h5>

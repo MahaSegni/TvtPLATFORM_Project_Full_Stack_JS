@@ -1,8 +1,15 @@
 import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
 import { useApi } from "../../utils/useApi"
 import { useSelector } from 'react-redux';
+import { useHistory } from "react-router-dom";
+import { useEffect } from 'react';
 export default function Library() {
-
+    const history = useHistory();
+    useEffect(()=> {
+        if(connectedUser.type == "disconnected"){
+            history.push('/signin')
+        }
+    },[])
     var connectedUser = useSelector(selectConnectedUser);
     const [ownModules, err, reloadAllModules] = useApi('user/getModulesByOwner/' + connectedUser.id, null, 'GET', false, connectedUser.token);
     const [subscribedModules, err2, reloadSubscribedModules] = useApi('user/getModulesBySubscriber/' + connectedUser.id, null, 'GET', false, connectedUser.token);

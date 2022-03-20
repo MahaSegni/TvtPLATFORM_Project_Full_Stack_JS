@@ -105,38 +105,34 @@ export default function ForgetPassword() {
             {!codeForEmail.sent &&
                 <form class="w-50 mx-auto mt-5" onSubmit={onSubmit}>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" onChange={(e) => onChange(e)} />
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email" onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ textAlign: "center", color: "red" }}>{formEmail.error}</div>
                     <button type="submit" class="ms-auto my-2 btn get-started-btn">Submit</button>
                 </form>
             }
             {codeForEmail.sent &&
-                <form class="w-50 mx-auto mt-5" onSubmit={codeVerification}>
+                <form class="w-50 mx-auto my-5" onSubmit={codeVerification}>
                     <h4>A verification code was sent to your email address</h4>
                     <div class="form-group">
-                        <label for="enteredValue" style={{ float: "left" }}><h5>Verification Code : </h5></label>
-                        <input type="text" class="form-control" id="enteredValue" name="enteredValue" value={codeForEmail.enteredValue} placeholder="Enter Your Verification code" onChange={(e) => onChangeCE(e)} />
+                        <input type="text" class="form-control" id="enteredValue" name="enteredValue" value={codeForEmail.enteredValue} placeholder="Enter your verification code" onChange={(e) => onChangeCE(e)} />
                     </div>
                     <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{codeForEmail.error}</h5>
-                    <button type="submit" className="btn get-started-btn" style={{ float: "right" }}>Continue</button>
+                    <button type="submit" className="btn get-started-btn my-2" style={{ float: "right" }}>Continue</button>
                 </form>
             }
 
             {codeForEmail.changePassDisplay == true &&
-                <form class="w-50 mx-auto mt-5" onSubmit={changePass}>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
+                <form class="w-50 mx-auto my-5" onSubmit={changePass}>
+                    <div class="form-group my-2">
                         <input type="password" class="form-control" id="exampleInputPassword1" name="password" value={formPass.password} placeholder="Enter Password" onChange={(e) => onChangePass(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formPass.passwordError}</div>
-                    <div class="form-group">
-                        <label for="confirmPassword1">Confirm Password</label>
+                    <div class="form-group my-2">
                         <input type="password" class="form-control" id="confirmPassword1" name="confirmp" value={formPass.confirmp} placeholder="Confirm your Password" onChange={(e) => onChangePass(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formPass.confirmpError}</div>
-                    <button type="submit" className="btn get-started-btn" style={{ float: "right" }}>Continue</button>
+                    <button type="submit" className="btn get-started-btn my-2" style={{ float: "right" }}>Continue</button>
                 </form>
             }
         </div>

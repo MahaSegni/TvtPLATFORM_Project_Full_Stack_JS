@@ -43,6 +43,7 @@ export default function Signup(props) {
         const isContainsLowercase = /^(?=.*[a-z])/;
         const isContainsNumber = /^(?=.*[0-9])/;
         const isValidLength = /^.{8,16}$/;
+        var onlyNumbers = /^-?\d*\.?\d*$/
         let err = false;
         if (!values.name) {
             errors.name = "Name is required";
@@ -54,6 +55,10 @@ export default function Signup(props) {
         }
         if (!values.email) {
             errors.email = "Email is required";
+            err = true;
+        }
+        if(!onlyNumbers.test(values.phone)){
+            errors.phone = "Only numbers"
             err = true;
         }
         if ((!isContainsUppercase.test(values.password))||(!isContainsLowercase.test(values.password))||(!isContainsNumber.test(values.password))||(!isValidLength.test(values.password))) {
@@ -121,42 +126,35 @@ export default function Signup(props) {
             {!codeForEmail.sent &&
                 <form class="w-50 mx-auto" onSubmit={onSubmit}>
                     <div class="form-group">
-                        <label for="name" class="me-auto">Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value={formData.name} onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formErrors.name}</div>
 
-                    <div class="form-group">
-                        <label for="lname">Last Name</label>
+                    <div class="form-group my-2">
                         <input type="text" class="form-control" id="lname" name="lastname" placeholder="Enter Last Name" value={formData.lastname} onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formErrors.lastname}</div>
 
-                    <div class="form-group">
-                        <label for="bdate">Birth Date</label>
+                    <div class="form-group my-2">
                         <input type="date" class="form-control" id="bdate" name="birthDate" value={formData.birthDate} onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formErrors.birthDate}</div>
 
-                    <div class="form-group">
-                        <label for="name" class="me-auto">Phone</label>
+                    <div class="form-group my-2">
                         <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone Number" value={formData.phone} onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formErrors.phone}</div>
 
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" name="email" value={formData.email} aria-describedby="emailHelp" placeholder="Enter email" onChange={(e) => onChange(e)} />
+                    <div class="form-group my-2">
+                        <input type="email" class="form-control" id="exampleInputEmail1" name="email" value={formData.email} aria-describedby="emailHelp" placeholder="Enter Email" onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formErrors.email}</div>
 
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
+                    <div class="form-group my-2">
                         <input type="password" class="form-control" id="exampleInputPassword1" name="password" value={formData.password} placeholder="Enter Password" onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formErrors.password}</div>
-                    <div class="form-group">
-                        <label for="confirmPassword1">Confirm Password</label>
+                    <div class="form-group my-2">
                         <input type="password" class="form-control" id="confirmPassword1" name="confirmp" value={formData.confirmp} placeholder="Confirm your Password" onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formErrors.confirmp}</div>
@@ -170,7 +168,7 @@ export default function Signup(props) {
                     <h4>A verification code was sent to your email address</h4>
                     <div class="form-group">
                         <label for="enteredValue" style={{ float: "left" }}><h5>Verification Code : </h5></label>
-                        <input type="text" class="form-control" id="enteredValue" name="enteredValue" value={codeForEmail.enteredValue} placeholder="Enter Your Verification code" onChange={(e) => onChangeCE(e)} />
+                        <input type="text" class="form-control" id="enteredValue" name="enteredValue" value={codeForEmail.enteredValue} placeholder="Enter your verification code" onChange={(e) => onChangeCE(e)} />
                     </div>
                     <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{codeForEmail.error}</h5>
                     <button type="submit" className="btn get-started-btn" style={{ float: "right" }}>Continue</button>

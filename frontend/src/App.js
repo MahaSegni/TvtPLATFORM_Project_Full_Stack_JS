@@ -10,6 +10,8 @@ const Signin = React.lazy(() => import('./components/user/signin'));
 const Profile = React.lazy(() => import('./components/user/profile'));
 const ForgetPassword = React.lazy(() => import('./components/user/forgetPassword'));
 const Library = React.lazy(() => import('./components/user/library'));
+const Users = React.lazy(() => import('./components/user/users'));
+const InterestPoints = React.lazy(() => import('./components/user/interestPoints'));
 function App() {
 
   return (
@@ -25,6 +27,8 @@ function App() {
             <Route path='/profile' render={props => <Profile {...props} />}></Route>
             <Route path='/forgetPassword' render={props => <ForgetPassword {...props} />}></Route>
             <Route path='/library' render={props => <Library {...props} />}></Route>
+            <Route path='/users' render={props => <Users {...props} />}></Route>
+            <Route path='/interestpoints' render={props => <InterestPoints {...props} />}></Route>
           </Switch>
         </Suspense>
       </BrowserRouter>
