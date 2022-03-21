@@ -9,12 +9,12 @@ const Messenger = (props) => {
         <>
       
 
-      <main class="content" style={{marginLeft:100}}>
-    <div class="container p-0">
+      <main class="content" style={{marginLeft:10}}>
+
 
 		
 
-		<div class="card">
+		<div class="card"style={{width:"115%"}}>
 			<div class="row g-0">
 				<div class="col-12 col-lg-5 col-xl-3 border-right">
 
@@ -209,7 +209,7 @@ const Messenger = (props) => {
 				</div>
 			</div>
 		</div>
-	</div>
+
 </main>
 
 

@@ -18,20 +18,20 @@ const FriendList = (props) => {
     const history = useHistory();
     let connecteduser=useSelector(selectConnectedUser)
     let idUser = useSelector(selectConnectedUser).id
-    let [Friends, err, reloadFriends] = useApi('friends/getMyFriends/' + idUser, null, 'GET', false);
+    let [Friends, err, reloadFriends] = useApi('friends/getMyFriends/' + idUser, null, 'GET', false,connecteduser.token);
     console.log(Friends)
     
     async function deleteFriend(id) {
           const [, err] = await queryApi('friends/deleteFriend/' + idUser+'/'+id,null
-             , 'get', false);
+             , 'get', false,connecteduser.token);
              reloadFriends();
        
     }
 
     return (
         <>
-<div class="container mt-3 mb-4">
-<div class="col-lg-9 mt-4 mt-lg-0">
+<div class="container mt-3 mb-4" >
+
     <div class="row">
       <div class="col-md-12">
         <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
@@ -54,14 +54,18 @@ const FriendList = (props) => {
                   </div>
                   <div class="candidate-list-details">
                     <div class="candidate-list-info">
-                      <div class="candidate-list-title">
-                        <h5 class="mb-0"><a href="#">{user.name} {user.lastName}</a></h5>
+                      <div class="candidate-list-title " >
+                        <h5 class="mb-0"><a style={{color:"black"}}  >{user.name} {user.lastName}</a></h5>
                       </div>
                       <div class="candidate-list-option">
+               
                         <ul class="list-unstyled">
-                          <li><i class="fas fa-filter pr-1"></i>Information Technology</li>
-                          <li><i class="fas fa-map-marker-alt pr-1"></i>Rolling Meadows, IL 60008</li>
-                        </ul>
+                              <label class="text-muted" >Course Preferences : </label>
+                        {user.coursepreferences &&
+                        user.coursepreferences.map((cp) => (
+                       <li style={{color:"#5fcf80" }}>&nbsp; {cp}</li>
+                     
+                          ))} </ul>
                       </div>
                     </div>
                   </div>
@@ -83,7 +87,7 @@ const FriendList = (props) => {
         </div>
       </div>
     </div>
-  </div>
+
 </div>
 
 

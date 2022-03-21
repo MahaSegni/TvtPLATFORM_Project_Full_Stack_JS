@@ -1,12 +1,16 @@
 const FriendModel = require('../Model/Friend');
 const userModel = require('../Model/User');
-
+const UserModle = require('../Model/User');
 
 
 
 module.exports.getSuggestions = async (req, res) => {
+  UserTok= await UserModle.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
   const myrequests = [];
-  let users = await userModel.find({ _id: { $ne: req.params.idUser } });
+  let users = await userModel.find({ _id: { $ne: req.params.idUser},typeUser:  { $ne: "admin"} });
   friendship = await FriendModel.find()
   const friendRequests = [];
   for (let i in friendship) {
@@ -58,25 +62,25 @@ module.exports.getSuggestions = async (req, res) => {
     }
   }
 
-  res.send(notmyfriends);
+  res.send(notmyfriends);}
 
 
 
-};
-module.exports.getAllFriends = (req, res) => {
-  FriendModel.find((err, docs) => {
-    if (!err) res.send(docs);
-    else console.log("Error to get data : " + err);
-  }).sort({ createdAt: -1 });
 };
 
 
 module.exports.getRequests = async (req, res) => {
+  UserTok= await UserModle.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
+ 
   const myrequests = [];
   let users = [];
   const friendRequests = [];
   users = await userModel.find()
   friendship = await FriendModel.find()
+  
   for (let i in friendship) {
     if (friendship[i].iduser == req.params.idUser && friendship[i].etat == false) {
       myrequests.push(friendship[i])
@@ -92,27 +96,43 @@ module.exports.getRequests = async (req, res) => {
     }
   }
 
-  res.send(friendRequests);
+  res.send(friendRequests);}
 }
 
 
 module.exports.getMyFriends = async (req, res) => {
+  UserTok= await UserModle.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
   let myfriends = [];
   let myfriendship = [];
+  
+  
   let user = await userModel.findById(req.params.idUser)
-
+  if(user.reffriends.length>0){
+  
   for (let i in user.reffriends) {
-    let result = await FriendModel.findOne({ _id: user.reffriends[i] })
-    myfriendship.push(result)
-  }
+    let result = await FriendModel.findOne({ _id: user.reffriends[i],etat:true })
+   if(result!=null){
+     myfriendship.push(result)}
+  }}
+
+  if(myfriendship.length>0){
+
   for (let i in myfriendship) {
     let result = await userModel.findOne({ _id: myfriendship[i].iduser })
     myfriends.push(result)
-  }
-  res.status(200).send(myfriends)
+  }}
+
+  res.status(200).send(myfriends)}
 }
 
 module.exports.sendRequest = async (req, res) => {
+  UserTok= await UserModle.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
   const newFriend = new FriendModel({
     iduser: req.params.idRcpt,
     type: req.body.type,
@@ -131,9 +151,14 @@ module.exports.sendRequest = async (req, res) => {
       else
         return res.status(400).send("No update here : " + req.params.idUser);
 
-    });
+    });}
 };
 module.exports.acceptRequest = async (req, res) => {
+  UserTok= await UserModle.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
+    
 
   let user = await userModel.findById(req.params.idSender)
   let reffriendssender = []
@@ -145,11 +170,11 @@ module.exports.acceptRequest = async (req, res) => {
     let friendfrombase = await FriendModel.findById(reffriendssender[i])
 
     if (friendfrombase.iduser === req.params.idUser) {
-      console.log("ok")
+
       idFriendship = friendfrombase.id
     }
   }
-  console.log(idFriendship)
+  
   const f = await FriendModel.findById(idFriendship)
   f.etat = true;
   f.save()
@@ -174,10 +199,14 @@ module.exports.acceptRequest = async (req, res) => {
       else
         return res.status(400).send("No update here : " + req.params.idUser);
 
-    });
+    });}
 };
 
 module.exports.rejectRequest = async (req, res) => {
+  UserTok= await UserModle.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
   let user = await userModel.findById(req.params.idSender)
   let reffriendssender = []
   let idFriendship;
@@ -197,10 +226,58 @@ module.exports.rejectRequest = async (req, res) => {
       res.send(docs);
     else
       console.log("Delete error : " + err);
-  }).clone;
+  }).clone;}
 
 };
 
+
+
+module.exports.deleteFriend = async (req, res) => {
+  UserTok= await UserModle.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
+  let user = await userModel.findById(req.params.idUser)
+  let reffriends = []
+  let idFriendship;
+  reffriends = user.reffriends;
+
+  for (let i in reffriends) {let fr=await FriendModel.findById(reffriends[i])
+    if (fr.iduser === req.params.idFriend) {
+      idFriendship = reffriends[i]
+      
+    }
+  }
+
+  user.reffriends.pull(idFriendship);
+  await user.save();
+
+
+
+
+  let friend = await userModel.findById(req.params.idFriend)
+  let reffriendsfriend = []
+  let idFriendshipfriend;
+  reffriendsfriend = friend.reffriends;
+  for (let i in reffriendsfriend) {
+    let fr=await FriendModel.findById(reffriendsfriend[i])
+    if ( fr.iduser === req.params.idUser) {
+      idFriendshipfriend = reffriendsfriend[i]
+    }
+  }
+  
+  friend.reffriends.pull(idFriendshipfriend);
+  await friend.save();
+
+  FriendModel.deleteMany({idFriendshipfriend,idFriendship}, function(err, result) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  });
+  }
+};
 module.exports.updateFriend = async (req, res) => {
 
   let user = await userModel.findById(req.params.idUser)
@@ -222,44 +299,36 @@ module.exports.updateFriend = async (req, res) => {
     }
   );
 };
-module.exports.deleteFriend = async (req, res) => {
-  let user = await userModel.findById(req.params.idUser)
-  let reffriends = []
-  let idFriendship;
-  reffriends = user.reffriends;
-
-  for (let i in reffriends) {let fr=await FriendModel.findById(reffriends[i])
-    if (fr.iduser === req.params.idFriend) {
-      idFriendship = reffriends[i]
-      
-    }
-  }
- 
-  user.reffriends.pull(idFriendship);
-  await user.save();
+module.exports.getAllFriends = (req, res) => {
+  FriendModel.find((err, docs) => {
+    if (!err) res.send(docs);
+    else console.log("Error to get data : " + err);
+  }).sort({ createdAt: -1 });
+};
 
 
-  FriendModel.findByIdAndRemove(idFriendship);
 
-  let friend = await userModel.findById(req.params.idFriend)
-  let reffriendsfriend = []
-  let idFriendshipfriend;
-  reffriendsfriend = friend.reffriends;
-  for (let i in reffriendsfriend) {
-    let fr=await FriendModel.findById(reffriendsfriend[i])
-    if ( fr.iduser === req.params.idUser) {
-      idFriendshipfriend = reffriendsfriend[i]
-    }
-  }
+ async  function MyFriends( idUser) 
+ {
+  let myfriends = [];
+  let myfriendship = [];
+  
+  
+  let user = await userModel.findById(idUser)
+  if(user.reffriends.length>0){
+  
+  for (let i in user.reffriends) {
+    let result = await FriendModel.findOne({ _id: user.reffriends[i],etat:true })
+   if(result!=null){
+     myfriendship.push(result)}
+  }}
 
-  friend.reffriends.pull(idFriendshipfriend);
-  await friend.save();
+  if(myfriendship.length>0){
 
-  FriendModel.findByIdAndRemove(idFriendshipfriend, (err, docs) => {
-    if (!err){
- 
-      res.send(docs);}
-    else
-      console.log("Delete error : " + err);
-  }).clone;
+  for (let i in myfriendship) {
+    let result = await userModel.findOne({ _id: myfriendship[i].iduser })
+    myfriends.push(result)
+  }}
+
+  return (myfriends)
 };

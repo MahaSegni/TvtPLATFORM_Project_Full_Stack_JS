@@ -8,14 +8,18 @@ import Suggestions from './suggestions';
 import FriendsRequests from './friendsRequests';
 import FriendList from "./friendList";
 import $ from 'jquery';
+import { useHistory } from "react-router-dom";
 import Messenger from "./messenger";
 const SocialMediaMenu = (props) => {
+       const history = useHistory();
   const [messenger, setMessenger] = useState(false);
   const [friendList, setFriendList] = useState(false);
   const [friendRequests, setFriendRequests] = useState(false);
   const [suggestions, setSuggestions] = useState(false);
   let user = useSelector(selectConnectedUser)
-  
+  if (user.id==null){
+    history.push("/signin") }
+ 
   $('a').click(function(){
     $('a.active').each(function(){
       $(this).removeClass('active');

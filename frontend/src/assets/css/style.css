@@ -11,13 +11,13 @@
 .btn-template{
   background: #5fcf80;
   opacity: 0.8;
-  color: white;
+  color: white !important;
   transition: 0.3s;
 
 }
 .btn-template:hover{
   opacity: 1;
-  color: white;
+  color: white !important;
   border-radius: 20px;
   transition: 0.3s;
 
