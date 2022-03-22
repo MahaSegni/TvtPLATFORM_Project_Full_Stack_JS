@@ -1,7 +1,7 @@
 const EvaluationModel = require('../Model/Evaluation');
 const ModuleModel = require('../Model/Module');
 const QuestionModel = require('../Model/Evaluationquestion');
-
+const UserModel = require('../Model/User');
 
 module.exports.addQuestion = async (req, res) => {
   let e = await EvaluationModel.findById(req.params.idev);
@@ -175,10 +175,9 @@ module.exports.updateQuestion = async (req, res) => {
 
 module.exports.submitEvaluation = async (req, res) => {
  let idUser= req.params.idUser
- 
+ let user= await UserModel.findById(idUser)
+ let userName=user.name+" "+user.lastName
  let s=0;
- 
- 
  
  for(let i in req.body)
  {let q= await QuestionModel.findById(req.body[i].idquestion)
@@ -200,6 +199,7 @@ module.exports.submitEvaluation = async (req, res) => {
   { $push: {
     submissions: {
       idSubmitter: idUser,
+      nameSubmitter:userName,
       result:r,
       }   }
   },

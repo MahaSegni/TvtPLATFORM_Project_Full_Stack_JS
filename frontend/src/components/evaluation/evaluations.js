@@ -8,9 +8,10 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import AddEvaluation  from "./addEvaluation";
+import EvResults  from "./question/results";
 import UpdateEvaluation from "./updateEvaluation";
 import Questions from "./question/questions";
-
+import $ from "jquery"
 const Evaluations = (props) => {
   var idModule="null";
   const [error, setError] = useState(null);
@@ -20,10 +21,19 @@ const Evaluations = (props) => {
   const [consult, setConsult] = useState(false);
   const [evaluationq, setEvaluationq] = useState();
   const [idev, setIdev] = useState();
+  const [evresults, setEvResults] = useState(false);
  
 
   let connectedUser = useSelector(selectConnectedUser)
 
+  $(document).ready(function () {
+          $("#search").on("keyup", function () {
+              var value = $(this).val().toLowerCase();
+              $("#mydiv ").filter(function () {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+              });
+          });
+     });
 
   if(connectedUser.type!=="admin"){
     idModule="622e1c68ecacff8056ddbc18";
@@ -62,24 +72,48 @@ const Evaluations = (props) => {
 
   return owner!==null && consult == true ? (<Questions evq={evaluationq} owner={owner} consult={setConsult} rlEv={reloadEv}/>):
   update == true ?(<UpdateEvaluation idU={idev} update={setUpdate} reload={reloadEv}/>):
+  evresults == true ? (<EvResults evaluations={evaluations}/>):
    (
       <>
-    
+               <div class="container mt-5">
+               {owner==true && 
+                <Button onClick={()=>{setEvResults(true)}} class="btn-template" style={{ color:"black", border:"2px solid black", marginBottom:"1%"}}><i class="fa fa-bar-chart" style={{color:"black",fontSize:"25px", paddingRight:"10"}}></i>See Results</Button>
+               }
+                <div class="row" style={{marginBottom:"2%"}}>
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body p-t-0">
+                                <div class="input-group">
+                                    <input type="text" id="search" name="example-input1-group2" class="form-control" placeholder="Search" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-effect-ripple btn-template"><i class="fa fa-search" ></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
 
-           {owner==true &&
-          <Button  style={{marginLeft:"77.8%"}} onClick={() => setAdd(!add)}>Add Evaluation</Button>
-        }
-         {add==true &&
-         <AddEvaluation add={setAdd} reload={reloadEv}/>
-         }
+           
+         
       
        
       {evaluations  && owner!=null &&
        
         <div class="container">
+          {owner==true && 
+           <label style={{marginLeft:"83%"}}>
+            <Button  onClick={() => setAdd(!add)}>Add Evaluation</Button>&nbsp;&nbsp;
+          </label>
+          
+        }
+        {add==true &&
+         <AddEvaluation add={setAdd} reload={reloadEv}/>
+         }
           <div class="row">
             <div class="table-responsive">
-              <table class="table user-list">
+              <table class="table user-list"  >
                 <tbody>
                   {
                     evaluations.map((evaluation, index) => (
@@ -117,10 +151,9 @@ const Button = styled.button`
   background: ${(props) => (props.primary ? "palevioletred" : "white")
   };
   color: #5FCF80;
-
   font-size: 1.5em;
-  margin: 1em;
   padding: 0.25em 1em;
+  margin-top:1rem;
   border: 2px solid #5FCF80;
   border-radius: 3px;
 `;

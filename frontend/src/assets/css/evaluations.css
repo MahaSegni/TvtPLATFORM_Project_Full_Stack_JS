@@ -3,9 +3,11 @@
 /* USER LIST TABLE */
 .user-list tbody td > img {
     position: relative;
-	max-width: 50px;
+	width: 70px;
+	height: 70px;
 	float: left;
 	margin-right: 15px;
+
 }
 .user-list tbody td .user-link {
 	display: block;

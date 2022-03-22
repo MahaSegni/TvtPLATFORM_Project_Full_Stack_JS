@@ -68,7 +68,8 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
   }
   const onSub=async() =>{
      const [result, err] = await queryApi('evquestion/submit/'+connectedUser.id+'/'+ evq._id , formDataSubmit, "POST", false);
-    
+     rlEv() ;
+     consult(false); 
   }
   const onSubmit= async(e) =>{
    
@@ -77,10 +78,6 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
     {if(document.getElementById(response._id).checked)
       {    setformDataSubmit(formDataSubmit=>[...formDataSubmit,  {idquestion: question._id,idrps: response._id}])}
     })})
-    
-  
-
-
   } 
 
 
@@ -279,6 +276,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
             </div>
           </div>
         </div>}
+        
        {/*  -----------------------------------------------------ConfirmationModal----------------------------------------------*/}
        <div class="modal fade" id="ConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -298,7 +296,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
       </div>
     </div>
   </div>
-</div>
+       </div>
     </>
   );
 }

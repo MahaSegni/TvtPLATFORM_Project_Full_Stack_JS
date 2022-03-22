@@ -39,6 +39,7 @@ var Evaluation = new Schema({
           {
             submissionsId:String,
             idSubmitter: String,
+            nameSubmitter: String,
             result: Number,
           
           }
