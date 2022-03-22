@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleArrowDown } from '@fortawesome/free-solid-svg-icons';
 const CourList=(props)=>{
     const [cour, err, reloadCours] = useApi('cours/find/' + props.refcour, null, 'GET', false);
- console.log(cour)
 return (
     
     <div>

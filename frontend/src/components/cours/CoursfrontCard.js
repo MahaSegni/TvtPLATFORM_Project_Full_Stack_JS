@@ -20,6 +20,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import EditCour from "./EditCour";
 
 const CoursfrontCard = (props) => {
+
   const [showComments,setShowComments]=useState(false);
   var connectedUser = useSelector(selectConnectedUser)
   const [cour, err, reloadCours] = useApi('cours/find/' + props.refcour, null, 'GET', false);
@@ -44,13 +45,11 @@ const CoursfrontCard = (props) => {
     });
   } 
   async function submitEditCour(data,ckeditordata){
-     console.log("submitEditorCour")
-     console.log(cour._id,data.title,ckeditordata)
-    const [, err] =  await queryApi('cours/update/'+ cour._id,{
+      const [, err] =  await queryApi('cours/update/'+ cour._id,{
         title:data.title,
         texte:ckeditordata
     }
-   , 'PUT', false);
+   , 'PUT', false,connectedUser.token);
    setEditCour(false)
    reloadCours();
 
@@ -59,14 +58,14 @@ const CoursfrontCard = (props) => {
   async function Delete(id){
 
     const [, err] = await queryApi('cours/delete/' + idModule +'/'+id, null
-      , 'GET', false);
+      , 'GET', false,connectedUser.token);
       reloadCours();
   }
   async function like(id) {
     const [, err] = await queryApi('cours/like-cours/' + id, {
       id: connectedUser.id
     }
-      , 'PATCH', false);
+      , 'PATCH', false,connectedUser.token);
       reloadCours();
 
   }
@@ -74,7 +73,7 @@ const CoursfrontCard = (props) => {
     const [, err] = await queryApi('cours/unlike-cours/' + id, {
       id: connectedUser.id
     }
-      , 'PATCH', false);
+      , 'PATCH', false,connectedUser.token);
       reloadCours();
 
   }
@@ -85,7 +84,7 @@ const CoursfrontCard = (props) => {
       imageUser:connectedUser.image,
       texte:data.zonetexte
     }
-      , 'POST', false);
+      , 'POST', false,connectedUser.token);
   
     reloadCours();
     setShowComments(true)
@@ -95,7 +94,7 @@ const CoursfrontCard = (props) => {
     const [, err] = await queryApi('cours/'+ props.refcour+'/deleteComment', {
       id:id
     }
-      , 'PATCH', false);
+      , 'PATCH', false,connectedUser.token);
   
     reloadCours();
    }
@@ -104,10 +103,9 @@ const CoursfrontCard = (props) => {
       id:id,
       texte:texte
     }
-      , 'PATCH', false);
+      , 'PATCH', false,connectedUser.token);
   
     
-    console.log("try to update "+ id + texte);
   
     reloadCours();
    }
@@ -168,7 +166,7 @@ const CoursfrontCard = (props) => {
             {showComments==true&& 
                               <a  style={{cursor: "pointer",color:"grey"}} onClick={()=>setShowComments(false)}>close comments <FontAwesomeIcon icon={faMinusCircle} /></a>
                             }
-            {showComments==true&&
+            {showComments==true&&connectedUser.type!="disconnected"&&
             
                         cour.comments.map((comment, index) => (
 
@@ -182,9 +180,9 @@ const CoursfrontCard = (props) => {
                         ))
                         }
 
-            
+            {connectedUser.type!="disconnected"&&
            <PostComment onCommentClick={clickAlert2}/>
-
+                      }
           </div>
         </div>
       </div>

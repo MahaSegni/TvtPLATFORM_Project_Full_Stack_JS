@@ -14,16 +14,28 @@ module.exports.createModule = async (req, res) => {
   }
 }
 module.exports.getModuleofcours=async (req, res) => {
+   User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null){
+    return res.send('authorization failed')
+  }else{
+  
   if (!ObjectID.isValid(req.params.idModule))
   return res.status(400).send("ID unknown : " + req.params.idModule);
   ModuleModel.findById(req.params.idModule,(err, docs) => {
     if (!err) res.send(docs);
     else console.log("Error to get data : " + err);
-  })
+  })}
+
+
+ 
 };
 
 
 module.exports.create = async(req,res)=>{
+  User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null){
+    return res.send('authorization failed')
+  }
   if (!ObjectID.isValid(req.params.idModule))
   return res.status(400).send("ID unknown : " + req.params.idModule);
 const{title,texte} = req.body
@@ -50,7 +62,11 @@ const cour = await newCour.save();
   
  
 
-module.exports.delete = (req, res) => {
+module.exports.delete = async (req, res) => {
+  User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null){
+    return res.send('authorization failed')
+  }
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);
 
@@ -71,7 +87,8 @@ module.exports.delete = (req, res) => {
 
 };
 
-module.exports.find = (req, res) => {
+module.exports.find =  (req, res) => {
+ 
   if (!ObjectID.isValid(req.params.id))
   return res.status(400).send("ID unknown : " + req.params.id);
   CoursModel.findById(req.params.id,(err, docs) => {
@@ -79,7 +96,11 @@ module.exports.find = (req, res) => {
     else console.log("Error to get data : " + err);
   })
 };
-module.exports.update = (req, res) => {
+module.exports.update = async (req, res) => {
+  User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null){
+    return res.send('authorization failed')
+  }
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);
     const updatedRecord = {};
@@ -106,6 +127,10 @@ module.exports.update = (req, res) => {
 };
 
 module.exports.likeCours = async (req, res) => {
+  User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null||User.id!=req.body.id){
+    return res.send('authorization failed')
+  }
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);
      CoursModel.findByIdAndUpdate(
@@ -126,6 +151,10 @@ module.exports.likeCours = async (req, res) => {
 };
 
 module.exports.unlikeCours = async (req, res) => {
+  User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null||User.id!=req.body.id){
+    return res.send('authorization failed')
+  }
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);
     CoursModel.findByIdAndUpdate(
@@ -155,6 +184,10 @@ module.exports.findOwner=async(req,res)=>
 }
 
 module.exports.createComment = async (req, res) => {
+  User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null||User.id!=req.body.ownerComment){
+    return res.send('authorization failed')
+  }
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);
      CoursModel.findByIdAndUpdate(
@@ -180,6 +213,10 @@ module.exports.createComment = async (req, res) => {
   
 };
 module.exports.deleteComment = async (req, res) => {
+  User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null){
+    return res.send('authorization failed')
+  }
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);
     CoursModel.findByIdAndUpdate(
@@ -200,6 +237,10 @@ module.exports.deleteComment = async (req, res) => {
 };
 
 module.exports.UpdateComment = async (req, res) => {
+  User= await UserModle.findOne({token :req.headers['authorization'] })
+  if(User==null){
+    return res.send('authorization failed')
+  }
   if (!ObjectID.isValid(req.params.id))
   return res.status(400).send("ID unknown : " + req.params.id);
   CoursModel.findById(req.params.id, (err, docs) => {

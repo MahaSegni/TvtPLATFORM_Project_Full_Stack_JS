@@ -4,6 +4,8 @@ require('./Model/dbConfig')
 const userRoutes=require('./routes/userRoutes')
 const interestPointRoutes=require('./routes/interestPointRoutes')
 const courRoutes = require('./routes/coursRoutes')
+const quizRoutes=require('./routes/quizRoutes');
+
 const cors = require('cors');
 
 const bodyParser=require("body-parser")
@@ -27,7 +29,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use('/api/user',userRoutes);
 app.use('/api/interestpoint',interestPointRoutes);
 app.use('/api/cours',courRoutes);
-
+app.use('/api/quiz',quizRoutes)
 
 
 app.listen(process.env.PORT,()=>{

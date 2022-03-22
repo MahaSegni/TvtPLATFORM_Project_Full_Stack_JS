@@ -8,9 +8,9 @@ import { useSelector } from 'react-redux';
 import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
 import { queryApi } from "../../utils/queryApi";
 import CourList from "./CourList";
+
 const Coursfront = () => {
     var connectedUser= useSelector(selectConnectedUser)
-
     let { idModule } = useParams();
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -19,10 +19,11 @@ const Coursfront = () => {
     const [owner,setOwner]=useState();
     const [ownerLoaded,setOwnerLoaded]=useState(false);
     const [ownerId,setOwnerId]=useState("");
-    const [addClicked,setaddClicked]=useState(false)
+    console.log(isLoaded)
     async function getData(){
         await fetch(`${process.env.REACT_APP_API_URL}/cours/getModuleofcours/${idModule}`, {
             method: 'GET',
+            headers: {authorization: connectedUser.token}
         
         })
             .then(res => res.json())
@@ -65,31 +66,34 @@ const Coursfront = () => {
          title:data.title,
          texte:ckeditordata
      }
-    , 'POST', false);
+    , 'POST', false,connectedUser.token);
     setIsLoaded(false);
     }
     useEffect(() => {
         
         getData();
-
-          
+       
                
 
     },[isLoaded])
-
+    const scrollToTop = () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth' // for smoothly scrolling
+        });
+      };
+    
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded||!ownerLoaded) {
         return <div>Loading...</div>;
     }
     else {
-
         return (
             
-             
-            <div class="row my-4 mx-auto" style={{width:"90%" }}>
-               
-                <div class="col-4">
+            <div class="row my-4 mx-auto" style={{width:"95%" }}>
+
+                <div class="col-4 me-2">
                 <div class="main-card mb-3 card">
 <div class="card-body">
     <h5 class="card-title text-center">Course Timeline</h5>
@@ -102,11 +106,26 @@ const Coursfront = () => {
 
 )).reverse()}
                     </div></div></div>
+                    {ownerId==connectedUser.id && connectedUser.type!="disconnected"&&
+                    <div>
+                     <a href={"/module/"+idModule+"/Quiz"}class="btn  col-12 btncustom mb-3">Quiz Management</a>
+                    
+                     <a class="btn  col-12 btncustom mb-3">Evaluations Management</a>
+                    
+
+                    </div>
+                    }
+                    {ownerId!=connectedUser.id && connectedUser.type!="disconnected"&&
+                    <div>
+                     <a class="btn  col-12 btncustom mb-3">Quizzes</a>
+                    </div>
+                    }
+
                 </div>
 
-                <div class="col ">
+                <div class="col-7 ms-2  ">
                     
-                   {owner.id==connectedUser._id && connectedUser.type!="disconnected"&& 
+                   {ownerId==connectedUser.id&& connectedUser.type!="disconnected"&&
                     <AjouterCour idmodule={idModule} onChildClick={clickAlert} ></AjouterCour>
                 }
                   
@@ -124,7 +143,6 @@ const Coursfront = () => {
                         )).reverse()}
                 </div>
             </div>
-
         );
 
 

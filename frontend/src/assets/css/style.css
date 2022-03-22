@@ -1392,3 +1392,15 @@ section {
   color: #fff;
   text-decoration: none;
 }
+.btncustom{
+  background: #5fcf80;
+  border: 0;
+  padding: 10px 35px;
+  color: #fff;
+  transition: 0.4s;
+}
+.btncustom:hover{
+  background: #3ac162;
+ 
+  color: #fff;
+}

@@ -49,7 +49,7 @@ return (
     
     </div>
    
-  ) :(<PostComment textedata={comment.texte} onCommentClick={commentEdit}  ></PostComment>)
+  ) :( <PostComment textedata={comment.texte} onCommentClick={commentEdit}  ></PostComment>)
   
 
 );
