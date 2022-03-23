@@ -128,7 +128,7 @@ module.exports.signOut = async (req, res) => {
         UserModel.findById({ _id: req.params.id }, (err, result) => {
             if (result) {
                 if ((req.headers['authorization'] == result.token) && (result.state != -1)) {
-                    if (result != null && result.state > 0) {
+                    if (result.state > 0) {
                         result.state = result.state - 1
                         result.save()
                     }
