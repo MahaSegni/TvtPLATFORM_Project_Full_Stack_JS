@@ -5,9 +5,9 @@ import { queryApi } from "../../utils/queryApi"
 import { chnageConenctedUser } from '../../Redux/slices/sessionSlice';
 import { Link } from "react-router-dom";
 import GoogleLogin from "react-google-login";
+import Cookies from 'js-cookie'
 export default function Signin(props) {
 
-  const[googleLoginData,setGoogleLoginData] = useState()
   const dispatch = useDispatch();
   const history = useHistory();
   const [errorDisplay, setErrorDisplay] = useState("");
@@ -22,21 +22,19 @@ export default function Signin(props) {
     e.preventDefault()
     const [result, err] = await queryApi('user/signin', formData, "POST", false)
 
-    if ((result == 'Incorrect password') || (result == 'Incorrect email')|| (result == 'You are Trying to connect with a google account')||(result == 'Account Banned')) {
+    if ((result == 'Incorrect password') || (result == 'Incorrect email') || (result == 'You are Trying to connect with a google account that does not has a password, click Forget Password to create one') || (result == 'Account Banned')) {
       setErrorDisplay(result)
     } else {
-      if(result.image.startsWith('https')){
-        let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType : "default", pictureType : "external" }
+      if (result.image.startsWith('https')) {
+        let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: "default", pictureType: "external" }
         dispatch(chnageConenctedUser(userResult))
-        history.push('/')
       }
-      else
-      {
-        
-      let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType : "default", pictureType : "internal" }
-      dispatch(chnageConenctedUser(userResult))
+      else {
+        let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: "default", pictureType: "internal" }
+        dispatch(chnageConenctedUser(userResult))
+      }
       history.push('/')
-      } 
+      Cookies.set('connected', 'true', { expires: 1 })
     }
 
   }
@@ -47,21 +45,21 @@ export default function Signin(props) {
     const [resultGoogleLogin, err] = await queryApi('user/googleLogin', JSON.stringify({
       token: googleData.tokenId,
     }), "POST", false)
-    console.log("sent")
-    if(resultGoogleLogin){
-      if(resultGoogleLogin == "Account Banned"){
+    if (resultGoogleLogin) {
+      if (resultGoogleLogin == "Account Banned") {
         setErrorDisplay(resultGoogleLogin)
       }
-      else if(resultGoogleLogin.image.startsWith('https')){
-        let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType : "google", pictureType : "external" }
-        dispatch(chnageConenctedUser(googleUserResult))
+      else {
+        if (resultGoogleLogin.image.startsWith('https')) {
+          let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType: "google", pictureType: "external" }
+          dispatch(chnageConenctedUser(googleUserResult))
+        }
+        else {
+          let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType: "google", pictureType: "internal" }
+          dispatch(chnageConenctedUser(googleUserResult))
+        }
         history.push('/')
-      }
-      else
-      {
-        let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType : "google", pictureType : "internal" } 
-        dispatch(chnageConenctedUser(googleUserResult))
-        history.push('/')
+        Cookies.set('connected', 'true', { expires: 1 })
       }
     }
   }
@@ -79,13 +77,13 @@ export default function Signin(props) {
         <Link to={'/forgetPassword'}>Forget Password</Link>
         <div style={{ textAlign: "center", color: "red" }}>{errorDisplay}</div>
         <button type="submit" class="ms-auto my-2 btn get-started-btn">Submit</button>
-        <div style={{ float: "right"}}>
-          <GoogleLogin     
-          clientId={process.env.REACT_APP_TVT_PLATFORM_GOOGLE_CLIENT_ID} 
-          buttonText="Log in with Google"
-          onSuccess={handleLogin}
-          onFailure={handleFailure}
-          cookiePolicy={'single_host_origin'}
+        <div style={{ float: "right" }}>
+          <GoogleLogin
+            clientId={process.env.REACT_APP_TVT_PLATFORM_GOOGLE_CLIENT_ID}
+            buttonText="Log in with Google"
+            onSuccess={handleLogin}
+            onFailure={handleFailure}
+            cookiePolicy={'single_host_origin'}
           ></GoogleLogin>
         </div>
       </form>

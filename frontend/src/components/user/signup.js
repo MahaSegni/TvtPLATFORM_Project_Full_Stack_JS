@@ -74,9 +74,7 @@ export default function Signup(props) {
             err = true;
         }
 
-        if (err) {
-            console.log("error")
-        } else {
+        if (!err) {
             addUser()
         }
         return errors;

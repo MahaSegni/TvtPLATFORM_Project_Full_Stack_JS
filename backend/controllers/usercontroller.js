@@ -54,7 +54,7 @@ module.exports.sendMail = (req, res) => {
         };
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
-                console.log(error);
+                res.send(error);
             } else {
                 res.status(200).send(r)
             }
@@ -101,21 +101,16 @@ module.exports.signIn = async (req, res) => {
                 else if (user.password) {
                     let auth = await bcrypt.compare(req.body.password, user.password);
                     if (auth) {
-                        if (user.state == 0) {
-                            let uForJwt = { id: user._id }
-                            user.state = 1
-                            user.token = jwt.sign(uForJwt, process.env.ACCESS_TOKEN_SECRET);
-
-                        } else {
-                            user.state = user.state + 1
-                        }
+                        let uForJwt = { id: user._id }
+                        user.state = user.state + 1
+                        user.token = jwt.sign(uForJwt, process.env.ACCESS_TOKEN_SECRET);
                         user.save()
                         res.status(200).send(user)
                     } else {
                         res.send('Incorrect password');
                     }
                 } else {
-                    res.send('You are Trying to connect with a google account');
+                    res.send('You are Trying to connect with a google account that does not has a password, click Forget Password to create one');
                 }
             }
             else {
@@ -131,12 +126,16 @@ module.exports.signIn = async (req, res) => {
 module.exports.signOut = async (req, res) => {
     try {
         UserModel.findById({ _id: req.params.id }, (err, result) => {
-            console.log(result.state)
-            if (result != null && result.state != -1 && result.state != 0) {
-                result.state = result.state - 1
-                result.save()
+            if (result) {
+                if ((req.headers['authorization'] == result.token) && (result.state != -1)) {
+                    if (result != null && result.state > 0) {
+                        result.state = result.state - 1
+                        result.save()
+                    }
+                    res.status(200).send('disconnected')
+                }
+                else res.status(401).send()
             }
-            res.status(200).send('disconnected')
         });
 
     }
@@ -258,7 +257,7 @@ module.exports.changeEmail = async (req, res) => {
                     };
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
-                            console.log(error);
+                            res.send(error);
                         } else {
                             res.status(200).send(r)
                         }
@@ -372,13 +371,13 @@ module.exports.uploadPicture = async (req, res) => {
             if ((req.headers['authorization'] == user.token) && (user.state != -1)) {
                 user.image = req.file.filename
                 user.save()
-                res.status(200).send('success')
+                res.status(200).send(user.image)
             } else {
                 res.status(401).send()
             }
         })
     } catch (err) {
-        console.log(err)
+        res.send(err)
     }
 }
 
@@ -396,15 +395,11 @@ module.exports.googleLogin = async (req, res) => {
         if (result) {
             if (result.state == -1) {
                 res.send("Account Banned")
-            } 
+            }
             else {
-                if(result.state==0){
-                    let uForJwt = { id: result._id }
-                    result.state = 1
-                    result.token = jwt.sign(uForJwt, process.env.ACCESS_TOKEN_SECRET);
-                }else {
-                    result.state = result.state + 1
-                }
+                let uForJwt = { id: result._id }
+                result.state = result.state + 1
+                result.token = jwt.sign(uForJwt, process.env.ACCESS_TOKEN_SECRET);
                 await result.save()
                 result.typeUser = "user"
                 res.send(result)
@@ -543,5 +538,44 @@ module.exports.unban = async (req, res) => {
         })
     } catch (err) {
         res.send(err)
+    }
+}
+
+module.exports.getGeneralInformations = async (req, res) => {
+    try {
+        UserModel.findById(req.params.id, (err, user) => {
+            user.password = null
+            user.token = null
+            user.refmodules = null
+            user.reffriends = null
+            user.typeUser = null
+            res.send(user)
+        })
+    }
+    catch (err) {
+        res.send(err)
+    }
+}
+
+module.exports.refreshUser = async (req, res) => {
+    if (req.params.secret == process.env.ACCESS_TOKEN_SECRET) {
+        UserModel.findById(req.params.id, (err, user) => {
+            if (user.typeUser == "googleUser") {
+                user.typeUser = "user"
+            }
+            res.send(user)
+        })
+    }
+}
+
+module.exports.autoSignOut = async (req, res) => {
+    if (req.params.secret == process.env.ACCESS_TOKEN_SECRET) {
+        UserModel.findById({ _id: req.params.id }, (err, result) => {
+            if (result != null && result.state > 0) {
+                result.state = result.state - 1
+                result.save()
+            }
+            res.status(200).send('disconnected')
+        });
     }
 }

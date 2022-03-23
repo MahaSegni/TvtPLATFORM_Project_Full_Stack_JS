@@ -60,22 +60,20 @@ export default function UpdateUser({ closeModal }) {
             errors.phone = "Only numbers"
             err = true;
         }
-        if (err) {
-            console.log("error")
-        } else {
+        if (!err) {
             updateUser()
         }
         return errors;
     }
     const updateUser = async () => {
         if (uploadImage.image != "") {
-            const [, err] = await queryApi('user/uploadPicture/' + connectedUser.id, uploadImage, "PUT", true, connectedUser.token)
+            const [imageResult, err] = await queryApi('user/uploadPicture/' + connectedUser.id, uploadImage, "PUT", true, connectedUser.token)
             const [result, err2] = await queryApi('user/update', formData, "PUT", false, connectedUser.token)
             if (!err2) {
-                let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: connectedUser.connectionType, pictureType: "internal" }
+                let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: imageResult, token: result.token, connectionType: connectedUser.connectionType, pictureType: "internal" }
                 dispatch(chnageConenctedUser(userResult))
-                closeModal(false)
             }
+            closeModal(false)
         }
         else {
             const [result, err2] = await queryApi('user/update', formData, "PUT", false, connectedUser.token)
@@ -90,8 +88,8 @@ export default function UpdateUser({ closeModal }) {
 
         <div className="modalBackground ">
             <div className="modalContainer col-sm-10 offset-md-1 my-5">
-                <div className="title">
-                    <h1>Profile Update</h1>
+                <div className="title my-5">
+                    <h1>Your Account's General Informations</h1>
                 </div>
                 <div className="body row">
                     <div className="col-md-6">
@@ -130,7 +128,7 @@ export default function UpdateUser({ closeModal }) {
                             <div>
                                 {connectedUser.pictureType == "external" &&
                                     <img src={connectedUser.image} className="rounded-circle"
-                                        width="300"></img>
+                                        width="300" referrerpolicy="no-referrer"></img>
                                 }
                                 {connectedUser.pictureType == "internal" && <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="Admin" className="rounded-circle"
                                     width="300" />

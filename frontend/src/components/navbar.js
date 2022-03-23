@@ -1,11 +1,26 @@
 import { Link } from "react-router-dom";
 import { queryApi } from "../utils/queryApi"
 import { useSelector } from 'react-redux';
-import { chnageConenctedUser, selectConnectedUser } from '../Redux/slices/sessionSlice';
+import { chnageConenctedUser, selectConnectedUser,refreshUserToken } from '../Redux/slices/sessionSlice';
 import { useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
-
+import Cookies from 'js-cookie'
+import { useEffect, useState } from "react";
 export default function Navbar() {
+  
+  
+  const autoSignOut = async () => {
+    const [res, err] = await queryApi('user/autoSignOut/f5bc2de53fb87ca782918b25504e1f402cd0b4b47099b7aeba2a3/'+ connectedUser.id);
+    history.push('/signin')
+    dispatch(chnageConenctedUser({ type: "disconnected" }))
+  }
+
+
+  useEffect(() => {
+    if (connectedUser.type != "disconnected" && !Cookies.get('connected')) { 
+        autoSignOut()
+    }
+  },[])
 
   const history = useHistory()
   const dispatch = useDispatch();
@@ -41,12 +56,13 @@ export default function Navbar() {
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>
                 <li><a onClick={async () => {
-                   const [res, err] = await queryApi('user/signout/'+connectedUser.id);
-                   history.push('/signin')
-                   dispatch(chnageConenctedUser({ type: "disconnected" }))
+                  const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false,connectedUser.token);
+                  history.push('/signin')
+                  dispatch(chnageConenctedUser({ type: "disconnected" }))
+                  Cookies.remove('connected')
                 }}>Sign Out</a></li>
               </ul>
-            </li>   
+            </li>
           </ul>
           <i className="bi bi-list mobile-nav-toggle"></i>
         </nav>
@@ -65,10 +81,11 @@ export default function Navbar() {
             <li className="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>
-                <li><Link onClick={async () => {   
-                  const [res, err] =  await queryApi('user/signout/'+connectedUser.id);
+                <li><Link onClick={async () => {
+                  const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false,connectedUser.token);
                   history.push('/signin')
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
+                  Cookies.remove('connected')
                 }}>Sign Out</Link></li>
               </ul>
             </li>

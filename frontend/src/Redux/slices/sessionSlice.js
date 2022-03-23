@@ -11,6 +11,9 @@ const sessionSlice = createSlice({
         chnageConenctedUser(state, action){
             state.connectedUser = action.payload
         },
+        refreshUserToken(state, action){
+            state.connectedUser.token = action.payload
+        }
     }
 });
 
@@ -19,7 +22,7 @@ export const selectConnectedUser = (state) => {
 };
 
 export const {
-    chnageConenctedUser,
+    chnageConenctedUser,refreshUserToken
 } = sessionSlice.actions;
 
 

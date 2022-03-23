@@ -19,14 +19,14 @@ import { useDispatch } from 'react-redux';
 export default function Profile(props) {
     const history = useHistory();
     const dispatch = useDispatch();
-    var connectedUser = useSelector(selectConnectedUser);
+    
+    
     useEffect(()=> {
         if(connectedUser.type == "disconnected"){
             history.push('/signin')
         }
     },[])
-    
-    
+    var connectedUser = useSelector(selectConnectedUser);
     const [openModal, setOpenModal] = useState(false);
     const [openPasswordModal, setOpenPasswordModal] = useState(false);
     
@@ -51,66 +51,64 @@ export default function Profile(props) {
         IPid: "",
     })
 
-    async function onRemove(ip) {
+    const onRemove = async (ip) => {
         const [, err] = await queryApi('interestpoint/rvFromUser/' + connectedUser.id + '/' + ip._id, null, 'GET', false, connectedUser.token);
         setAddIP({ ...addIP, listDisplay: false, IPid: "" })
         reloadUserIPs()
         reloadAllIPs();
     }
 
-    async function onRemoveCP(cp) {
+    const onRemoveCP = async (cp) => {
         const [, err] = await queryApi('user/removeCP/' + connectedUser.id + '/' + cp, null, 'GET', false, connectedUser.token);
         reloadUserCPs();
 
     }
 
-    function openAddIP() {
+    const openAddIP = () => {
         let myArray = allIPs.filter(x => !userIPs.find(u => (x._id == u._id)));
         setOtherIPs(myArray)
         setAddIP({ ...addIP, listDisplay: true, IPid: myArray[0]._id })
-
-
     }
-    function onSelectIP(e) {
+    const onSelectIP = (e) => {
         setAddIP({ ...addIP, IPid: e.target.value })
     }
-    async function addIPtoUser() {
+    const addIPtoUser = async () => {
         const [, err] = await queryApi('interestpoint/addToUser/', addIP, 'PUT', false, connectedUser.token);
         setAddIP({ ...addIP, listDisplay: false, IPid: "" })
         reloadUserIPs();
         reloadAllIPs();
     }
 
-    function closeAddIP() {
+    const closeAddIP = () => {
         setAddIP({ ...addIP, listDisplay: false })
     }
 
-    function openAddCP() {
+    const openAddCP = () => {
         setAddCP({ ...addCP, inputDisplay: true })
     }
 
-    function onChangeCP(e) {
+    const onChangeCP = (e) => {
         setAddCP({ ...addCP, inputValue: e.target.value })
     }
 
-    async function handleKeyPress(event) {
+    const handleKeyPress = async (event) => {
         if (event.key === 'Enter') {
-            const [, err] = await queryApi('user/addCP/', addCP, 'POST', false, connectedUser.token);
+            const [, err] = await queryApi('user/addCP/', addCP, 'PUT', false, connectedUser.token);
             setAddCP({ ...addCP, inputDisplay: false, inputValue: "" })
             reloadUserCPs();
         }
     }
-    function closeAddCP() {
+    const closeAddCP = () => {
         setAddCP({ ...addCP, inputDisplay: false, inputValue: "" })
     }
 
-    function openUpdateCP(cp) {
+    const openUpdateCP = (cp) => {
         setUpdateCP({ ...addCP, inputDisplay: true, cp: cp, inputValue: cp })
     }
-    function onUpdateCPinput(e) {
+    const onUpdateCPinput = (e) => {
         setUpdateCP({ ...updateCP, inputValue: e.target.value })
     }
-    async function handleKeyPressUpdate(event) {
+    const handleKeyPressUpdate = async (event) => {
         if (event.key === 'Enter') {
             const [, err] = await queryApi('user/updateCP/', updateCP, 'PUT', false, connectedUser.token);
             setUpdateCP({ ...addCP, inputDisplay: false, cp: "" })
@@ -138,8 +136,8 @@ export default function Profile(props) {
                                                 <div>
                                                     {connectedUser.pictureType == "external" &&
                                                      
-                                                        <img src={`${connectedUser.image}`} className="rounded-circle"
-                                                            width="300"></img>
+                                                        <img src={connectedUser.image} className="rounded-circle"
+                                                            width="300" referrerpolicy="no-referrer"></img>
                                                     }
                                                     {connectedUser.pictureType == "internal" && <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="Admin" className="rounded-circle"
                                                         width="300" />
@@ -270,7 +268,7 @@ export default function Profile(props) {
                                 <div className="col-md-6 my-3">
                                     <div className="card mb-3">
                                         <div className="mx-auto my-auto">
-                                            <h3 className="my-3">Course Prefernces</h3>
+                                            <h3 className="my-3">Course Preferences</h3>
                                         </div>
                                         <hr />
                                         <div className="card-body">

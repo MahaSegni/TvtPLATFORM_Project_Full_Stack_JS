@@ -3,9 +3,11 @@ import { queryApi } from "../../utils/queryApi"
 import { useApi } from "../../utils/useApi"
 import { useSelector } from 'react-redux';
 import { faBan } from '@fortawesome/free-solid-svg-icons';
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect } from 'react';
 import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 export default function Users(props) {
     var connectedUser = useSelector(selectConnectedUser);
     const history = useHistory()
@@ -54,6 +56,8 @@ export default function Users(props) {
                             {user.state == -1 &&
                                 <button onClick={() => unban(user._id)} className="btn get-started-btn" style={{ float: "right" }}><FontAwesomeIcon icon={faBan}></FontAwesomeIcon></button>
                             }
+                            <Link to={`/check/${user._id}`} className="btn get-started-btn" style={{ float: "right" }} ><FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon></Link>
+                            
                         </div>
                         }
                     </div>

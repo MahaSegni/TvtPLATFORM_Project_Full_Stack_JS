@@ -17,7 +17,7 @@ router.post("/signin",userController.signIn);
 router.get("/signout/:id",userController.signOut);
 router.get("/coursepreferences/:id",userController.userCoursePreferences);
 router.get("/removeCP/:id/:cp",userController.removeUserCoursePreferences);
-router.post("/addCP",userController.addUserCoursePreferences);
+router.put("/addCP",userController.addUserCoursePreferences);
 router.put("/updateCP",userController.updateUserCoursePreferences);
 router.put("/update",userController.updateUser);
 router.put("/changePassword",userController.changePassword);
@@ -28,10 +28,12 @@ router.get("/sendMail/:email",userController.sendMail);
 router.put("/forgetPassword",userController.forgetPassword);
 router.put("/uploadPicture/:id",upload.single('image'),userController.uploadPicture);
 router.post("/googleLogin",userController.googleLogin);
-//router.get("/checkIfGoogle/:email",userController.checkIfGoogle);
 router.get("/getModulesByOwner/:id",userController.getModulesByOwner);
 router.get("/getModulesBySubscriber/:id",userController.getModulesBySubscriber);
 router.get("/allUsers/:id",userController.getAllUsers)
 router.get("/ban/:aid/:id",userController.ban)
 router.get("/unban/:aid/:id",userController.unban)
+router.get("/getGeneralInfo/:id",userController.getGeneralInformations);
+router.get("/refreshUser/:secret/:id",userController.refreshUser)
+router.get("/autoSignOut/:secret/:id",userController.autoSignOut)
 module.exports=router;

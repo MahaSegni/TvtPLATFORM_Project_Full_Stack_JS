@@ -99,9 +99,7 @@ export default function UserSettings({ closeModal }) {
             errors.currentPassword = "Your current Password is required";
             err = true;
         }
-        if (err) {
-            console.log("error")
-        } else {
+        if (!err) {
             deleteUser()
         }
         return errors;
@@ -132,16 +130,13 @@ export default function UserSettings({ closeModal }) {
             errors.currentPassword = "Your current Password is required";
             err = true;
         }
-        if (err) {
-            console.log("error")
-        } else {
+        if (!err) {
             updateEmail()
         }
         return errors;
     }
     const updateEmail = async () => {
         const [resultCheck, err] = await queryApi('user/check/' + formEmail.email, null, "GET", false)
-        console.log(resultCheck)
         if (resultCheck == false) {
             const [result, err2] = await queryApi('user/changeEmail', formEmail, "POST", false, connectedUser.token)
             if (result == "Incorrect Current password") {
@@ -180,9 +175,7 @@ export default function UserSettings({ closeModal }) {
             err = true;
         }
 
-        if (err) {
-            console.log("error")
-        } else {
+        if (!err) {
             updateUser()
         }
         return errors;
@@ -204,7 +197,7 @@ export default function UserSettings({ closeModal }) {
         <div className="modalBackground ">
             <div className="modalContainer col-sm-10 offset-md-1 mt-2">
                 <div className="title">
-                    <h1>User Settings</h1>
+                    <h1>Settings</h1>
                 </div>
                 {connectedUser.connectionType == "default" &&
                     <>
@@ -324,11 +317,13 @@ export default function UserSettings({ closeModal }) {
                         </div>
                     </>}
                 {connectedUser.connectionType == "google" &&
-                    <div className="alert alert-danger my-3" role="alert">
-                        Sorry you log in using your google account and for security reasons this page is only accessible by accounts that log in with their email and password,
-                        if you have already added a password to your account please connect through the signin form to get access to this page,
-                        otherwise you can add a password to your account by disconnecting and clicking on Forget Password, a verification code will be sent to your email address, add it and create a password,
-                        You can continue to connect using your google account even if you added a password, you can login with two ways.
+                    <div className="alert alert-warning mt-5 mx-5" role="alert">
+                        You are now connected with your Google credentials, please switch to your own credentials (email and password)
+                        in order to procceed to your profile settings. If you don't already have a password, please sign out, click on
+                        "ForgetPassword" and create one.
+                        <br/>
+                        <br/>
+                        NOTE : After creating a password you can continue to sign in with your Google Account. 
                     </div>
                 }
                 <div className="my-1" style={{ textAlign : "center" }}>
