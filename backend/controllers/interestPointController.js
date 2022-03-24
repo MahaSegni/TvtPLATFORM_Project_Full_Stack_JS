@@ -1,6 +1,5 @@
 const UserModel = require('../Model/User');
 const interestPointModel = require('../Model/Interestpoint');
-const Interestpoint = require('../Model/Interestpoint');
 
 module.exports.getAll = async (req, res) => {
     try {
@@ -72,7 +71,7 @@ module.exports.addIP = async (req, res) => {
     try {
         UserModel.findById(req.body.id, async (err, admin) => {
             if ((req.headers['authorization'] == admin.token) && (admin.typeUser == "admin")) {
-                let ip = new Interestpoint(
+                let ip = new interestPointModel(
                     {
                         value: req.body.inputValue
                     })

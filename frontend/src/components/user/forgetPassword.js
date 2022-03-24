@@ -31,19 +31,12 @@ export default function ForgetPassword() {
                 console.log(err)
             } else {
                 if (result == true) {
-                   /* const [resultGoogleCheck, err] = await queryApi('user/checkIfGoogle/' + formEmail.email, null, "GET", false)
-                    if (resultGoogleCheck == false) 
-                    {*/
                         const [result, err2] = await queryApi('user/sendMail/' + formEmail.email, null, "GET", false)
                         if (err2) {
                             console.log(err2)
                         } else {
                             setcodeForEmail({ ...codeForEmail, sent: true, value: result })
                         }
-
-                   /* }else{
-                        setFormEmail({ ...formEmail, error: "You are Trying to connect with a google account" })
-                    }*/
                 }
                 else {
                     setFormEmail({ ...formEmail, error: "Mail does not exist" })

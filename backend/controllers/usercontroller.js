@@ -9,6 +9,8 @@ const upload = multer({ dest: 'D:/PiMern/Project_Full_Stack_JS/frontend/src/asse
 var nodemailer = require('nodemailer');
 const UserModel = require('../Model/User');
 const ModuleModel = require('../Model/Module');
+const FriendModel = require('../Model/Friend');
+const FriendController = require('../controllers/friendController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var transporter = nodemailer.createTransport({
@@ -297,6 +299,7 @@ module.exports.changeEmailAction = async (req, res) => {
 }
 
 module.exports.deleteUser = async (req, res) => {
+
     try {
         UserModel.findById({ _id: req.body.id }, async (err, user) => {
             if ((req.headers['authorization'] == user.token) && (user.state != -1)) {
@@ -314,6 +317,13 @@ module.exports.deleteUser = async (req, res) => {
                             e.remove()
                         })
                     }).clone()
+                    let Friends = await FriendController.userFriends(user)
+                    for (let i in Friends) {
+                        await deleteFriend(user, Friends[i])
+                    }
+                    for (let j in user.reffriends) {
+                        await FriendModel.findByIdAndDelete(user.reffriends[j])
+                    }
                     user.remove()
                     res.send('success')
                 }
@@ -513,11 +523,6 @@ module.exports.ban = async (req, res) => {
     }
 }
 
-
-
-
-
-
 module.exports.unban = async (req, res) => {
     try {
         UserModel.findById(req.params.aid, async (err, admin) => {
@@ -579,3 +584,15 @@ module.exports.autoSignOut = async (req, res) => {
         });
     }
 }
+
+const deleteFriend = async (user, friend) => {
+    for(let i in friend.reffriends){
+        await FriendModel.findById(friend.reffriends[i],(err,fr) => {
+            if(fr.iduser == user._id){
+                fr.remove()
+                friend.reffriends.pull(friend.reffriends[i])
+                friend.save()
+            }
+        }).clone()
+    }
+};

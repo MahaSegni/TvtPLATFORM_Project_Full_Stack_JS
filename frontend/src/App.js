@@ -31,7 +31,6 @@ function App() {
 
   const refreshUser = async () => {
     const [result, err] = await queryApi('user/refreshUser/f5bc2de53fb87ca782918b25504e1f402cd0b4b47099b7aeba2a3/' + connectedUser.id);
-    console.log(result)
     if (result.image.startsWith('https')) {
       let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: connectedUser.connectionType, pictureType: "external" }
       dispatch(chnageConenctedUser(userResult))
