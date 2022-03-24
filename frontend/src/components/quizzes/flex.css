@@ -1,0 +1,15 @@
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .flex-container > div {
+    background-color: #3ac162;
+    margin: 5%;
+    text-align: center;
+    padding: 5%;
+    color: white;
+  }
+  .flex-container .active{
+      background-color: grey;
+  }

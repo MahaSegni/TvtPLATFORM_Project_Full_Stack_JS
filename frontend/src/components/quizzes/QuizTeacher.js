@@ -4,18 +4,18 @@ import { useSelector } from 'react-redux';
 import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
 import { useApi } from "../../utils/useApi";
 import { useHistory } from 'react-router-dom';
-import { Card, Collapse, Table } from "react-bootstrap";
+import { Badge, Card, Collapse, Table } from "react-bootstrap";
 import AddQuiz from "./AddQuiz";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { queryApi } from "../../utils/queryApi";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { confirmAlert } from "react-confirm-alert";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { Switch } from "@mui/material";
 import AddQuestion from "./AddQuestion";
@@ -23,7 +23,7 @@ import AddQuestion from "./AddQuestion";
 const QuizTeacher = () => {
     const[openAdd,setopenAdd]=useState(false)
     const[ShowAddQuestion,setShowAddQuestion]=useState(false)
-    const[Quizselected,setQuizselected]=useState({});
+    const[Quizselected,setQuizselected]=useState(null);
     const[editQuiz,setEditQuiz]=useState(false);
     const[KeySelected,setKeySelected]=useState(-1)
     const [checked, setChecked] = useState(false);
@@ -93,15 +93,14 @@ const QuizTeacher = () => {
     }
     }
    async function AddQuestionEvent(data,responses){
-    const [, err] =  await queryApi('quiz/addQuestion/'+Quizselected._id ,{
+    const [q, err] =  await queryApi('quiz/addQuestion/'+Quizselected._id ,{
        
       texte:data.texte,
       QuestionType:data.QuestionType,
       Responses:responses
     }
     , 'PATCH', false,connectedUser.token);
-    reloadquiz()
-
+setQuizselected(q)
    }
     async function addQuizFn(data,timer){
     console.log(data)
@@ -176,8 +175,63 @@ const QuizTeacher = () => {
 
      </Card>
      </Collapse>
+     
      <a class="btn  col-12 btncustom mb-3">Show Results</a>
+     <Collapse in={ShowAddQuestion}>
+     <Card className="mb-3">
+       <Card.Header>{Quizselected&& <Card.Title style={{"textAlign":"center"}}>{Quizselected.title}</Card.Title>}</Card.Header>
+  <Card.Body>
+     <h6>Questions :</h6>
+     <div id="accordion">
 
+  { Quizselected&&
+      Quizselected.Questions.map((question, index) => (
+
+        <div class="card my-3" key={index}>
+        <div id={"heading"+index} class="card-header" >
+          <h5 class="mb-0">
+            <div class="row">
+              <div class="col-10" data-toggle="collapse" data-target={"#collapse"+index} aria-expanded="true" aria-controls={"collapse"+index}  style={{color:"black",cursor: "pointer"}}>{question.texte}</div>
+              <div class="col"> <FontAwesomeIcon icon={faCircleXmark} /> </div>
+
+            </div>
+          </h5>
+        </div>
+        <div id={"collapse"+index} class="card-body collapse" aria-labelledby={"heading"+index} data-parent="#accordion">
+          {question.QuestionType=="Radio"&&
+          question.Responses.map((reponse,index)=>(
+          <div class="form-group" key={index}>
+          <input type="radio"  name={question.texte}/>{ reponse.texte}
+          </div>))}
+          {question.QuestionType=="CheckBox"&&
+          question.Responses.map((reponse,index)=>(
+          <div class="form-group" key={index}>
+          <input type="checkbox"  name={reponse.texte}/>{ reponse.texte}
+          </div>))}
+          {question.QuestionType=="Select"&&
+          <select  class="form-control">  
+ {
+    question.Responses.map((reponse,index)=>(
+        <option value={ reponse.texte}>{ reponse.texte}</option>    
+      ))
+ }         
+          </select>
+}
+        </div>
+        </div>
+
+
+    ))
+
+    
+  }
+</div>
+</Card.Body>
+<Card.Footer  style={{cursor: "pointer"}} onClick={()=>setShowAddQuestion(false)} className="d-flex justify-content-center"> <FontAwesomeIcon icon={faArrowUp}/>
+</Card.Footer>
+
+     </Card>
+     </Collapse>
      </div>
      <div class="col-7">
      <Table striped bordered hover>
@@ -209,7 +263,8 @@ const QuizTeacher = () => {
                             </td>
                             <td style={{textAlign:"center"}}>
                             <a style={{color:"#4284f5",cursor: "pointer"}}  className="me-3" onClick={()=>{setShowAddQuestion(true);
-                               setQuizselected(quiz)}}> <FontAwesomeIcon icon={faPlus}/> Manage Question </a> 
+                               setQuizselected(quiz)
+                               console.log(Quizselected)}}> <FontAwesomeIcon icon={faGear}/> Manage Question </a> 
                             <FontAwesomeIcon icon={faEdit} className="me-3" onClick={()=>{setQuizselected(quiz);
                             setKeySelected(index);
                             setEditQuiz(true);
