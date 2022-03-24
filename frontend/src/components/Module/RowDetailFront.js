@@ -1,16 +1,18 @@
 
 import React from 'react'
-import { useHistory } from "react-router-dom";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import {Button,  CardActionArea, CardActions } from '@mui/material';
 import DayJS from 'react-dayjs';
-
+import { useSelector } from 'react-redux';
+import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
+import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 function RowDetailsFront({label, description , date_creation , Id }) {
-  const history = useHistory();
+  var connectedUser = useSelector(selectConnectedUser)
   return (
 <div class="col-sm-3 mb-3  p-2" >
  <Card sx={{ maxWidth: 345 }} >
@@ -37,8 +39,9 @@ function RowDetailsFront({label, description , date_creation , Id }) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary" variant="contained" onClick={() => history.push("/signin")}>
-          Rejoindre
+       
+        <Button size="small" color="primary" >
+        <Link to={`addUser/${Id}/${connectedUser.email}`} className=" p-2" >Rejoindre  </Link>
         </Button>
       </CardActions>
     </Card>

@@ -8,6 +8,22 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+.btn-template{
+  background: #5fcf80;
+  opacity: 0.8;
+  color: white !important;
+  transition: 0.3s;
+  font-family: Georgia, serif;
+
+}
+.btn-template:hover{
+  opacity: 1;
+  color: white !important;
+  border-radius: 20px;
+  transition: 0.3s;
+  font-family: Georgia, serif;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   color: #444444;

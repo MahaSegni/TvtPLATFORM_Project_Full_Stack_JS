@@ -2,6 +2,7 @@ import { useState } from "react";
 import { queryApi } from "../../utils/queryApi"
 import { useHistory } from "react-router-dom";
 
+import React from 'react';
 export default function Signup(props) {
 
     const history = useHistory();

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Module = new Schema({
-    idwoner : {
+    idowner : {
         type:String
     },
     label : {
@@ -17,11 +17,17 @@ var Module = new Schema({
     date_creation : {
         type:Date
     },
+    date_update : {
+        type:Date
+    },
     refStudents : {
         type:[String]
     },
-    refCours : {
+    refCours :  {
         type:[String]
+    },
+    statusModule : {
+        type : Boolean
     },
 });
 

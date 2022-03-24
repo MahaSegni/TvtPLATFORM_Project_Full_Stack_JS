@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const Categorycontroller = require('../controllers/Categorycontroller')
 
-router.get('/', Categorycontroller.readPost);
+router.get('/get', Categorycontroller.readPost);
 router.post('/', Categorycontroller.createPost);
 router.put('/:id', Categorycontroller.updatePost);
 router.delete('/:id', Categorycontroller.deletePost);
-
+router.patch('/addmoduletocategory/:id/:idModule', Categorycontroller.addmoduleToCategory);
 
 router.patch('/addsouscategory/:id', Categorycontroller.addsousCATEGORY);
 router.patch('/editsouscategory/:id/:ide', Categorycontroller.editsouscategory);

@@ -8,11 +8,13 @@ import ListCategory from "../Category/ListCategory";
 
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { useSelector } from "react-redux";
 
+import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
 export default function ListModuleFront() {
   const [modules, setModules] = useState([]);
   const [category, setCategory] = useState([]);
- 
+  var connectedUser = useSelector(selectConnectedUser)
 
 
   /* find all modules */
@@ -24,6 +26,7 @@ export default function ListModuleFront() {
   useEffect(async () => {
     await axios.get('http://localhost:3000/api/category/').then(res => {
         setCategory(res.data)
+       
     })
   },[])
   return (
@@ -31,12 +34,14 @@ export default function ListModuleFront() {
     
      
       <div class="container ">
+        
           {
               
                 <ListCategory   />
 
              
             } 
+            
       <div class="card-group">
   
   {
@@ -48,6 +53,7 @@ export default function ListModuleFront() {
             
   </div>
   <div className="d-flex justify-content-center">
+ 
   <Stack spacing={2}>
      
       <Pagination count={10} color="primary" />

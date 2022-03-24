@@ -19,7 +19,11 @@ module.exports.createPost = async (req, res) => {
 
   try {
     const post = await newPost.save();
-    return res.status(201).json(post);
+    return res.status(201).json({
+      statue: true,
+      message: " category added Succefully",
+      result: post,
+    });
   } catch (err) {
     return res.status(400).send(err);
   }
@@ -53,7 +57,27 @@ module.exports.deletePost = (req, res) => {
     else console.log("Delete error : " + err);
   });
 };
+module.exports.addmoduleToCategory = (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("ID unknown : " + req.params.id);
 
+  try {
+    return categoryModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          modules: 
+              req.params.idModule
+          ,
+        },
+      },
+      { new: true })
+            .then((data) => res.send(data))
+            .catch((err) => res.status(500).send({ message: err }));
+    } catch (err) {
+        return res.status(400).send(err);
+    }
+};
 
 
 module.exports.addsousCATEGORY = (req, res) => {
@@ -102,6 +126,7 @@ module.exports.editsouscategory = (req, res) => {
     return res.status(400).send(err);
   }
 };
+
 
 module.exports.deletesousCategory = (req, res) => {
   if (!ObjectID.isValid(req.params.id))

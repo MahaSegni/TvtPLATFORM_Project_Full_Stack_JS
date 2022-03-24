@@ -1,4 +1,217 @@
-const ModuleModel = require("../model/Module");
+const ModuleModel = require("../Model/Module.js");
+const UserModel = require("../Model/User.js");
+const mongoose = require("mongoose");
+module.exports = {
+  getModule: async (req, res) => {
+    try {
+      res
+        .status(200)
+        .json(
+          await ModuleModel.find({})
+          //.populate("idowner")
+          // .populate("refStudents")
+        );
+    } catch (error) {
+      res.status(404).json({ statue: false, message: error.message });
+    }
+  },
+
+  getModuleById: async (req, res) => {
+    try {
+      res
+        .status(200)
+        .json(
+          await ModuleModel.findById({ _id: req.params.id })
+         
+        );
+    } catch (error) {
+      res.status(404).json({ statue: false, message: error.message });
+    }
+  },
+  getModuleBylabel: async (req, res) => {
+    try {
+      res
+        .status(200)
+        .json(
+          await ModuleModel.findOne({ label: req.params.label })
+         
+        );
+    } catch (error) {
+      res.status(404).json({ statue: false, message: error.message });
+    }
+  },
+
+  addModule: async (req, res) => {
+    const newModule = new ModuleModel({
+      label: req.body.label,
+      description : req.body.description,
+      image : req.body.image,
+      date_creation : req.body.date_creation,
+      statusModule : false,
+      idowner : req.body.idowner,
+    });
+    try {
+      const data = await newModule.save();
+      res.status(201).json({
+        statue: true,
+        message: "Module Added Succefully",
+        result: data,
+      });
+    } catch (error) {
+      res.status(400).json({ statue: false, message: error.message });
+    }
+  },
+  updateModule: async (req, res) => {
+    try {
+    
+      // const updateClass = new ClassModel(req.body);
+      const data = await ModuleModel.findByIdAndUpdate(
+        req.params.id,
+        { label: req.body.label, description: req.body.description, image: req.body.image ,date_update: new Date() },
+      );
+      res.status(201).json({
+        statue: true,
+        message: " Module Updated Succefully",
+        result: data,
+      });
+    } catch (error) {
+      res.status(400).json({ statue: false, message: error.message });
+    }
+  },
+
+  deleteModule: async (req, res) => {
+    try {
+      const data = await ModuleModel.findByIdAndRemove(req.params.id);
+      res.status(201).json({
+        statue: true,
+        message: "Module Deleted Succefully",
+        result: data,
+      });
+    } catch (error) {
+      res.status(400).json({ statue: false, message: error.message });
+    }
+  },
+  deleteAllModules: async (req, res) => {
+    try {
+      const data = await ModuleModel.remove({});
+      res.status(201).json({
+        statue: true,
+        message: "Module Deleted Succefully",
+        result: data,
+      });
+    } catch (error) {
+      res.status(400).json({ statue: false, message: error.message });
+    }
+  },
+  addUserToModule: async (req, res) => {
+    try {
+      const dataFind1 = await UserModel.findOne(
+        { _id: req.params.idUser });
+      const dataFind = await UserModel.updateOne(
+        { _id: req.params.idUser },
+        {
+          $push: { refmodules: req.params.id },
+        }
+      );
+      const dataUpdate = await ModuleModel.updateOne(
+        { _id: req.params.id },
+        {
+          $push: { refStudents: [dataFind1._id] },
+        }
+      );
+      res.status(201).json({
+        statue: true,
+        message: "Module Updated Succefully",
+        result: dataUpdate,
+      });
+    } catch (error) {
+      res.status(400).json({ statue: false, message: error.message });
+    }
+  },
+  removeUserFromModule: async (req, res) => {
+    try {
+      const dataFind = await UserModel.findOne({ _id: req.params.idUser });
+
+      const dataFind1 = await UserModel.updateOne(
+        { _id: req.params.idUser},
+        {
+          $pull: { refmodules: req.params.id },
+        }
+      );
+      const dataUpdate = await ModuleModel.update(
+        { _id: req.params.id },
+        { $pullAll: { refStudents: [dataFind] } },
+        { safe: true }
+      );
+      res.status(201).json({
+        statue: true,
+        message: "Module Updated Succefully User Removed",
+        result: dataUpdate,
+      });
+    } catch (error) {
+      res.status(400).json({ statue: false, message: error.message });
+    }
+  },
+  verifowner : async ( req, res) => {
+    const dataUpdate = await ModuleModel.findOne(
+      { _id: req.params.id },
+      { $pullAll: { refStudents} },
+      
+    );
+    let owner=null;
+    if(dataUpdate.refStudents._id == req.params.id){
+owner = true;
+    }else{
+       owner=false;
+    }
+    res.send(owner);
+  },
+  getUserByEmail: async (req, res) => {
+    try {
+      const dataFind = await UserModel.findOne({ email: req.params.email });
+      res.status(201).json(dataFind);
+    } catch (error) {
+      res.status(400).json({ statue: false, message: error.message });
+    }
+  },
+  getUserByid: async (req, res) => {
+    try {
+      const dataFind = await UserModel.findOne({ _id: req.params._id });
+      res.status(201).json(dataFind);
+    } catch (error) {
+      res.status(400).json({ statue: false, message: error.message });
+    }
+  },
+  getOwner : async (req, res) => {
+    if(!ObjectID.isValid(req.params.id))
+  return res.status(400).send("ID unknown : " + req.params.id);
+  UserModle.findById(req.params.id,(err, docs) => {
+    if (!err) res.send(docs);
+    else console.log("Error to get data : " + err);
+  })
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*const ModuleModel = require("../model/Module");
 const ObjectID = require("mongoose").Types.ObjectId;
 const ValidateModule = require("../validation/Module.Validation");
 
@@ -23,7 +236,9 @@ module.exports.readPost = (req, res) => {
     const newPost = new ModuleModel({
       label: req.body.label,
       description: req.body.description,
+      ownerId : req.body.ownerId,
       date_creation :  new Date().getTime()
+     
        });
 try{
   if (!isValid) {
@@ -71,4 +286,4 @@ try{
     });
     
   };
-  
+  */
