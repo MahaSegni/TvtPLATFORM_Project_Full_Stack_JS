@@ -103,18 +103,18 @@ export default function InterestPoints() {
                             </td>
                             <td>
                                 {ip._id != updateInput.ipId &&
-                                    <button type="submit" className="btn get-started-btn ms-0" onClick={() => {
+                                    <button type="submit" className="btn btn-template ms-0" onClick={() => {
                                         openUpdateInput(ip)
                                     }}><FontAwesomeIcon icon={faPencil}></FontAwesomeIcon></button>
                                 }
                                 {ip._id == updateInput.ipId &&
-                                    <button type="submit" className="btn get-started-btn ms-0" style={{ background: "#FF0000" }} onClick={() => {
+                                    <button type="submit" className="btn btn-template ms-0" style={{ background: "#FF0000" }} onClick={() => {
                                         closeUpdateInput()
                                     }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
                                 }
                             </td>
                             <td>
-                                <button type="submit" className="btn get-started-btn ms-0" style={{ background: "#FF0000" }} onClick={() => {
+                                <button type="submit" className="btn btn-template ms-0" style={{ background: "#FF0000" }} onClick={() => {
                                     deleteIp(ip._id)
                                 }}><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button>
                             </td>
@@ -123,7 +123,7 @@ export default function InterestPoints() {
                     <tr>
                         {addInput.inputDisplay == false &&
                             <td colSpan={4} style={{ textAlign: "center" }}>
-                                <button onClick={() => openAddIP()} className="btn get-started-btn"><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
+                                <button onClick={() => openAddIP()} className="btn btn-template"><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
                             </td>
                         }
                         {addInput.inputDisplay == true &&
@@ -137,7 +137,7 @@ export default function InterestPoints() {
                                 </td>
                                 <td colSpan={1}>
                                     <div className='col-3'>
-                                        <button onClick={() => closeAddIP()} className="btn get-started-btn ms-0" style={{ background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
+                                        <button onClick={() => closeAddIP()} className="btn btn-template ms-0" style={{ background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
                                     </div>
                                 </td>
                             </>

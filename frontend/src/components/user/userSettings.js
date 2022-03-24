@@ -232,7 +232,7 @@ export default function UserSettings({ closeModal }) {
                                                 <h5 style={{ color: "red" }}>{secondFormErrors.passwordConfirmation}</h5>
                                                 <h5 style={{ textAlign: "center", color: "red" }}>{errorDisplay}</h5>
                                                 <div className="mt-5">
-                                                    <button type="submit" className="btn get-started-btn" >Continue</button>
+                                                    <button type="submit" className="btn btn-template" >Submit</button>
                                                 </div>
                                             </form >
                                         </div>
@@ -264,7 +264,7 @@ export default function UserSettings({ closeModal }) {
                                                     <h5 style={{ color: "red" }}>{emailFormErrors.currentPassword}</h5>
                                                     <h5 style={{ textAlign: "center", color: "red" }}>{errorEmailDisplay}</h5>
                                                     <div className="mt-5">
-                                                        <button type="submit" className="btn get-started-btn" >Continue</button>
+                                                        <button type="submit" className="btn btn-template" >Submit</button>
                                                     </div>
 
                                                 </form >
@@ -278,7 +278,7 @@ export default function UserSettings({ closeModal }) {
 
                                                     </div>
                                                     <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{codeForEmail.error}</h5>
-                                                    <button type="submit" className="btn get-started-btn">Continue</button>
+                                                    <button type="submit" className="btn btn-template">Submit</button>
                                                 </form>
 
                                             }
@@ -306,7 +306,7 @@ export default function UserSettings({ closeModal }) {
                                                 <h5 style={{ color: "red" }}>{deleteFormErrors.currentPassword}</h5>
                                                 <h5 style={{ textAlign: "center", color: "red" }}>{errorDeletelDisplay}</h5>
                                                 <div className="mt-5">
-                                                    <button type="submit" className="btn get-started-btn" >Continue</button>
+                                                    <button type="submit" className="btn btn-template" >Submit</button>
                                                 </div>
                                             </form >
                                         </div>
@@ -319,7 +319,7 @@ export default function UserSettings({ closeModal }) {
                 {connectedUser.connectionType == "google" &&
                     <div className="alert alert-warning mt-5 mx-5" role="alert">
                         You are now connected with your Google credentials, please switch to your own credentials (email and password)
-                        in order to procceed to your profile settings. If you don't already have a password, please sign out, click on
+                        in order to procceed to your settings. If you don't already have a password, please sign out, click on
                         "ForgetPassword" and create one.
                         <br/>
                         <br/>
@@ -327,7 +327,7 @@ export default function UserSettings({ closeModal }) {
                     </div>
                 }
                 <div className="my-1" style={{ textAlign : "center" }}>
-                    <button onClick={() => closeModal(false)} className="btn get-started-btn" id="cancelBtn">Cancel</button>
+                    <button onClick={() => closeModal(false)} className="btn btn-template" id="cancelBtn">Cancel</button>
                 </div>
             </div>
         </div>

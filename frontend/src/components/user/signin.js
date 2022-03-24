@@ -76,7 +76,7 @@ export default function Signin(props) {
         </div>
         <Link to={'/forgetPassword'}>Forget Password</Link>
         <div style={{ textAlign: "center", color: "red" }}>{errorDisplay}</div>
-        <button type="submit" class="ms-auto my-2 btn get-started-btn">Submit</button>
+        <button type="submit" class="ms-auto my-2 btn btn-template">Submit</button>
         <div style={{ float: "right" }}>
           <GoogleLogin
             clientId={process.env.REACT_APP_TVT_PLATFORM_GOOGLE_CLIENT_ID}

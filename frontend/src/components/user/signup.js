@@ -157,7 +157,7 @@ export default function Signup(props) {
                     </div>
                     <div style={{ color: "red" }}>{formErrors.confirmp}</div>
                     <div style={{ textAlign: "center", color: "red" }}>{errorDisplay}</div>
-                    <button type="submit" class="ms-auto my-2 btn get-started-btn">Submit</button>
+                    <button type="submit" class="ms-auto my-2 btn btn-template">Submit</button>
 
                 </form >}
 
@@ -169,7 +169,7 @@ export default function Signup(props) {
                         <input type="text" class="form-control" id="enteredValue" name="enteredValue" value={codeForEmail.enteredValue} placeholder="Enter your verification code" onChange={(e) => onChangeCE(e)} />
                     </div>
                     <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{codeForEmail.error}</h5>
-                    <button type="submit" className="btn get-started-btn" style={{ float: "right" }}>Continue</button>
+                    <button type="submit" className="btn btn-template" style={{ float: "right" }}>Submit</button>
                 </form>
             }
         </div >

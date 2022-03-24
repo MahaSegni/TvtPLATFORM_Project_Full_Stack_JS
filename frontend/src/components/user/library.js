@@ -29,7 +29,7 @@ export default function Library() {
                                     <div clclassNameass="card-body">
                                         <h5 className="card-title" style={{ textAlign: "center" }}>{module.label}</h5>
                                         {/*  <p className="card-text my-2">{module.description}</p>*/}
-                                        <button className="btn get-started-btn my-2" style={{ float: "right" }}>Check</button>
+                                        <button className="btn btn-template my-2" style={{ float: "right" }}>Check</button>
                                     </div>
                                 </div>
                             ))}
@@ -46,7 +46,7 @@ export default function Library() {
                                     <div clclassNameass="card-body">
                                         <h5 className="card-title" style={{ textAlign: "center" }}>{module.label}</h5>
                                         {/*  <p className="card-text my-2">{module.description}</p>*/}
-                                        <button className="btn get-started-btn my-2" style={{ float: "right" }}>Check</button>
+                                        <button className="btn btn-template my-2" style={{ float: "right" }}>Check</button>
                                     </div>
                                 </div>
                             ))}

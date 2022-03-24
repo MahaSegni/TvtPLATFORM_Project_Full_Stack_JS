@@ -203,17 +203,17 @@ export default function Profile(props) {
                                             </div>
                                             <hr />
                                             <div className="mx-auto" style={{ float: "right" }}>
-                                                <button type="submit" className="btn get-started-btn" onClick={() => {
+                                                <button type="submit" className="btn btn-template" onClick={() => {
                                                     setOpenModal(true)
                                                 }}><FontAwesomeIcon icon={faPencil}></FontAwesomeIcon></button>
                                             </div>
                                             <div className="mx-auto" style={{ float: "right" }}>
-                                                <button type="submit" className="btn get-started-btn" onClick={() => {
+                                                <button type="submit" className="btn btn-template me-3" onClick={() => {
                                                     setOpenPasswordModal(true)
                                                 }}><FontAwesomeIcon icon={faGear}></FontAwesomeIcon></button>
                                             </div>
                                             <div className="mx-auto" style={{ float: "right" }}>
-                                                <button type="submit" className="btn get-started-btn" onClick={() => {
+                                                <button type="submit" className="btn btn-template me-3" onClick={() => {
                                                     toLibrary()
                                                 }}><FontAwesomeIcon icon={faBook}></FontAwesomeIcon></button>
                                             </div>
@@ -234,7 +234,7 @@ export default function Profile(props) {
                                                             <h6 className="mt-2">{ip.value}</h6>
                                                         </div>
                                                         <div className="col-sm-9">
-                                                            {<button onClick={() => onRemove(ip)} className="btn get-started-btn" style={{ float: "right", background: "#FF0000" }} href="#"><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button>}
+                                                            {<button onClick={() => onRemove(ip)} className="btn btn-template" style={{ float: "right", background: "#FF0000" }} href="#"><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button>}
                                                         </div>
                                                     </div>
                                                     <hr />
@@ -252,12 +252,12 @@ export default function Profile(props) {
                                                 }
                                                 <div className={addIP.listDisplay == true ? 'col' : '-6'}>
                                                     {addIP.listDisplay == false &&
-                                                        <button onClick={() => openAddIP()} className="btn get-started-btn" style={{ float: "right" }}><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
+                                                        <button onClick={() => openAddIP()} className="btn btn-template" style={{ float: "right" }}><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
                                                     }
                                                     {addIP.listDisplay == true &&
                                                         <>
-                                                            <button onClick={() => closeAddIP()} className="btn get-started-btn" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
-                                                            <button onClick={() => addIPtoUser()} className="btn get-started-btn" style={{ float: "right" }}><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon></button>
+                                                            <button onClick={() => closeAddIP()} className="btn btn-template" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
+                                                            <button onClick={() => addIPtoUser()} className="btn btn-template me-3" style={{ float: "right" }}><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon></button>
                                                         </>
                                                     }
                                                 </div>
@@ -287,15 +287,15 @@ export default function Profile(props) {
                                                                     <input type="text" className="form-control" id="inputValue" name="inputValue" value={updateCP.inputValue} placeholder="Enter a new course preference" onChange={(e) => onUpdateCPinput(e)} onKeyPress={(e) => handleKeyPressUpdate(e)} />
                                                                 </div>
                                                                 <div className='col-3'>
-                                                                    <button onClick={() => closeUpdateCP()} className="btn get-started-btn" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
+                                                                    <button onClick={() => closeUpdateCP()} className="btn btn-template" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
                                                                 </div>
 
                                                             </>
                                                         }
                                                         {updateCP.cp !== cp &&
                                                             <div className="col-sm-6">
-                                                                {<button onClick={() => onRemoveCP(cp)} className="btn get-started-btn" style={{ float: "right", background: "#FF0000" }} href="#"><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button>}
-                                                                {<button onClick={() => openUpdateCP(cp)} className="btn get-started-btn" style={{ float: "right" }} href="#"><FontAwesomeIcon icon={faPencil}></FontAwesomeIcon></button>}
+                                                                {<button onClick={() => onRemoveCP(cp)} className="btn btn-template" style={{ float: "right", background: "#FF0000" }} href="#"><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button>}
+                                                                {<button onClick={() => openUpdateCP(cp)} className="btn btn-template me-3" style={{ float: "right" }} href="#"><FontAwesomeIcon icon={faPencil}></FontAwesomeIcon></button>}
                                                             </div>
                                                         }
                                                     </div>
@@ -309,13 +309,13 @@ export default function Profile(props) {
                                                             <input type="text" className="form-control" id="inputValue" name="inputValue" value={addCP.inputValue} placeholder="Enter a new course preference" onChange={(e) => onChangeCP(e)} onKeyPress={(e) => handleKeyPress(e)} />
                                                         </div>
                                                         <div className='col-3'>
-                                                            <button onClick={() => closeAddCP()} className="btn get-started-btn" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
+                                                            <button onClick={() => closeAddCP()} className="btn btn-template" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
                                                         </div>
                                                     </>
                                                 }
                                                 {!addCP.inputDisplay == true &&
                                                     <div className={addCP.inputDisplay == true ? 'col' : '-3'}>
-                                                        <button onClick={() => openAddCP()} className="btn get-started-btn" style={{ float: "right" }}><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
+                                                        <button onClick={() => openAddCP()} className="btn btn-template" style={{ float: "right" }}><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
                                                     </div>
                                                 }
                                             </div>
