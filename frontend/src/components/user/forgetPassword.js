@@ -101,7 +101,7 @@ export default function ForgetPassword() {
                         <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email" onChange={(e) => onChange(e)} />
                     </div>
                     <div style={{ textAlign: "center", color: "red" }}>{formEmail.error}</div>
-                    <button type="submit" class="ms-auto my-2 btn btn-template">Submit</button>
+                    <button type="submit" class="ms-auto my-2 btn btn-template-user">Submit</button>
                 </form>
             }
             {codeForEmail.sent &&
@@ -111,7 +111,7 @@ export default function ForgetPassword() {
                         <input type="text" class="form-control" id="enteredValue" name="enteredValue" value={codeForEmail.enteredValue} placeholder="Enter your verification code" onChange={(e) => onChangeCE(e)} />
                     </div>
                     <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{codeForEmail.error}</h5>
-                    <button type="submit" className="btn btn-template my-2" style={{ float: "right" }}>Submit</button>
+                    <button type="submit" className="btn btn-template-user my-2" style={{ float: "right" }}>Submit</button>
                 </form>
             }
 
@@ -125,7 +125,7 @@ export default function ForgetPassword() {
                         <input type="password" class="form-control" id="confirmPassword1" name="confirmp" value={formPass.confirmp} placeholder="Confirm your Password" onChange={(e) => onChangePass(e)} />
                     </div>
                     <div style={{ color: "red" }}>{formPass.confirmpError}</div>
-                    <button type="submit" className="btn btn-template my-2" style={{ float: "right" }}>Submit</button>
+                    <button type="submit" className="btn btn-template-user my-2" style={{ float: "right" }}>Submit</button>
                 </form>
             }
         </div>

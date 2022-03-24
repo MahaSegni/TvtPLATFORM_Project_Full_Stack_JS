@@ -116,8 +116,8 @@ export default function UpdateUser({ closeModal }) {
 
 
                             <div className="mt-5">
-                                <button onClick={() => closeModal(false)} className="btn btn-template me-3" id="cancelBtn">Cancel</button>
-                                <button type="submit" className="btn btn-template" >Submit</button>
+                                <button onClick={() => closeModal(false)} className="btn btn-template-user me-3" id="cancelBtn">Cancel</button>
+                                <button type="submit" className="btn btn-template-user" >Submit</button>
                             </div>
 
                         </form >

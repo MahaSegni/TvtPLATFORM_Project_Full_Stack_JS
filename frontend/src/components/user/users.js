@@ -51,12 +51,12 @@ export default function Users(props) {
                         {user.typeUser != "admin" &&
                         <div className="col-2">
                             {user.state != -1 &&
-                                <button onClick={() => ban(user._id)} className="btn btn-template" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faBan}></FontAwesomeIcon></button>
+                                <button onClick={() => ban(user._id)} className="btn btn-template-user" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faBan}></FontAwesomeIcon></button>
                             }
                             {user.state == -1 &&
-                                <button onClick={() => unban(user._id)} className="btn btn-template" style={{ float: "right" }}><FontAwesomeIcon icon={faBan}></FontAwesomeIcon></button>
+                                <button onClick={() => unban(user._id)} className="btn btn-template-user" style={{ float: "right" }}><FontAwesomeIcon icon={faBan}></FontAwesomeIcon></button>
                             }
-                            <Link to={`/check/${user._id}`} className="btn btn-template me-3" style={{ float: "right" }} ><FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon></Link>
+                            <Link to={`/check/${user._id}`} className="btn btn-template-user me-3" style={{ float: "right" }} ><FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon></Link>
                             
                         </div>
                         }

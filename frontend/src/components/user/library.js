@@ -29,7 +29,7 @@ export default function Library() {
                                     <div clclassNameass="card-body">
                                         <h5 className="card-title" style={{ textAlign: "center" }}>{module.label}</h5>
                                         {/*  <p className="card-text my-2">{module.description}</p>*/}
-                                        <button className="btn btn-template my-2" style={{ float: "right" }}>Check</button>
+                                        <button className="btn btn-template-user my-2" style={{ float: "right" }}>Check</button>
                                     </div>
                                 </div>
                             ))}
@@ -45,8 +45,8 @@ export default function Library() {
                                     <img src={require('../../assets/uploads/modules/' + module.image)} alt="" style={{ width: '100%', height: '13vw', objectFit: 'cover' }}></img>
                                     <div clclassNameass="card-body">
                                         <h5 className="card-title" style={{ textAlign: "center" }}>{module.label}</h5>
-                                        {/*  <p className="card-text my-2">{module.description}</p>*/}
-                                        <button className="btn btn-template my-2" style={{ float: "right" }}>Check</button>
+                                        
+                                        <button className="btn btn-template-user my-2" style={{ float: "right" }}>Check</button>
                                     </div>
                                 </div>
                             ))}

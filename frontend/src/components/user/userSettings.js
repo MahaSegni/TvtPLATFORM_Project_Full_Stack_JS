@@ -232,7 +232,7 @@ export default function UserSettings({ closeModal }) {
                                                 <h5 style={{ color: "red" }}>{secondFormErrors.passwordConfirmation}</h5>
                                                 <h5 style={{ textAlign: "center", color: "red" }}>{errorDisplay}</h5>
                                                 <div className="mt-5">
-                                                    <button type="submit" className="btn btn-template" >Submit</button>
+                                                    <button type="submit" className="btn btn-template-user" >Submit</button>
                                                 </div>
                                             </form >
                                         </div>
@@ -264,7 +264,7 @@ export default function UserSettings({ closeModal }) {
                                                     <h5 style={{ color: "red" }}>{emailFormErrors.currentPassword}</h5>
                                                     <h5 style={{ textAlign: "center", color: "red" }}>{errorEmailDisplay}</h5>
                                                     <div className="mt-5">
-                                                        <button type="submit" className="btn btn-template" >Submit</button>
+                                                        <button type="submit" className="btn btn-template-user" >Submit</button>
                                                     </div>
 
                                                 </form >
@@ -278,7 +278,7 @@ export default function UserSettings({ closeModal }) {
 
                                                     </div>
                                                     <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{codeForEmail.error}</h5>
-                                                    <button type="submit" className="btn btn-template">Submit</button>
+                                                    <button type="submit" className="btn btn-template-user">Submit</button>
                                                 </form>
 
                                             }
@@ -306,7 +306,7 @@ export default function UserSettings({ closeModal }) {
                                                 <h5 style={{ color: "red" }}>{deleteFormErrors.currentPassword}</h5>
                                                 <h5 style={{ textAlign: "center", color: "red" }}>{errorDeletelDisplay}</h5>
                                                 <div className="mt-5">
-                                                    <button type="submit" className="btn btn-template" >Submit</button>
+                                                    <button type="submit" className="btn btn-template-user" >Submit</button>
                                                 </div>
                                             </form >
                                         </div>
@@ -327,7 +327,7 @@ export default function UserSettings({ closeModal }) {
                     </div>
                 }
                 <div className="my-1" style={{ textAlign : "center" }}>
-                    <button onClick={() => closeModal(false)} className="btn btn-template" id="cancelBtn">Cancel</button>
+                    <button onClick={() => closeModal(false)} className="btn btn-template-user" id="cancelBtn">Cancel</button>
                 </div>
             </div>
         </div>
