@@ -1,6 +1,7 @@
 const EvaluationModel = require('../Model/Evaluation');
 const ModuleModel = require('../Model/Module');
 const QuestionModel = require('../Model/Evaluationquestion');
+const UserModel = require('../Model/User');
 
 
 module.exports.getOwner = async (req, res) => {
@@ -15,7 +16,19 @@ module.exports.getOwner = async (req, res) => {
   res.send(owner)
 }
 
+module.exports.getToken = async (req, res) => {
+  UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
+    res.send('authorization succeeded')
+  }}
+
 module.exports.getEvaluation = async (req, res) => {
+  UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
   const idModule = req.params.idModule;
   let idUser=req.params.idUser;
   let owner=null
@@ -34,7 +47,7 @@ module.exports.getEvaluation = async (req, res) => {
   }
   else { ev = await EvaluationModel.find({ public: true }); }
   res.send(ev)
-};
+}};
 
 module.exports.getEvaluationById = (req, res) => {
   let id = req.params.id;
@@ -100,8 +113,6 @@ module.exports.deleteEvaluation = async (req, res) => {
   let ev= await EvaluationModel.findById(req.params.id);
   console.log(ev.id)
   for (i in ev.refquestions){
-    //q=await QuestionModel.findById(ev.refquestions[i]);
-    //questions.push(q);
     await QuestionModel.findByIdAndRemove(ev.refquestions[i])
   }
   await EvaluationModel.findByIdAndRemove(req.params.id)

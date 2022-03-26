@@ -11,8 +11,13 @@ import AddEvaluation  from "./addEvaluation";
 import EvResults  from "./question/results";
 import UpdateEvaluation from "./updateEvaluation";
 import Questions from "./question/questions";
+import { useHistory } from "react-router-dom";
 import $ from "jquery"
+
+
+
 const Evaluations = (props) => {
+  const history = useHistory();
   var idModule="null";
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -35,40 +40,29 @@ const Evaluations = (props) => {
           });
      });
 
+  const [token, errtoken, reloadToken] =  useApi('evaluation/getToken/'+ connectedUser.id, null, 'GET', false, connectedUser.token);
+  if(token=="authorization failed"){
+    history.push('/signin')
+  }
+
   if(connectedUser.type!=="admin"){
     idModule="622e1c68ecacff8056ddbc18";
   }
-  const [evaluations, err, reloadEv] =  useApi('evaluation/get/'+ connectedUser.id+'/'+ idModule, null, 'GET', false);
-  const [owner, errOwner, reloadOwner] =  useApi('evaluation/getOwner/'+ connectedUser.id +'/' +idModule , null, 'GET', false);
+  const [evaluations, err, reloadEv] =  useApi('evaluation/get/'+ connectedUser.id+'/'+ idModule, null, 'GET', false, connectedUser.token);
+
+  const [owner, errOwner, reloadOwner] =  useApi('evaluation/getOwner/'+ connectedUser.id +'/' +idModule , null, 'GET', false, connectedUser.token);
 
    //console.log(evaluations)
   const deleteEvaluation = async (id) => {
-    const [,err] = await queryApi('evaluation/delete/'+id,null,"GET", false);
+    const [,err] = await queryApi('evaluation/delete/'+id,null,"GET", false, connectedUser.token);
     reloadEv()
 }
 
   async function updateStatus (id) {
     console.log(id);
-    const [, err] = await queryApi('evaluation/updateStatus/'+id, null, 'POST', false);
+    const [, err] = await queryApi('evaluation/updateStatus/'+id, null, 'POST', false, connectedUser.token);
     reloadEv();
 }
-
-
-  /*useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/evaluation/get`, { method: 'GET', })
-      .then(res => res.json())
-      .then(
-        (data) => {
-          setIsLoaded(true);
-          console.log(data);
-          setEvaluations(data);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-  }, [])*/
 
   return owner!==null && consult == true ? (<Questions evq={evaluationq} owner={owner} consult={setConsult} rlEv={reloadEv}/>):
   update == true ?(<UpdateEvaluation idU={idev} update={setUpdate} reload={reloadEv}/>):
@@ -76,7 +70,11 @@ const Evaluations = (props) => {
    (
       <>
         <div class="container mt-5">
+        <h4 class="logo  " style={{ textAlign: "center", color: "#5fcf80", fontSize:"200%"}}>Evaluations</h4>
           {owner==true && 
+              <Button onClick={()=>{setEvResults(true)}} class="btn-template" style={{ color:"black", border:"2px solid black", marginBottom:"1%", width:"17%"}}><i class="fa fa-bar-chart" style={{color:"black",fontSize:"25px", paddingRight:"10"}}></i><label style={{marginLeft:"3%"}}>See Results</label></Button>
+            }
+            {connectedUser.type=="admin" && 
               <Button onClick={()=>{setEvResults(true)}} class="btn-template" style={{ color:"black", border:"2px solid black", marginBottom:"1%", width:"17%"}}><i class="fa fa-bar-chart" style={{color:"black",fontSize:"25px", paddingRight:"10"}}></i><label style={{marginLeft:"3%"}}>See Results</label></Button>
             }
             <div class="row" style={{marginBottom:"2%"}}>
@@ -136,10 +134,6 @@ const Evaluations = (props) => {
 
 export default Evaluations;
 
-const ProductsWrapper = styled.div`
- text-align: center; 
- display: flex; 
-`;
 const Button = styled.button`
   /* Adapt the colors based on primary prop */
   background: ${(props) => (props.primary ? "palevioletred" : "white")
@@ -150,10 +144,4 @@ const Button = styled.button`
   margin-top:1rem;
   border: 2px solid #5FCF80;
   border-radius: 3px;
-`;
-const Footer = styled.footer`
-  background: transparent;
-  grid-area: footer;
-  padding: 0.15rem;
-  text-align: right !important;
 `;

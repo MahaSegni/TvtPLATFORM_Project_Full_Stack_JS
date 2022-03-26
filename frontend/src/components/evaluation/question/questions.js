@@ -22,7 +22,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
   const [thirdUpdate, setThirdUpdate] = useState("Neutral");
   const [fourthUpdate, setFourthUpdate] = useState("Dissatisfied");
   const [fifthUpdate, setFifthUpdate] = useState("Very dissatisfied");
-  const [questions, err, reloadQ] = useApi('evquestion/get/' + evq._id, null, 'GET', false);
+  const [questions, err, reloadQ] = useApi('evquestion/get/' + evq._id, null, 'GET', false, connectedUser.token);
   
   const [formData, setFormData] = useState({text: "",type: "" })
 

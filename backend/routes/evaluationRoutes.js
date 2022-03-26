@@ -16,6 +16,7 @@ const upload = multer({storage:storage})
 
 
 router.get("/get/:idUser/:idModule",evaluationController.getEvaluation);
+router.get("/getToken/:idUser",evaluationController.getToken);
 router.get("/getOwner/:idUser/:idModule",evaluationController.getOwner);
 router.get("/getById/:id",evaluationController.getEvaluationById);
 router.post("/add/:idModule",evaluationController.addEvaluation);
