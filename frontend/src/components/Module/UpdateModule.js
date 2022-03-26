@@ -1,85 +1,126 @@
 import styled from "styled-components";
-import {useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { queryApi } from "../../utils/queryApi";
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import React from 'react';
-export default function UpdateModule({props, update, idu, reload}){
-    let id = idu;
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useSelector } from "react-redux";
+import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 
-    console.log(idu)
-    var fileName = ""; 
+import "../../assets/css/cardmodule.css"
+export default function UpdateModule({ props, update, idu, reload, tabindex }) {
+  let id = idu;
+
+  console.log(idu)
+  var fileName = "";
   let myCurrentDate = new Date();
   const history = useHistory();
-
-  const [module, setModule] = useState({});
+  const [ckedtiorValue, setckedtiorValue] = useState("");
+  const [ckedtiorValide, setckedtiorValide] = useState(false);
+  const [ckedtiormessage, setckedtiormessage] = useState("");
+  var connectedUser = useSelector(selectConnectedUser)
   
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/module/getById/${idu}`, { method: 'GET', })
-      .then(res => res.json())
-      .then(
-        (data) => {
-          setModule(data);
-          console.log("data",data);
-        }
-      )
+  const [module, setModule] = useState({
+    label: ""
+  });
+
+
+  useEffect(async () => {
+    await axios.get('http://localhost:3000/api/module/getById/' + id).then(res => {
+      setModule(res.data)
+    })
   }, [])
 
-       const [errors,setErrors] = useState({visbile:false,message:""});
-         const onChange = (e) => {
-            setModule({...module,[e.target.name]:e.target.value})
-       }
+  
+
+  const onChange = (e) => {
+    console.log(e.target.value)
+    setModule({ ...module, [e.target.name]: e.target.value })
+  }
+  const [uploadImage, setUploadImage] = useState({
+    image: ""
+})
+const onChangeFile = (e) => {
+    setUploadImage({ ...uploadImage, image: e.target.files[0] })
+    //updateImage()
+}
+
+  const refresh = async (e) => {
+
+    window.location.reload(true);
+  }
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    module.description = ckedtiorValue;
+    let result=await updateModule()
+    window.location.reload(true);
+  }
+  const updateModule = async () => {
+    const [result, err] = await queryApi('module/update', module, "PUT", false);
+ if (uploadImage.image != "") {
+       const [imageResult, err] = await queryApi('module/uploadPicture/' + result._id, uploadImage, "PUT", true, connectedUser.token)
        
-        const refresh= async (e) =>{
-       
-          window.location.reload(true);
-        }
-        const onSubmit = async (e) =>{
-              e.preventDefault();
-               await queryApi('module/update', module, "PUT", false);
-            // await fetch(`${process.env.REACT_APP_API_URL}/module/update`,module,"PUT",false)
-            //  await queryApi('module/update', module, "PUT", false);
-             // window.location.reload(true);
-           }
-       const {label,description,date_update}= module;
-      
-;
-   return (
-            <Wrapper>
-              <Form class="w-50 mx-auto" onSubmit={onSubmit} style={{border: "2px solid #5FCF80" ,padding:40, borderRadius:30, width:"84%", marginBottom:15, boxShadow:"2px 2px 2px #5FCF80"}}>
-              <h4 class="logo  " style={{ textAlign: "center", color: "#5fcf80" }}>update Module</h4>
-                  <div class="form-group">
-                      {errors.visbile && <FormError>{errors.message}</FormError>}
-                  </div>
-                  <div class="form-group">
-                    <input style={{ marginTop:30 }} class="form-control" placeholder="Label" 
-                            type='text'
-                            name="label"
-                            value={label}
-                            onChange={(e)=>onChange(e)} />
-                  </div>
-                  <div class="form-group">
-                    <input style={{ marginTop:30 }} class="form-control" placeholder="Description" 
-                            type='text'
-                            name="description"
-                            value={description}
-                            onChange={(e)=>onChange(e)} />
-                  </div>
-                  <FormGroup>
-                      <FormField
+    }
+    
+    return result
+}
+
+  const { label, description } = module;
+
+  ;
+  return (
+    <>
+      <a class="btn btn-template" onClick={refresh} ><i class="fas fa-arrow-left"></i></a>
+      <Wrapper>
+
+        <Form class="w-50 mx-auto" onSubmit={onSubmit} style={{ border: "2px solid #5FCF80", padding: 40, borderRadius: 30, width: "84%", marginBottom: 15, boxShadow: "2px 2px 2px #5FCF80" }}>
+          <h4 class="logo  " style={{ textAlign: "center", color: "#5fcf80" }}>update Module</h4>
+
+          <div class="form-group">
+            <input style={{ marginTop: 30 }} class="form-control" placeholder="Label"
+              type='text'
+              name="label"
+              value={module.label}
+              onChange={(e) => onChange(e)} />
+          </div>
+          <div class="form-group my-3">
+            <CKEditor
+              editor={ClassicEditor}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+                setckedtiorValue(data);
+                if (data.length == 0) {
+                  setckedtiormessage("texte is required");
+                  setckedtiorValide(false);
+                } else {
+                  setckedtiormessage("");
+                  setckedtiorValide(true);
+                }
+                console.log(ckedtiorValide)
+              }
+              }
+            />
+          </div>
+          <FormGroup>
+        <label for="file" class="label-file">Choose image</label>
+                  <input id="file" class="input-file" 
                           type='file'
                           name="image"
-                          onChange={(e)=>onChange(e)}
-                          >                   
-                      </FormField>
-                  </FormGroup>
-                  <div className="mt-3 text-center" >
-                    <button type="submit" className="btn btn-md btn-template" style={{marginRight:"2%"}}>Save</button>
-                    <button className="btn btn-md btn-template" id="cancelBtn" type="reset" onClick={refresh}  >Cancel</button>
-                  </div>
-              </Form>
-            </Wrapper>
-   );
+                          onChange={(e)=>onChangeFile(e)}
+                  />
+        </FormGroup>
+          <div className="mt-3 text-center" >
+            <button type="submit" className="btn btn-md btn-template" style={{ marginRight: "2%" }} disabled={!ckedtiorValide}>Save</button>
+            <button className="btn btn-md btn-update" id="cancelBtn" type="reset" onClick={refresh}  >Cancel</button>
+          </div>
+        </Form>
+      </Wrapper>
+    </>
+  );
 }
 
 const FormButton = styled.button`
@@ -93,7 +134,7 @@ const FormButton = styled.button`
   padding: 0.25em 1em;
   border: 2px solid #5FCF80;
   border-radius: 3px;
-`; 
+`;
 const Wrapper = styled.div`
  height: 100%;
  display: flex;
@@ -136,16 +177,16 @@ const FormError = styled.p`
  color: #f74b1b;
 `;
 const Spinner = () => (
- <Loader viewBox="0 0 50 50">
-   <circle
-     className="path"
-     cx="25"
-     cy="25"
-     r="20"
-     fill="none"
-     strokeWidth="2"
-   />
- </Loader>
+  <Loader viewBox="0 0 50 50">
+    <circle
+      className="path"
+      cx="25"
+      cy="25"
+      r="20"
+      fill="none"
+      strokeWidth="2"
+    />
+  </Loader>
 );
 const Loader = styled.svg`
  animation: rotate 2s linear infinite;

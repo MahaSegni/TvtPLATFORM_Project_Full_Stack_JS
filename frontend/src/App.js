@@ -6,7 +6,6 @@ import '../node_modules/bootstrap/dist/css/bootstrap.css'
 import './assets/css/style.css'
 
 import CategoryModule from './components/Category/admincategory'
-import AddCategoryModule from './components/Category/AddCategoryAdmin'
 import Module from './components/Module/listModule'
 
 const Navbar = React.lazy(() => import('./components/navbar'));
@@ -30,7 +29,6 @@ function App() {
             <Route exact path='/module' render={props => <Module {...props} />}></Route>
            
             <Route exact path='/category' render={props => <CategoryModule {...props} />}></Route>
-            <Route  path='/category/add' render={props => <AddCategoryModule {...props} />}></Route>
           </Switch>
         </Suspense>
       </BrowserRouter>

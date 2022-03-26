@@ -1,3 +1,27 @@
+
+.label-file {
+    cursor: pointer;
+    color: #6C7592;
+	border: 1px solid #CED4DA;
+	border-radius: 4px;
+	padding:0.5%;
+	padding-left:1%;
+	margin-bottom:1%;
+}
+.label-file:hover {
+    color: rgb(5, 68, 104);
+}
+/* et on masque le input*/
+.input-file {
+    display: none;
+}
+
+input{
+	outline:none;
+}
+
+
+
 .btn-delete{
   background: #f05252;
   opacity: 0.8;
@@ -15,7 +39,7 @@
 
 }
 .btn-update{
-  background: burlywood;
+  background: #7b9b85;
   opacity: 0.8;
   color: white !important;
   transition: 0.3s;

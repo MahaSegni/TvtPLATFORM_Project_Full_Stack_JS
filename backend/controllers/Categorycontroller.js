@@ -1,19 +1,25 @@
 const categoryModel = require("../Model/CategorieModule");
 const ObjectID = require("mongoose").Types.ObjectId;
 
-
+const ModuleModel = require("../Model/Module.js");
 module.exports.readPost = (req, res) => {
     categoryModel.find((err, docs) => {
     if (!err) res.send(docs);
     else console.log("Error to get data : " + err);
   }).sort({ createdAt: -1 });
 };
-
-module.exports.createPost = async (req, res) => {
+module.exports.uploadPicture = async (req, res) => {
+  let modul=await categoryModel.findById(req.params.id)
+  modul.image = req.file.filename
+  modul.save()
+       res.send("err")
+},
+module.exports.createCategory = async (req, res) => {
  
 
   const newPost = new categoryModel({
     label: req.body.label,
+    image : req.body.image,
     sous_categorie: [],
   });
 
@@ -57,6 +63,19 @@ module.exports.deletePost = (req, res) => {
     else console.log("Delete error : " + err);
   });
 };
+
+module.exports.getmodulesfromcategory = async  (req, res) => {
+  let modules=[]
+  let docs =await categoryModel.findById(req.params.id)
+
+  for(let i in docs.modules)
+  {console.log(docs.modules[i]);
+    modules.push( await ModuleModel.findById(docs.modules[i] ))}
+  console.log (modules)
+  res.send(modules)
+
+};
+
 module.exports.addmoduleToCategory = (req, res) => {
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);

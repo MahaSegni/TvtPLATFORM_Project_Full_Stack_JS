@@ -6,6 +6,7 @@ import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from "react-hook-form";
 import React from 'react';
+import "../../assets/css/cardmodule.css"
 
 import Select from '@mui/material/Select';
 import * as yup from "yup";
@@ -14,6 +15,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import { InputLabel, MenuItem } from "@mui/material";
+
 const schema = yup.object({
   label: yup.string().required().max(30),
 }).required();
@@ -32,14 +34,15 @@ export default function AddModule({ props, add, reload }) {
     label: "",
     description: "",
     date_creation: myCurrentDate.toDateString(),
-    image: "",
+    image:"",
     idowner: connectedUser.id,
   })
-  const [categoryid, setcategoryid] = React.useState('');
+  const [categoryid, setcategoryid] = useState("");
   const [category, setCategory] = useState([]);
+
   const handleChange = (event) => {
     setcategoryid(event.target.value);
-    console.log(categoryid)
+ 
   };
   useEffect(async () => {
     await axios.get('http://localhost:3000/api/category/get').then(res => {
@@ -48,20 +51,20 @@ export default function AddModule({ props, add, reload }) {
   }, [])
 
   const addModuleToCategory = (id, idModule) => {
-
     axios.patch(`http://localhost:3000/api/category/addmoduletocategory/${id}/${idModule}`)
-
-
   }
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+  const [uploadImage, setUploadImage] = useState({
+    image: ""
+})
+const onChangeFile = (e) => {
+    setUploadImage({ ...uploadImage, image: e.target.files[0] })
+    //updateImage()
+}
   
-  const onChangeFile = async (e) => {
-    fileName = Date.now() + ".png";
-    setFormData({ ...formData, image: fileName })
-  }
   const refresh = async (e) => {
 
     window.location.reload(true);
@@ -69,17 +72,24 @@ export default function AddModule({ props, add, reload }) {
   const onSubmit = async (e) => {
     //e.preventDefault();
     formData.description = ckedtiorValue;
-    const [result, err] = await queryApi('module/add', formData, "POST", false);
-    
-    console.log(result.result._id)
+   let result=await updateModule()
     // history.push("/module");
     addModuleToCategory(categoryid, result.result._id);
     window.location.reload(true);
     // reload();
 
   }
+  const updateModule = async () => {
+    const [result, err2] = await queryApi('module/add', formData, "POST", false, connectedUser.token)
+    if (uploadImage.image != "") {
+       const [imageResult, err] = await queryApi('module/uploadPicture/' + result.result._id, uploadImage, "PUT", true, connectedUser.token)
+       
+    }
+    
+    return result
+}
 
-  const { label, description, date_creation, image } = formData;
+  const { label, description, date_creation } = formData;
   ;
   return (
     <Wrapper>
@@ -134,16 +144,17 @@ export default function AddModule({ props, add, reload }) {
           ))}
         </Select>
         <FormGroup>
-          <FormField
-            type='file'
-            name="image"
-            onChange={(e) => onChange(e)}
-          >
-          </FormField>
+        <label for="file" class="label-file">Choose image</label>
+                  <input id="file" class="input-file" 
+                          type='file'
+                          name="image"
+                          onChange={(e)=>onChangeFile(e)}
+                  />
         </FormGroup>
+        
         <div className="mt-3 text-center" >
-          <button type="submit" className="btn btn-md btn-template" style={{ marginRight: "2%" }}>Save</button>
-          <button className="btn btn-md btn-template" id="cancelBtn" type="reset" onClick={refresh} disabled={!ckedtiorValide}>Cancel</button>
+          <button type="submit" className="btn btn-md btn-template" style={{ marginRight: "2%" }}disabled={!ckedtiorValide}>Save</button>
+          <button className="btn btn-md btn-update" id="cancelBtn" type="reset" onClick={refresh} >Cancel</button>
         </div>
       </Form>
     </Wrapper>

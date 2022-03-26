@@ -15,6 +15,13 @@ module.exports = {
       res.status(404).json({ statue: false, message: error.message });
     }
   },
+  getToken : async (req, res) => {
+    UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+    if(UserTok==null){
+      return res.send('authorization failed')
+    }else{
+      res.send('authorization succeeded')
+    }},
 
   getModuleById: async (req, res) => {
     try {
@@ -62,21 +69,16 @@ module.exports = {
     }
   },
   updateModule: async (req, res) => {
-    try {
-    
-      // const updateClass = new ClassModel(req.body);
-      const data = await ModuleModel.findByIdAndUpdate(
-        req.params.id,
-        { label: req.body.label, description: req.body.description, image: req.body.image ,date_update: new Date() },
-      );
-      res.status(201).json({
-        statue: true,
-        message: " Module Updated Succefully",
-        result: data,
-      });
-    } catch (error) {
-      res.status(400).json({ statue: false, message: error.message });
-    }
+    console.log(req.body);
+     let modul=await ModuleModel.findById(req.body._id);
+
+     modul.label= req.body.label
+
+     modul.description= req.body.description
+     modul.image = req.body.image
+     modul.date_update= new Date()
+     modul.save()
+     return  res.send(modul)
   },
 
   deleteModule: async (req, res) => {
@@ -182,6 +184,16 @@ owner = true;
       res.status(400).json({ statue: false, message: error.message });
     }
   },
+  uploadPicture :async (req, res) => {
+    
+    let modul=await ModuleModel.findById(req.params.id)
+    modul.image = req.file.filename
+    modul.save()
+       
+         res.send("err")
+  },
+
+
   getOwner : async (req, res) => {
     if(!ObjectID.isValid(req.params.id))
   return res.status(400).send("ID unknown : " + req.params.id);
