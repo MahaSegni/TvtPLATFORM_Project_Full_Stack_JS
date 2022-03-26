@@ -49,15 +49,15 @@ const FriendsRequests = (props) => {
                                 <li class="list-group-item text-left"
                                     key={index}>
        
-      
+       {/* src={require('../../assets/uploads/user/' + user.image)} */}
         <img class="profile-photo-lg" src="https://bootdey.com/img/Content/User_for_snippets.png"/>
         
-        <label class="name" >{user.name} {user.lastName}  <br/><label class="text-muted" style={{fontSize:13}}>{user.birthDate.substring(0, 10)}</label></label> 
+        <label class="name text-capitalize" >{user.name} {user.lastName}  <br/>{user.birthDate&&<label class="text-muted" style={{fontSize:13}}> {user.birthDate.substring(0, 10)}</label>}</label> 
         
         <label class="pull-right">
             <a  onClick={() => { acceptRequest(user._id) }} class="btn  btn-accept  " data-placement="top" style={{background:("#5fcf80"),color:("white")}} data-toggle="tooltip" data-original-title="Delete">
             <i class="fa fa-check" aria-hidden="true"></i> </a>
-            <a   onClick={() => { rejectRequest(user._id) }} class="btn btn-danger " data-placement="top" data-toggle="tooltip" data-original-title="Delete"> 
+            <a   onClick={() => { rejectRequest(user._id) }} class="btn btn-danger " style={{color:("white")}} data-placement="top" data-toggle="tooltip" data-original-title="Delete"> 
             <i class="fas fa-trash-alt"></i></a>
         </label>
         <div class="break"></div>

@@ -237,6 +237,7 @@ module.exports.deleteFriend = async (req, res) => {
   if(UserTok==null){
     return res.send('authorization failed')
   }else{
+
   let user = await userModel.findById(req.params.idUser)
   let reffriends = []
   let idFriendship;
@@ -249,7 +250,7 @@ module.exports.deleteFriend = async (req, res) => {
     }
   }
 
-  user.reffriends.pull(idFriendship);
+ user.reffriends.pull(idFriendship);
   await user.save();
 
 
@@ -269,13 +270,15 @@ module.exports.deleteFriend = async (req, res) => {
   friend.reffriends.pull(idFriendshipfriend);
   await friend.save();
 
-  FriendModel.deleteMany({idFriendshipfriend,idFriendship}, function(err, result) {
+  
+  FriendModel.deleteMany(   {_id: { $in: [idFriendshipfriend,idFriendship ]}}, function(err, result) {
     if (err) {
       res.send(err);
     } else {
       res.send(result);
     }
   });
+
   }
 };
 module.exports.updateFriend = async (req, res) => {
@@ -332,3 +335,7 @@ module.exports.getAllFriends = (req, res) => {
 
   return (myfriends)
 };
+
+
+
+

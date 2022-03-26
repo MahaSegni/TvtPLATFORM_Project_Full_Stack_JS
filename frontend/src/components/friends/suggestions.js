@@ -17,7 +17,7 @@ const Suggestions = (props) => {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
-    });
+   });
 
 
     const [error, setError] = useState(null);
@@ -84,7 +84,7 @@ const Suggestions = (props) => {
                                 <div class="card" id="mydiv"  >
                                     <div class="card-body p-t-10">
                                         <div class="media-main">
-                                            <a class="pull-left" href="#">
+                                            <a class="pull-left" >{/*require('../../assets/uploads/user/' + suggestion.image*/}
                                                 <img class="profile-photo-lg" src={require('../../assets/uploads/avatar7.png')} alt="" />
                                             </a>
                                             <div class="pull-right btn-group-sm">
@@ -94,10 +94,10 @@ const Suggestions = (props) => {
                                                 </a>
                                             </div>
                                             <div class="info" style={{height:"130px"}}>
-                                                <h4>{suggestion.name} {suggestion.lastName}</h4>
-                                                <label class="text-muted" >Course Preferences : </label>
+                                                <h4 class="text-capitalize">{suggestion.name} {suggestion.lastName}</h4>
+                                                {suggestion.coursepreferences!="" && <label class="text-muted" >Course Preferences : </label>}
                                                 {suggestion.coursepreferences &&
-                        suggestion.coursepreferences.map((cp) => (
+                                                    suggestion.coursepreferences.map((cp) => (
                                                 <label style={{color:"#5fcf80" }} >&nbsp; {cp}</label>))}
                                             </div>
                                         </div>
