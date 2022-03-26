@@ -82,12 +82,12 @@ export default function UpdateEvaluation({props, update, idU, reload}){
                   onChange={(e)=>onChange(e)} />
         </div>
         <FormGroup>
-            <FormField 
-                type='file'
-                name="image"
-                onChange={(e)=>onChangeFile(e)}
-                >                   
-            </FormField>
+        <label for="file" class="label-file">Choose image</label>
+        <input id="file" class="input-file" 
+               type='file'
+               name="image"
+               onChange={(e)=>onChangeFile(e)}
+        />
             {fileuploaded &&
             <center><img src={imgSrc} style={{height:"50%", width:"50%"}} /></center>}
         </FormGroup>

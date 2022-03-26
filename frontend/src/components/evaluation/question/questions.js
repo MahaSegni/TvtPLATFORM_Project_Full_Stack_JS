@@ -107,7 +107,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
             </div>}
             {owner==false &&
             <div className="title">
-              <h1 class="logo mx-auto" style={{ color: "#5fcf80" }}> {evq.title}</h1>
+              <h1 class="logo mx-auto text-capitalize" style={{ color: "#5fcf80" }}> {evq.title}</h1>
             </div>}
             <div id="accordion" style={{ display: "block" }}>
               {owner == true && evq.public == false &&
@@ -166,7 +166,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                       <>
                         <div style={{ marginTop: "2%", marginBottom: "2%" }}>
                           <p>
-                            <strong style={{ color: "rgb(5, 68, 104)" }}>Q{index + 1}. {question.text}</strong>
+                            <strong class="text-capitalize" style={{ color: "rgb(5, 68, 104)" }}>Q{index + 1}. {question.text}</strong>
                             {owner == true &&
                               <div class="pull-right">
                                 {evq.public == false && <>

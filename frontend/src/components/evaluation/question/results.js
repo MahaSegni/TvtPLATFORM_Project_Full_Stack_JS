@@ -1,74 +1,29 @@
 import { queryApi } from "../../../utils/queryApi";
 import { useApi } from "../../../utils/useApi";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Chart from "react-apexcharts";
-export default function Results({ evaluations }) {
-    const [chart, setChart] = useState({
-        options: {
-            chart: {
-                id: "basic-bar"
-            },
-            xaxis: {
-                categories: []
-            },
-        },
-        series: [
-            {
-                name: "series-1",
-                data:[]
-            }
-        ]
-    })
-    function setChartData(evaluation)
-    { let names=[]
-        let data=[]
-        evaluation.submissions.map((submission, indexSub) => {
-          names.push( submission.nameSubmitter)
-          data.push( submission.result)
-    })
-    setChart.options.xaxis.categories(names)
-    setChart.series.data(data)
-    
-    }
-
-  
-                           
-                            
-                    
-
-
-    console.log(chart);
+import Result from "./result";
+export default function Results({ evaluations, evresults }) {
 
     return (
         <>
             <div className="container mt-5">
+                <a onClick={() => {evresults(false);}}><i style={{ color: "rgb(5, 68, 104)" }} class="fas fa-arrow-circle-left fa-2x"></i></a>
                 <center>
                     <div className="row">
-                    {evaluations &&
-                evaluations.map((evaluation, indexEvs) => ( 
-                            
-                 
-                        <div class="col-lg-6">
-                 {setChartData(evaluation)} 
-                  {chart.options.xaxis.categories &&  
-                            <div className="mixed-chart">
-                                <Chart
-                                    options={chart.options}
-                                    series={chart.series}
-                                    type="bar"
-                                    width="500"
-                                />
-                            </div>
-                            }
-                        </div>
-                     ))
-                             }
-                    
+                        {evaluations &&
+                        evaluations.map((evaluation, indexEvs) => ( 
+                            <>{evaluation.submissions!="" &&
+                            <div class="col-lg-6">
+                                <p class="text-capitalize">{evaluation.title}</p>
+                                <Result
+                                        key={indexEvs}
+                                        evaluation={evaluation}>
+                                </Result>
+                            </div>}</>)) 
+                        }
                     </div>
                 </center>
             </div>
-
-             
-       </> 
-    )
+        </> )
 }

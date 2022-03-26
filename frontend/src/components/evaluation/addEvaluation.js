@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { queryApi } from "../../utils/queryApi";
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
+import "../../assets/css/evaluations.css"
 
 export default function AddEvaluation({props, add, reload}){
   var fileName = ""; 
@@ -63,12 +64,12 @@ export default function AddEvaluation({props, add, reload}){
                             onChange={(e)=>onChange(e)} />
                   </div>
                   <FormGroup>
-                      <FormField
+                  <label for="file" class="label-file">Choose image</label>
+                  <input id="file" class="input-file" 
                           type='file'
                           name="image"
                           onChange={(e)=>onChangeFile(e)}
-                          >                   
-                      </FormField>
+                  />
                       {fileuploaded &&
                       <center><img src={imgSrc} style={{height:"50%", width:"50%"}} /></center>}
                   </FormGroup>

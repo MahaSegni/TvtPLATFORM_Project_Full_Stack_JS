@@ -74,7 +74,6 @@ module.exports.addEvaluation = async (req, res) => {
 };
 
 module.exports.updateEvaluation = async (req, res, next) => {
-  
   let id = req.body._id;
   EvaluationModel.findByIdAndUpdate(
     id,
@@ -96,10 +95,16 @@ module.exports.updateStatus = async (req, res, next) => {
   return res.send(f);
 };
 
-module.exports.deleteEvaluation = (req, res) => {
-  EvaluationModel.findByIdAndRemove(req.params.id, (err, docs) => {
-    if (!err) res.send(docs);
-    else console.log("Delete error : " + err);
-  });
+module.exports.deleteEvaluation = async (req, res) => {
+  let questions=[];
+  let ev= await EvaluationModel.findById(req.params.id);
+  console.log(ev.id)
+  for (i in ev.refquestions){
+    //q=await QuestionModel.findById(ev.refquestions[i]);
+    //questions.push(q);
+    await QuestionModel.findByIdAndRemove(ev.refquestions[i])
+  }
+  await EvaluationModel.findByIdAndRemove(req.params.id)
+  res.send("ok");
 };
 

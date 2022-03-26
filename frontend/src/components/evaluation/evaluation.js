@@ -11,12 +11,10 @@ export default function Evaluation({ props, id, update, ev, deleteEvaluation, up
   const history = useHistory();
   const [evaluation, setEvaluation] = useState(ev);
   let connectedUser = useSelector(selectConnectedUser)
-  const [iddel, setiddel] = useState();
- /*async function confirmedelete(id) {
-    
-    await setiddel(id)
-  console.log(iddel)
-  }*/
+
+  function Capitalize(str){
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
   return (
 
@@ -26,16 +24,16 @@ export default function Evaluation({ props, id, update, ev, deleteEvaluation, up
           {evaluation.image != null &&
             <img src={require('../../assets/uploads/evaluation/' + evaluation.image)} alt="" />}
           {evaluation.image == null &&
-            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />}
+            <img src={require('C:/Users/Emna/Desktop/projetMERN/Project_Full_Stack_JS/frontend/src/assets/img/evaluation1.jpg')} alt="" />}
 
-          <a href="#" class="user-link">{evaluation.title}</a>
-          <span class="user-subhead">Module: {evaluation.nomModule}</span>
+          <a class="user-link">{Capitalize(evaluation.title)}</a>
+          <span class="user-subhead text-capitalize" style={{ color: "rgb(5, 68, 104)" }}>Module: {evaluation.nomModule}</span>
         </td>
         <td>
-          <a href="#"><span style={{ color: "black" }}>Created at </span> {evaluation.date.substring(0, 10)}</a>
+          <a><span style={{ color: "black"}}>Created at : </span><span style={{ color: "rgb(5, 68, 104)" }}>{evaluation.date.substring(0, 10)}</span></a>
         </td>
         <td>
-          <a href="#"><span style={{ color: "black" }}>Last edit </span> {evaluation.lastEdit.substring(0, 10)}</a>
+          <a><span style={{ color: "black"}}>Last edit : </span><span style={{ color: "rgb(5, 68, 104)" }}>{evaluation.lastEdit.substring(0, 10)}</span></a>
         </td>
         <td style={{ width: "20%" }}>
           {owner == true && evaluation.public == false &&
@@ -53,14 +51,14 @@ export default function Evaluation({ props, id, update, ev, deleteEvaluation, up
               </span>
             </a>}
           {owner == true &&
-            <a onClick={()=> {deleteEvaluation(evaluation._id) }} data-toggle="modal" data-target="#ConfirmationModal" style={{ border: 0, background: "transparent", color: "red" }} class="table-link">
+            <a data-toggle="modal" data-target={`#ConfirmationModal${evaluation._id}`} style={{ border: 0, background: "transparent", color: "red" }} class="table-link">
               <span class="fa-stack">
                 <i class="fa fa-square fa-stack-2x"></i>
                 <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
               </span>
             </a>}
           {connectedUser.type === "admin" &&
-            <a onClick={()=> {deleteEvaluation(evaluation._id) }} data-toggle="modal" data-target="#ConfirmationModal" style={{ border: 0, background: "transparent", color: "red" }} class="table-link">
+            <a  data-toggle="modal"  data-target={`#ConfirmationModal${evaluation._id}`}style={{ border: 0, background: "transparent", color: "red" }} class="table-link">
               <span class="fa-stack">
                 <i class="fa fa-square fa-stack-2x"></i>
                 <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
@@ -95,9 +93,9 @@ export default function Evaluation({ props, id, update, ev, deleteEvaluation, up
         </td>
 
       </tr>
-      {/*  -----------------------------------------------------ConfirmationModal----------------------------------------------
+      {/*  -----------------------------------------------------ConfirmationModal----------------------------------------------*/}
       
-      <div class="modal fade" id="ConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal fade" id={`ConfirmationModal${evaluation._id}`} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-body">
@@ -110,12 +108,12 @@ export default function Evaluation({ props, id, update, ev, deleteEvaluation, up
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-template " id="cancelBtn" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-template" data-dismiss="modal" onClick={async() => { let idd= await iddel;console.log("ok",idd);deleteEvaluation(evaluation._id)}}>Submit</button>
+              <button type="button" class="btn btn-template" data-dismiss="modal" onClick={() => {deleteEvaluation(evaluation._id)}}>Submit</button>
               </div>
               </div>
             </div>
           </div>
-      */}
+      
 
     </>
   );

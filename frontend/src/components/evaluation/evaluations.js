@@ -72,45 +72,39 @@ const Evaluations = (props) => {
 
   return owner!==null && consult == true ? (<Questions evq={evaluationq} owner={owner} consult={setConsult} rlEv={reloadEv}/>):
   update == true ?(<UpdateEvaluation idU={idev} update={setUpdate} reload={reloadEv}/>):
-  evresults == true ? (<EvResults evaluations={evaluations}/>):
+  evresults == true ? (<EvResults evaluations={evaluations} evresults={setEvResults}/>):
    (
       <>
-               <div class="container mt-5">
-               {owner==true && 
-                <Button onClick={()=>{setEvResults(true)}} class="btn-template" style={{ color:"black", border:"2px solid black", marginBottom:"1%"}}><i class="fa fa-bar-chart" style={{color:"black",fontSize:"25px", paddingRight:"10"}}></i>See Results</Button>
-               }
-                <div class="row" style={{marginBottom:"2%"}}>
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-body p-t-0">
-                                <div class="input-group">
-                                    <input type="text" id="search" name="example-input1-group2" class="form-control" placeholder="Search" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-effect-ripple btn-template"><i class="fa fa-search" ></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
-
-           
-         
-      
-       
-      {evaluations  && owner!=null &&
-       
-        <div class="container">
+        <div class="container mt-5">
           {owner==true && 
-           <label style={{marginLeft:"83%"}}>
-            <Button  onClick={() => setAdd(!add)}>Add Evaluation</Button>&nbsp;&nbsp;
-          </label>
-          
-        }
-        {add==true &&
-         <AddEvaluation add={setAdd} reload={reloadEv}/>
-         }
+              <Button onClick={()=>{setEvResults(true)}} class="btn-template" style={{ color:"black", border:"2px solid black", marginBottom:"1%", width:"17%"}}><i class="fa fa-bar-chart" style={{color:"black",fontSize:"25px", paddingRight:"10"}}></i><label style={{marginLeft:"3%"}}>See Results</label></Button>
+            }
+            <div class="row" style={{marginBottom:"2%"}}>
+              <div class="col-lg-12">
+                <div class="panel panel-default">
+                  <div class="panel-body p-t-0">
+                    <div class="input-group">
+                      <input type="text" id="search" name="example-input1-group2" class="form-control" placeholder="Search" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-effect-ripple btn-template"><i class="fa fa-search" ></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+       
+        {evaluations  && owner!=null &&
+          <div class="container">
+            {owner==true && 
+            <label style={{marginLeft:"83%"}}>
+              <Button  onClick={() => setAdd(!add)}>Add Evaluation</Button>&nbsp;&nbsp;
+            </label>  
+          }
+          {add==true &&
+          <AddEvaluation add={setAdd} reload={reloadEv}/>
+          }
           <div class="row">
             <div class="table-responsive">
               <table class="table user-list"  >
@@ -136,7 +130,7 @@ const Evaluations = (props) => {
           </div>
         </div>
         }                
-        </>
+      </>
     );
 }
 
