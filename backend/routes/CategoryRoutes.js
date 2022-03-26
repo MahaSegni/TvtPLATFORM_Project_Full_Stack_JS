@@ -11,8 +11,9 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage:storage})
 router.get('/get', Categorycontroller.readPost);
+router.get('/get/:id', Categorycontroller.getModuleById);
 router.post('/add', Categorycontroller.createCategory);
-router.put('/:id', Categorycontroller.updatePost);
+router.put('/update', Categorycontroller.updateCategory);
 router.delete('/delete/:id', Categorycontroller.deletePost);
 router.put("/uploadPicture/:id",upload.single('image'),Categorycontroller.uploadPicture);
 router.patch('/addmoduletocategory/:id/:idModule', Categorycontroller.addmoduleToCategory);

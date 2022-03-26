@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 import DayJS from 'react-dayjs';
-import ListCategory from "../Category/ListCategory";
 import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
@@ -292,35 +291,7 @@ export default function listModule() {
       </TabPanel>
     </div>
 
-  ) : connectedUser.type == "disconnected" ? (
-    <div class="container">
-      <div>
-        {show == false && <div class="container content">
-          <div class="row gutters">
-            {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image }) => {
-              return (<div class="col-lg-4 col-md-4 col-sm-12">
-                <div class="plan-card plan-one">
-                  <RowDetailsFront label={label} image={image} />
-                  <div class="plan-footer">
-                    <a class="btn btn-template m-2 pull-right " onClick={() => {
-                      setshow(!show)
-                      SetselectedId(_id)
-                    }} >
-                      Show more
-                    </a>
-                    <a>.</a>
-                  </div>
-                </div>
-              </div>)
-            })}
-          </div>
-        </div>
-        }{
-          show == true && update == false && <DetailModule id={selectedId} />
-        }
-      </div>
-    </div>
-  ) : (
+ ):(
     <h1>problem happened</h1>
   )
 }

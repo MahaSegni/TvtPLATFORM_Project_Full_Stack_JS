@@ -18,7 +18,7 @@ export default function Navbar() {
           <ul>
             <li><Link to={'/'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
-            <li><Link to={'/module'}>Courses</Link></li>
+            <li><Link to={'/modules'}>Courses</Link></li>
             <li><Link to={'/signin'}>Sign In</Link></li>
             <li><Link to={'/signup'}>Sign Up</Link></li>
           </ul>

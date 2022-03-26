@@ -8,11 +8,33 @@ module.exports.readPost = (req, res) => {
     else console.log("Error to get data : " + err);
   }).sort({ createdAt: -1 });
 };
+module.exports.getModuleById= async (req, res) => {
+  try {
+    res
+      .status(200)
+      .json(
+        await categoryModel.findById({ _id: req.params.id })
+       
+      );
+  } catch (error) {
+    res.status(404).json({ statue: false, message: error.message });
+  }
+},
 module.exports.uploadPicture = async (req, res) => {
   let modul=await categoryModel.findById(req.params.id)
   modul.image = req.file.filename
   modul.save()
        res.send("err")
+},
+module.exports.updateCategory= async (req, res) => {
+  console.log(req.body);
+   let category=await categoryModel.findById(req.body._id);
+
+   category.label= req.body.label
+   category.image = req.body.image
+    const modul = await category.save();
+    return  res.send(modul)
+  
 },
 module.exports.createCategory = async (req, res) => {
  
@@ -34,7 +56,7 @@ module.exports.createCategory = async (req, res) => {
     return res.status(400).send(err);
   }
 };
-
+/*
 module.exports.updatePost = (req, res) => {
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);
@@ -53,6 +75,7 @@ module.exports.updatePost = (req, res) => {
     }
   );
 };
+*/
 
 module.exports.deletePost = (req, res) => {
   if (!ObjectID.isValid(req.params.id))

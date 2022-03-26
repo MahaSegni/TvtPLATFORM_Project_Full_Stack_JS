@@ -7,7 +7,7 @@ import './assets/css/style.css'
 
 import CategoryModule from './components/Category/admincategory'
 import Module from './components/Module/listModule'
-
+import  Listemodulefront from './components/Module/listmodulefront'
 const Navbar = React.lazy(() => import('./components/navbar'));
 const Signup = React.lazy(() => import('./components/user/signup'));
 const Signin = React.lazy(() => import('./components/user/signin'));
@@ -27,7 +27,7 @@ function App() {
             <Route path='/signin' render={props => <Signin {...props} />}></Route>
             <Route path='/profile' render={props => <Profile {...props} />}></Route>
             <Route exact path='/module' render={props => <Module {...props} />}></Route>
-           
+            <Route exact path='/modules' render={props => <Listemodulefront {...props} />}></Route>
             <Route exact path='/category' render={props => <CategoryModule {...props} />}></Route>
           </Switch>
         </Suspense>
