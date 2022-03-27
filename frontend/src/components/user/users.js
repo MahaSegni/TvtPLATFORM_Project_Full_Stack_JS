@@ -36,7 +36,7 @@ export default function Users(props) {
                         <div className="col-4">
                             {user.image.startsWith('https') &&
                                 <img src={user.image} className="rounded-circle"
-                                    width="200"></img>
+                                    width="200" referrerpolicy="no-referrer"></img>
                             }
                             {!user.image.startsWith('https') &&
                                 <img src={require('../../assets/uploads/user/' + user.image)} alt="user" className="rounded-circle"

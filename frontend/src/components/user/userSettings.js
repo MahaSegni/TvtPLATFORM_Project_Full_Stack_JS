@@ -222,7 +222,7 @@ export default function UserSettings({ closeModal }) {
                                                 <h5 style={{ color: "red" }}>{secondFormErrors.currentPassword}</h5>
 
                                                 <div class="form-group">
-                                                    <input type="password" class="form-control" id="newPassword" name="newPassword" value={formPassword.newPassword} placeholder="Enter Password" onChange={(e) => onChangePassword(e)} />
+                                                    <input type="password" class="form-control" id="newPassword" name="newPassword" value={formPassword.newPassword} placeholder="Enter your new Password" onChange={(e) => onChangePassword(e)} />
                                                 </div>
                                                 <h5 style={{ color: "red" }}>{secondFormErrors.newPassword}</h5>
 

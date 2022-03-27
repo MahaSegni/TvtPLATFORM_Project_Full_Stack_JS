@@ -1,6 +1,5 @@
 require("dotenv").config({path : "./config/.env"})
 require('./Model/dbConfig')
-//Declaration de userrouters
 const userRoutes=require('./routes/userRoutes')
 const interestPointRoutes=require('./routes/interestPointRoutes')
 
@@ -20,10 +19,6 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
-//GO TO USER ROUTES
-// /api/user howa el lien lekbir fi westou les routes lo5rin mta3 l crud mawjoudin 
-// fi /routes/userRoutes
-// el lienet el kol yabdw b /api 
 app.use('/api/user',userRoutes);
 app.use('/api/interestpoint',interestPointRoutes);
 
