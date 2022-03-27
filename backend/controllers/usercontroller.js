@@ -1,6 +1,3 @@
-//ONLY FOR TEST
-
-//Fonction bech t ajouti user 
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.REACT_APP_TVT_PLATFORM_GOOGLE_CLIENT_ID)
 require('dotenv').config()
