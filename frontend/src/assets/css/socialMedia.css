@@ -229,8 +229,9 @@ body{
     
 }
 .wrapper .sidebar .profile{
-    margin-bottom: 30px;
+    padding-bottom: 20px;
     text-align: center;
+    border-bottom: #5fcf80 1px solid;
 }
 
 .wrapper .sidebar .profile img{

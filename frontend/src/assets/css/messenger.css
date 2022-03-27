@@ -1,10 +1,40 @@
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #5fcf80; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #5ac279; 
+}
+
+
 .messenger {
-  height: calc(100vh - 70px);
+  height: calc(100vh - 73px);
   display: flex;
+  background-color: white;
+  margin-top:1.22%;
+  margin-left:  0% !important;
+  border:#5ac279 solid 1px;
+  overflow-y:none;
 }
 
 .chatMenu {
   flex: 3.5;
+  border-right: #5ac279 solid 1px;
 }
 
 .chatMenuInput {
@@ -16,6 +46,7 @@
 
 .chatBox {
   flex: 5.5;
+  border-right: #5ac279 solid 1px;
 }
 
 .chatBoxWrapper {
@@ -80,6 +111,8 @@
 
   .chatMenuInput {
     display: none;
+    border: black solid 1px;
+    
   }
 
   .chatBox{
