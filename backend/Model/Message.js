@@ -4,19 +4,18 @@ const User = require('./User');
 var Schema = mongoose.Schema;
 
 var Message = new Schema({
-    text : {
+    conversationId : {
         type:String
     },
     image : {
         type:String
     },
-    date : {
-        type:Date
-    },
-    refowner : {
+    sender : {
         type:String
     },
-
+    text : {
+        type:String
+    },
 });
 
-module.exports = mongoose.model('message',Message);
+module.exports = mongoose.model('Message',Message);

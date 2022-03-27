@@ -210,3 +210,19 @@ module.exports.deleteUser = async(req,res) => {
         }       
     })   
 }
+
+module.exports.getGeneralInformations = async (req, res) => {
+    try {
+        UserModel.findById(req.params.id, (err, user) => {
+            user.password = null
+            user.token = null
+            user.refmodules = null
+            user.reffriends = null
+            user.typeUser = null
+            res.send(user)
+        })
+    }
+    catch (err) {
+        res.send(err)
+    }
+}

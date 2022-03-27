@@ -14,4 +14,5 @@ router.post("/changeEmail",userController.changeEmail);
 router.put("/changeEmailAction",userController.changeEmailAction);
 router.post("/deleteUser",userController.deleteUser);
 router.get("/sendMail/:email",userController.sendMail);
+router.get("/getGeneralInfo/:id",userController.getGeneralInformations);
 module.exports=router;

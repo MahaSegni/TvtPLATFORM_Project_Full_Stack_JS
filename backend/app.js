@@ -4,11 +4,14 @@ require('./Model/dbConfig')
 const userRoutes=require('./routes/userRoutes')
 const interestPointRoutes=require('./routes/interestPointRoutes')
 const friendRoutes=require('./routes/friendRoutes')
+const conversationRoute = require("./routes/conversationsRoutes");
+const messageRoute = require("./routes/messagesRoutes");
 const cors = require('cors');
 
 const bodyParser=require("body-parser")
 const express=require("express");
 const app=express();
+
 var corsOptions = {
     origin: 'http://localhost:3001',
     credentials: true,
@@ -18,6 +21,7 @@ var corsOptions = {
     'preflightContinue': false
 }
 app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
 //GO TO USER ROUTES
@@ -29,7 +33,8 @@ app.use('/api/interestpoint',interestPointRoutes);
 
 
 app.use('/api/friends',friendRoutes);
-
+app.use("/api/conversations", conversationRoute);
+app.use("/api/messages", messageRoute);
 app.listen(process.env.PORT,()=>{
     console.log(`listening on port ${process.env.PORT}`);
 })

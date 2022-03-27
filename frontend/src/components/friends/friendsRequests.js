@@ -15,6 +15,7 @@ const FriendsRequests = (props) => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const history = useHistory();
+    
     let connecteduser=useSelector(selectConnectedUser)
     let idUser = useSelector(selectConnectedUser).id
     const [requests, err, reloadRequests] = useApi('friends/getRequests/' + idUser, null, 'GET', false,connecteduser.token);

@@ -12,12 +12,11 @@ var Conversation = new Schema({
         type:String
     },
   
-    refmembers : {
-        type:[String]
-    }, 
-    refmessages : {
-        type:[String]
-    }, 
+    members: {
+        type: Array,
+      }, 
+  
+     
 });
 
-module.exports = mongoose.model('conversation',Conversation);
+module.exports = mongoose.model('Conversation',Conversation);

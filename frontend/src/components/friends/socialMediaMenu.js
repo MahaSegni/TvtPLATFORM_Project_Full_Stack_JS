@@ -9,7 +9,8 @@ import FriendsRequests from './friendsRequests';
 import FriendList from "./friendList";
 import $ from 'jquery';
 import { useHistory } from "react-router-dom";
-import Messenger from "./messenger";
+import Messenger from "./Messenger";
+
 const SocialMediaMenu = (props) => {
        const history = useHistory();
   const [messenger, setMessenger] = useState(false);
