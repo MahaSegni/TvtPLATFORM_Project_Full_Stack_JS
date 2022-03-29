@@ -223,7 +223,7 @@ export default function Profile(props) {
                                 <div className="col-md-6 my-3">
                                     <div className="card mb-3">
                                         <div className="mx-auto my-auto">
-                                            <h3 className="my-3">Points of Interests</h3>
+                                            <h3 className="my-3">Points of Interest</h3>
                                         </div>
                                         <hr />
                                         <div className="card-body">
