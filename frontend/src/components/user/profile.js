@@ -19,21 +19,25 @@ import { useDispatch } from 'react-redux';
 export default function Profile(props) {
     const history = useHistory();
     const dispatch = useDispatch();
-    
-    
-    useEffect(()=> {
-        if(connectedUser.type == "disconnected"){
+
+
+    useEffect(() => {
+        if (connectedUser.type == "disconnected") {
             history.push('/signin')
         }
-    },[])
+    }, [])
     var connectedUser = useSelector(selectConnectedUser);
     const [openModal, setOpenModal] = useState(false);
     const [openPasswordModal, setOpenPasswordModal] = useState(false);
-    
+
     var [userIPs, err, reloadUserIPs] = useApi('interestpoint/userInterestPoints/' + connectedUser.id, null, 'GET', false, connectedUser.token);
     var [userCPs, err2, reloadUserCPs] = useApi('user/coursepreferences/' + connectedUser.id, null, 'GET', false, connectedUser.token);
     var [allIPs, err3, reloadAllIPs] = useApi('interestpoint/getAll/', null, 'GET', false);
     const [otherIPs, setOtherIPs] = useState([])
+    const [exist, setExist] = useState({
+        add: "",
+        update: "",
+    })
     const [addCP, setAddCP] = useState({
         id: connectedUser.id,
         inputDisplay: false,
@@ -92,10 +96,21 @@ export default function Profile(props) {
     }
 
     const handleKeyPress = async (event) => {
+        let error = false;
         if (event.key === 'Enter') {
-            const [, err] = await queryApi('user/addCP/', addCP, 'PUT', false, connectedUser.token);
-            setAddCP({ ...addCP, inputDisplay: false, inputValue: "" })
-            reloadUserCPs();
+            userCPs.forEach(e=> {
+                if (e.toString().toUpperCase() == addCP.inputValue.toUpperCase()){
+                    error = true;
+                }
+            })
+            if (error) {
+                setExist({ ...exist, add: "Already Exist" })
+            } else {
+                const [, err] = await queryApi('user/addCP/', addCP, 'PUT', false, connectedUser.token);
+                setAddCP({ ...addCP, inputDisplay: false, inputValue: "" })
+                setExist({ ...exist, add: "" })
+                reloadUserCPs();
+            }
         }
     }
     const closeAddCP = () => {
@@ -109,10 +124,22 @@ export default function Profile(props) {
         setUpdateCP({ ...updateCP, inputValue: e.target.value })
     }
     const handleKeyPressUpdate = async (event) => {
+        let error = false;
         if (event.key === 'Enter') {
-            const [, err] = await queryApi('user/updateCP/', updateCP, 'PUT', false, connectedUser.token);
-            setUpdateCP({ ...addCP, inputDisplay: false, cp: "" })
-            reloadUserCPs();
+            userCPs.forEach(e=> {
+                if (e.toString().toUpperCase() == updateCP.inputValue.toUpperCase()){
+                    error = true;
+                }
+            })
+            if (error) {
+                setExist({ ...exist, update: "Already Exist" })
+            }
+            else {
+                const [, err] = await queryApi('user/updateCP/', updateCP, 'PUT', false, connectedUser.token);
+                setUpdateCP({ ...addCP, inputDisplay: false, cp: "" })
+                setExist({ ...exist, update: "" })
+                reloadUserCPs();
+            }
         }
     }
     const closeUpdateCP = () => {
@@ -135,7 +162,7 @@ export default function Profile(props) {
                                             <div className="d-flex flex-column align-items-center text-center">
                                                 <div>
                                                     {connectedUser.pictureType == "external" &&
-                                                     
+
                                                         <img src={connectedUser.image} className="rounded-circle"
                                                             width="300" referrerpolicy="no-referrer"></img>
                                                     }
@@ -289,6 +316,8 @@ export default function Profile(props) {
                                                                 <div className='col-3'>
                                                                     <button onClick={() => closeUpdateCP()} className="btn btn-template-user" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
                                                                 </div>
+                                                                <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{exist.update}</h5>
+
 
                                                             </>
                                                         }
@@ -311,6 +340,7 @@ export default function Profile(props) {
                                                         <div className='col-3'>
                                                             <button onClick={() => closeAddCP()} className="btn btn-template-user" style={{ float: "right", background: "#FF0000" }}><FontAwesomeIcon icon={faX}></FontAwesomeIcon></button>
                                                         </div>
+                                                        <h5 style={{ color: "red" }}></h5><h5 style={{ textAlign: "center", color: "red" }}>{exist.add}</h5>
                                                     </>
                                                 }
                                                 {!addCP.inputDisplay == true &&

@@ -1396,3 +1396,36 @@ body{
   transition: 0.3s;
 
 }
+
+.paginationBttns {
+  width: 80%;
+  height: 40px;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  color: #5fcf80;
+}
+.paginationBttns a {
+  padding: 10px;
+  margin: 8px;
+  border-radius: 5px;
+  border: 1px solid #5fcf80;
+  color: #5fcf80;
+  cursor: pointer;
+}
+.paginationBttns :hover {
+  color: white;
+}
+.paginationActive  {
+  color: white;
+}
+.paginationBttns a:hover {
+  color: white;
+  background-color: #5fcf80;
+}
+
+.paginationActive a {
+  color: white;
+  background-color: #5fcf80;
+}
+

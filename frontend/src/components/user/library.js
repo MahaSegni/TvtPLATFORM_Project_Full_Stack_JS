@@ -26,9 +26,8 @@ export default function Library() {
                             {ownModules.map((module, index) => (
                                 <div className="card col-md-3 mx-2 mb-5" style={{ width: "18rem;" }}>
                                     <img src={require('../../assets/uploads/module/' + module.image)} alt="" style={{ width: '100%', height: '13vw', objectFit: 'cover' }}></img>
-                                    <div clclassNameass="card-body">
+                                    <div className="card-body">
                                         <h5 className="card-title" style={{ textAlign: "center" }}>{module.label}</h5>
-                                        {/*  <p className="card-text my-2">{module.description}</p>*/}
                                         <button className="btn btn-template-user my-2" style={{ float: "right" }}>Check</button>
                                     </div>
                                 </div>
@@ -43,7 +42,7 @@ export default function Library() {
                             {subscribedModules.map((module, index) => (
                                 <div className="card col-md-3 mx-2 mb-5" style={{ width: "18rem;" }}>
                                     <img src={require('../../assets/uploads/module/' + module.image)} alt="" style={{ width: '100%', height: '13vw', objectFit: 'cover' }}></img>
-                                    <div clclassNameass="card-body">
+                                    <div className="card-body">
                                         <h5 className="card-title" style={{ textAlign: "center" }}>{module.label}</h5>
                                         
                                         <button className="btn btn-template-user my-2" style={{ float: "right" }}>Check</button>
