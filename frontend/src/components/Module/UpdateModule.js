@@ -69,11 +69,13 @@ const onChangeFile = (e) => {
     return result
 }
 
-  const { label, description } = module;
+  const { label } = module;
 
   ;
   return (
     <>
+    {module &&
+    <div>
       <a class="btn btn-template" onClick={refresh} ><i class="fas fa-arrow-left"></i></a>
       <Wrapper>
 
@@ -119,8 +121,11 @@ const onChangeFile = (e) => {
           </div>
         </Form>
       </Wrapper>
+      </div>
+}
     </>
-  );
+
+);
 }
 
 const FormButton = styled.button`

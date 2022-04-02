@@ -3,6 +3,10 @@ require('./Model/dbConfig')
 //Declaration de userrouters
 const userRoutes=require('./routes/userRoutes')
 const interestPointRoutes=require('./routes/interestPointRoutes')
+const courRoutes = require('./routes/coursRoutes')
+const quizRoutes=require('./routes/quizRoutes');
+const evaluationRoutes=require('./routes/evaluationRoutes')
+const evquestionRoutes=require('./routes/evaluationquestionRoutes')
 const ModulesRoutes=require('./routes/ModulesRoutes')
 const CategoryRoutes=require('./routes/CategoryRoutes')
 
@@ -28,10 +32,15 @@ app.use(bodyParser.urlencoded({extended:true}))
 // el lienet el kol yabdw b /api 
 app.use('/api/user',userRoutes);
 app.use('/api/interestpoint',interestPointRoutes);
+
+app.use('/api/cours',courRoutes);
+app.use('/api/quiz',quizRoutes)
+
+app.use('/api/evaluation',evaluationRoutes);
+app.use('/api/evquestion',evquestionRoutes);
+
 app.use('/api/module',ModulesRoutes);
 app.use('/api/category',CategoryRoutes);
-
-
 
 app.listen(process.env.PORT,()=>{
     console.log(`listening on port ${process.env.PORT}`);

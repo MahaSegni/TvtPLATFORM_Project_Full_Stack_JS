@@ -12,8 +12,10 @@ import { queryApi } from "../../utils/queryApi";
 import { useApi } from "../../utils/useApi";
 import { useHistory } from "react-router-dom";
 import UpdateCategory from "./UpdateCategory";
-
-function admincategory() {
+import "../../assets/css/mymodules.css"
+import "../../assets/css/cardmodule.css"
+import Statistique from "./Statistique";
+function Admincategory() {
   const [category, setCategory] = useState([]);
   const [form, setForm] = useState({
     label: ""
@@ -46,13 +48,14 @@ function admincategory() {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = category.slice(indexOfFirstPost, indexOfLastPost);
-  
+
   // Change page
   const paginate = pageNumber => setCurrentPage(pageNumber);
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     let result = await updateimageCategory()
-   // window.location.reload(true);
+    //setAdd(false)
+     window.location.reload(true);
   }
   const updateimageCategory = async () => {
 
@@ -68,21 +71,8 @@ function admincategory() {
 
     return result
   }
-  /*
-    const onSubmit = () => {
-      axios.post('http://localhost:3000/api/category/add', form)
-        .then(res => {
-          setMessage(res.data.message)
-          setForm({})
-          setErrors({})
-          setShow(true)
-          setTimeout(() => {
-            setShow(false)
-          }, 4000);
-        })
-        .catch(err => setErrors(err.response.data))
-    }*/
-  
+
+
   const OnDelete = (id__) => {
     if (window.confirm("are you sure to delete this category")) {
 
@@ -107,26 +97,28 @@ function admincategory() {
     await axios.get("http://localhost:3000/api/category/get").then((res) => {
       setCategory(res.data);
     });
+
   });
   return (
-   // connectedUser.type == "admin" ? (
+    // connectedUser.type == "admin" ? (
     <>
-      {add == false && !update &&
-        <button className="btn btn-template" type="submit" onClick={() => setAdd(!add)}>Add Category</button>
-      }{add == true && !update &&
-        <button className="btn btn-template" type="submit" onClick={() => setAdd(!add)}>Hide</button>
-      }
 
 
       <div className="row p-4">
+        <div class="container mt-2 mb-2" >
+          {add == false && !update && <>
+            <button className="btn btn-template mb-3" type="submit" onClick={() => setAdd(!add)}><i class="fas fa-plus"></i></button>
 
+          </>
+          }{add == true && !update &&
+            <button className="btn btn-template mb-3" type="submit" onClick={() => setAdd(!add)}>Hide</button>
+          }
+        </div>
         {add == true &&
           <>
             <Alert message={message} show={show} />
-            <div className="mt-4">
-              <h2>Category</h2>
-            </div>
-            <div className="col-12 col-lg-4">
+
+            <div className="col-12 col-lg-4 mt-4">
               <form onSubmit={onSubmitHandler}>
                 <InputGroup
                   label="label"
@@ -147,65 +139,80 @@ function admincategory() {
               </form>
             </div>
           </>
+        }{add == false && update == false && <div className="col-12 col-lg-4 mt-4"> <Statistique category={category} /> </div>
+
         }
 
         {add == false && update == true &&
           <UpdateCategory idu={selectedId} />
         }
-        <div className="col-12 col-lg-7">
-          <div class="card-body">
-            <div class="table-responsive" id="proTeamScroll" tabindex="2" style={{ height: "400px", overflow: "hidden", outline: "none" }}>
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Image</th>
-                    <th>Category</th>
-                    <th>N° Modules</th>
-                    <th>Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentPosts.map(({ _id, label, image, modules }) => (
-                    <tr >
-                      <td>
-                        <td class="text-truncate">
-                          <ul class="list-unstyled order-list m-b-0">
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src={require('../../assets/uploads/module/' + image)} alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian" /></li>
-                          </ul>
-                        </td>
-                      </td>
-                      <td>
-                        <h6 class="mb-0 font-13">{label}</h6>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-text"></div>
-                        <div class="progress" data-height="15px" style={{ height: "15px" }}>
-                          <div class="progress-bar progress-bar-striped bg-success" data-width="15px" style={{ width: modules.length + "%", color: "black" }} >{modules.length}%</div>
-                        </div>
-                      </td>
-                      <td>
-                        <a data-toggle="tooltip" title="" data-original-title="Edit" class="pull-left" onClick={() => {
-                          setAdd(false)
-                          setUpdate(true)
-                          SetselectedId(_id)
-                        }}><i class="fa fa-edit"></i></a> &nbsp;
-                        <a data-toggle="tooltip" title="" data-original-title="Delete" class="pull-right" onClick={() => OnDelete(_id)} ><i class="fa fa-trash" aria-hidden="true" style={{ color: "green" }} ></i></a>
-                      </td>
+        <div className="col-12 col-lg-7 ">
+          <section id="courses" class="courses">
+            <div class="container" data-aos="fade-up">
+              <div class="row" data-aos="zoom-in" data-aos-delay="100">
 
-                    </tr>
-                  ))}
-                  <tr >
-                    <Pagination
-                      postsPerPage={postsPerPage}
-                      totalPosts={category.length}
-                      paginate={paginate}
-                    />
-                  </tr>
-                </tbody></table></div>
-          </div>
+                {currentPosts.map(({ _id, label, image, modules }) => {
+                  return (
+
+                    <>
+
+                      <div class="card mb-3">
+                        <div class="card-body">
+                          <div class="d-flex flex-column flex-lg-row">
+                            {image != null &&
+                              <img class="img-fluid rounded-3 me-4 mb-2" alt="..." src={require('../../assets/uploads/module/' + image)} style={{ height: "70px", width: "90px" }} />
+                            }
+                            {image == null &&
+                              <img class="img-fluid rounded-3 me-4 mb-2" src={require('../../assets/img/Courses.jpg')} alt="" style={{ height: "70px", width: "90px" }} />}
+
+                            <div class="row flex-fill">
+                              <div class="col-sm-5">
+                                <h4 class="h5" style={{ color: "black"}}>{label}</h4>
+
+                              </div>
+
+                              <div class="col-sm-3 text-lg-end">
+                                <a data-toggle="tooltip" title="" data-original-title="Edit" style={{ border: 0, background: "transparent", color: "#5FCF80" }}  class="pull-left" onClick={() => {
+                                  setAdd(false)
+                                  setShow(true)
+                                  setUpdate(true)
+                                  SetselectedId(_id)
+                                }}><span class="fa-stack">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                  </span></a> &nbsp;
+                                <a data-toggle="tooltip" title="" data-original-title="Delete" style={{ border: 0, background: "transparent", color: "red" }} class="pull-right" onClick={() => OnDelete(_id)} >
+                                  <span class="fa-stack">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                  </span></a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )
+                }
+                )
+                }
+                <div >
+                  <Pagination
+                    postsPerPage={postsPerPage}
+                    totalPosts={category.length}
+                    paginate={paginate}
+                  />
+                </div>
+
+              </div>
+            </div>
+          </section>
         </div>
-      </div></>
-  ) ;
+      </div>
+
+
+    </>
+  );
 }
 
-export default admincategory;
+export default Admincategory;

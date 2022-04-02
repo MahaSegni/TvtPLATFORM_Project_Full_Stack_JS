@@ -1,5 +1,6 @@
 const ModuleModel = require("../Model/Module.js");
 const UserModel = require("../Model/User.js");
+const CategorieModel = require("../Model/CategorieModule");
 const mongoose = require("mongoose");
 module.exports = {
   getModule: async (req, res) => {
@@ -28,7 +29,7 @@ module.exports = {
       res
         .status(200)
         .json(
-          await ModuleModel.findById({ _id: req.params.id })
+          await ModuleModel.findById(req.params.id )
          
         );
     } catch (error) {
@@ -69,11 +70,9 @@ module.exports = {
     }
   },
   updateModule: async (req, res) => {
-    console.log(req.body);
+   // console.log(req.body);
      let modul=await ModuleModel.findById(req.body._id);
-
      modul.label= req.body.label
-
      modul.description= req.body.description
      modul.image = req.body.image
      modul.date_update= new Date()
@@ -83,6 +82,16 @@ module.exports = {
 
   deleteModule: async (req, res) => {
     try {
+     const dataFind = await CategorieModel.updateMany( {
+      $pull: { modules: req.params.id },
+    });
+      const dataFind1 = await UserModel.updateMany(
+       
+        {
+          $pull: { refmodules: req.params.id },
+        }
+      );
+      
       const data = await ModuleModel.findByIdAndRemove(req.params.id);
       res.status(201).json({
         statue: true,
@@ -132,7 +141,7 @@ module.exports = {
   },
   removeUserFromModule: async (req, res) => {
     try {
-      const dataFind = await UserModel.findOne({ _id: req.params.idUser });
+      const dataFind = await UserModel.findById(req.params.idUser);
 
       const dataFind1 = await UserModel.updateOne(
         { _id: req.params.idUser},
@@ -140,9 +149,9 @@ module.exports = {
           $pull: { refmodules: req.params.id },
         }
       );
-      const dataUpdate = await ModuleModel.update(
-        { _id: req.params.id },
-        { $pullAll: { refStudents: [dataFind] } },
+      const dataUpdate = await ModuleModel.findByIdAndUpdate(
+         req.params.id,
+        { $pullAll: { refStudents: [dataFind._id] } },
         { safe: true }
       );
       res.status(201).json({

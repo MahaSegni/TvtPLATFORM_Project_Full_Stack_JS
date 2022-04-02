@@ -8,22 +8,6 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
-.btn-template{
-  background: #5fcf80;
-  opacity: 0.8;
-  color: white !important;
-  transition: 0.3s;
-  font-family: Georgia, serif;
-
-}
-.btn-template:hover{
-  opacity: 1;
-  color: white !important;
-  border-radius: 20px;
-  transition: 0.3s;
-  font-family: Georgia, serif;
-}
-
 body {
   font-family: "Open Sans", sans-serif;
   color: #444444;
@@ -1392,4 +1376,79 @@ section {
   background: #3ac162;
   color: #fff;
   text-decoration: none;
+}
+
+#profilepicture{
+  display: none;
+}
+#uploadPhotoBtn{
+position: absolute;
+}
+
+body{
+  overflow-x:hidden;
+}
+
+.btn-template-user{
+  background: #5fcf80;
+  opacity: 0.8;
+  color: white !important;
+  transition: 0.3s;
+
+}
+.btncustom{
+  background: #5fcf80;
+  border: 0;
+  padding: 10px 35px;
+  color: #fff;
+  transition: 0.4s;
+}
+.btncustom:hover{
+  background: #3ac162;
+ 
+  color: #fff;
+}
+
+/*---------------------------------------------------------*/
+textarea:focus, 
+textarea.form-control:focus, 
+input.form-control:focus, 
+input[type=text]:focus, 
+input[type=password]:focus, 
+input[type=email]:focus, 
+input[type=number]:focus, 
+[type=text].form-control:focus, 
+[type=password].form-control:focus, 
+[type=email].form-control:focus, 
+[type=tel].form-control:focus, 
+[contenteditable].form-control:focus {
+  box-shadow: inset 0 0 0 #CED4DA;
+  border: 1px solid #CED4DA;
+}
+
+.btn-template{
+  background: #5fcf80;
+  color: white;
+  transition: 0.3s;
+}
+.btn-template:hover{
+  opacity: 1;
+  color: white;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.btn-cancel-template{
+  background:  red;
+  opacity: 0.8;
+  color:white;
+  transition: 0.3s;
+  border:1px solid red !important;
+}
+
+.btn-cancel-template:hover{
+  opacity: 1;
+  color:white;
+  border-radius: 20px;
+  transition: 0.3s;
 }

@@ -2,14 +2,14 @@
     width: 100vw;
     height: 100vh;
     background-color: rgba(184, 174, 174, 0.247);
-    position: fixed;
+    position: absolute;
     display: block;
     justify-content: center;
     align-items: center;
   }
   
   .modalContainer {
-    height: 700px;
+    height: auto;
     border-radius: 12px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
@@ -51,9 +51,8 @@
     justify-content: center;
     align-items: center;
   }
-  
   #cancelBtn {
-    background-color: crimson;
+    background-color: #FF0000;
   }
 
   

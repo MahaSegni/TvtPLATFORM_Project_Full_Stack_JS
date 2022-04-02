@@ -3,7 +3,7 @@ const modulescontroller = require('../controllers/modulescontroller')
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function(req,file,cb) {
-        cb(null,'C:/Users/mahas/Desktop/pi/Project_Full_Stack_JS/frontend/src/assets/uploads/module');
+        cb(null,'C:/Users/mahas/Downloads/Project_Full_Stack_JS-AccountsManagement/Project_Full_Stack_JS-AccountsManagement/frontend/src/assets/uploads/module');
     },
     filename: function(req,file,cb) {
         cb(null, (Math.random() + 1).toString(36).substring(7)+file.originalname)

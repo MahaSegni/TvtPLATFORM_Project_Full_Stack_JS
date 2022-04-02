@@ -6,67 +6,127 @@ import RowDetailsFront from "./RowDetailFront";
 
 import axios from "axios";
 import DetailModule from './DetailModule';
-export default function ModuleByCat({cat,showmodel}) {
+import { useHistory } from 'react-router-dom';
+export default function ModuleByCat({ cat }) {
   var connectedUser = useSelector(selectConnectedUser)
   const [selectedId, SetselectedId] = useState(-1);
-    let [id,setid]=useState("");
-    const [show, setshow] = useState(false);
-    const [showdetai, setshowdetai] = useState(false);
-    const [modulesbycat, err, reload] = useApi('category/getmodulesfromcategory/'+cat,null,'GET',false);
-    if (id!=cat){setid(cat)
-        reload();
-    }
-    const join = (id__) => {
-      axios.put(`http://localhost:3000/api/module/adduser/${id__}/${connectedUser.id}`)
-        .then(res => {
-          window.location.reload(true);
-        })
-        
-    }
-    
-    
+  let [id, setid] = useState("");
+  const [show, setshow] = useState(false);
+  const [showdetai, setshowdetai] = useState(false);
 
-   return (
-<>
-{modulesbycat && <>
-{modulesbycat.map((module,index) =>(
+  const history = useHistory();
+  
+  const [modulesbycat, err, reload] = useApi('category/getmodulesfromcategory/' + cat, null, 'GET', false);
+  if (id != cat) {
+    setid(cat)
+    reload();
+  }
+  function handleClick() {
+    history.push("/signin");
+  }
+ 
+  const join = (id__) => {
+    axios.put(`http://localhost:3000/api/module/adduser/${id__}/${connectedUser.id}`)
+      .then(res => {
+        window.location.reload(true);
+      })
+
+  }
+
+
+
+  return connectedUser.type == "user" ? (
     <>
-     {   showdetai==false &&     <div class="col-lg-4 col-md-4 col-sm-12">
-                            <div class="plan-card plan-one">
-                              <RowDetailsFront label={module.label} image={module.image} />
-                              <div class="plan-footer">
-                                {!module.refStudents.includes(connectedUser.id) &&
-                                  <a class="btn btn-update m-2 pull-left  " onClick={() => join(module._id)} >
-                                    Join
-                                  </a >}
-                                {module.refStudents.includes(connectedUser.id) &&
-                                  <a class="btn btn-update m-2 pull-left " onClick={() => join(module._id)} >
-                                    Show more
-                                  </a>}
-                                <a class="btn btn-delete m-2 pull-right " onClick={() => {
-                                  setshow(!show)
-                                  SetselectedId(module._id)
-                                  setshowdetai(true)
-                                }} >Details</a>
-                                <a > .</a>
-                              </div>
-                            </div>
-                          </div>
+      {modulesbycat && show==false && <>
+       
+       
+        {modulesbycat.map((module, index) => {
+     if(module.idowner!=connectedUser.id && module.refStudents!=connectedUser.id){
+            return (
+              <>
+                {<>
+                  <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                  <div class="course-item">
+                    
+                      <RowDetailsFront label={module.label} image={module.image} idowner={module.idowner} refStudents={module.refStudents} id={module._id} />
+                      <div class="my-2">
+                      {module.idowner != connectedUser.id &&<>
+                        <button type="button" class="btn btn-template ms-5" onClick={() => join(module._id)}>Register now</button>
+                        <button type="button" class="btn btn-template mx-3" onClick={() => {
+                          setshow(true)
+                          SetselectedId(module._id)
+                        }}>Show more</button>
+                      </>}
+                     
+                      </div>
+                       
+                  </div>
+                  </div>
+                </>
+                }
 
-     } 
-    
-    </>
-   )
+              </>
+            )
+          }
+          
+        }
 
-   )}
-   {
-      show == true  && showdetai==true && <DetailModule id={selectedId} />
-    }
-</>
+        )}
+       
 
-}
-                
-                
               
-</>
-   )}
+      </>
+
+      }{
+        show==true && <DetailModule id={selectedId} />
+      }
+
+
+
+    </>
+  ) : connectedUser.type == "disconnected" ? (
+    <>
+      {modulesbycat && show ==false && <>
+      
+       
+        {modulesbycat.map((module, index) => {
+          
+            return (
+              <>
+                {<>
+                  <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                  <div class="course-item">
+                    
+                      <RowDetailsFront label={module.label} image={module.image} idowner={module.idowner} refStudents={module.refStudents} id={module._id} />
+                      <div class="my-2">
+                        <button type="button" class="btn btn-template ms-5" onClick={handleClick}>Register now</button>
+                      
+                        <button type="button" class="btn btn-template mx-3" onClick={() => {
+                          setshow(true)
+                          SetselectedId(module._id)
+                        }}>Show more</button>
+                       </div>
+                  </div>
+                  </div>
+                </>
+                }
+                
+
+              </>
+            )
+         
+        }
+
+        )}
+
+              
+      </>
+
+      }{
+        show==true && <DetailModule id={selectedId} />
+      }
+      </>
+  ): (
+    <h1>problem happened</h1>
+  )
+}

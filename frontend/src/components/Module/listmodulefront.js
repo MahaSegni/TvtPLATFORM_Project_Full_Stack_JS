@@ -1,32 +1,17 @@
 
 import axios from "axios";
 import React, { useEffect, useState } from 'react';
-import { Link, Route, useHistory } from "react-router-dom";
-
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-
-import DayJS from 'react-dayjs';
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-import ModuleByCat from "./modulebyCat"
 import { useSelector } from "react-redux";
 
 import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
-import AddModule from "./AddModule";
-import UpdateModule from "./UpdateModule";
-import { useApi } from "../../utils/useApi";
 import DetailModule from "./DetailModule";
 import "../../assets/css/cardmodule.css"
 import RowDetailsFront from "./RowDetailFront";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
-export default function listemodulefront() {
- 
+export default function Listemodulefront() {
+  let history = useHistory();
   const [modules, setModules] = useState([]);
  
   const [show, setshow] = useState(false);
@@ -38,6 +23,7 @@ export default function listemodulefront() {
   /* find all modules */
   useEffect(async () => {
     await axios.get('http://localhost:3000/api/module/get').then(res => {
+      console.log("tttt")
       setModules(res.data)
     })
    
@@ -56,7 +42,8 @@ export default function listemodulefront() {
                     <a class="btn btn-template m-2 pull-right " onClick={() => {
                       setshow(!show)
                       SetselectedId(_id)
-                    }} >
+                      
+                    }}  >
                       Show more
                     </a>
                     <a>.</a>
