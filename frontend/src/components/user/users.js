@@ -15,7 +15,7 @@ export default function Users(props) {
     const history = useHistory()
     const [users, err, reloadUsers] = useApi("user/allUsers/" + connectedUser.id, null, "GET", false, connectedUser.token)
     const [pageNumber, setPageNumber] = useState(0)
-    const usersPerPage = 5
+    const usersPerPage = 3
     const pagesVisited = pageNumber * usersPerPage
     const [searchInput, setSearchInput] = useState('')
     useEffect(() => {
