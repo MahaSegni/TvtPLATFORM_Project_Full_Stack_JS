@@ -2,7 +2,10 @@ import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import { useSelector } from 'react-redux';
 import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
 import { useApi } from '../../utils/useApi';
+import { useHistory } from "react-router-dom";
+import "../../assets/css/user.css"
 export default function VisitorProfile() {
+    const history = useHistory();
     var connectedUser = useSelector(selectConnectedUser);
     const { id } = useParams()
     var [user, err, reloadUser] = useApi('user/getGeneralInfo/' + id, null, 'GET', false);
@@ -10,14 +13,15 @@ export default function VisitorProfile() {
     return (
 
         <>
+         
             {user && user.state != -1 &&
-                <div id="main" data-aos="fade-in" className="mt-5" >
-                    <div className="container">
+                <div id="main" data-aos="fade-in">
+                    <div className="container mt-5">
                         <div className="main-body">
                             <div className="row">
                                 <div className="col-12 mb-3">
-                                    <div className="card">
-                                        <div className="card-body">
+                                    <div className="card card-user">
+                                        <div className="card-body card-body-user">
 
                                             <div className="d-flex flex-column align-items-center text-center">
                                                 <div>
@@ -38,8 +42,8 @@ export default function VisitorProfile() {
                                     </div>
                                 </div>
                                 <div className="col-md-8 my-3">
-                                    <div className="card mb-3">
-                                        <div className="card-body">
+                                    <div className="card card-user mb-3">
+                                        <div className="card-body card-body-user">
                                             <div className="row">
                                                 <div className="col-sm-3">
                                                     <h6 className="mb-0">Name</h6>
@@ -95,12 +99,12 @@ export default function VisitorProfile() {
                                 </div>
 
                                 <div className="col-md-4 my-3">
-                                    <div className="card mb-3">
+                                    <div className="card card-user mb-3">
                                         <div className="mx-auto my-auto">
-                                            <h3 className="my-3">Course Preferences</h3>
+                                            <h4 className="my-3">Course Preferences</h4>
                                         </div>
                                         <hr />
-                                        <div className="card-body">
+                                        <div className="card-body card-body-user">
                                             {user.coursepreferences.map((cp, index) => (
                                                 <>
                                                     <div className="row">

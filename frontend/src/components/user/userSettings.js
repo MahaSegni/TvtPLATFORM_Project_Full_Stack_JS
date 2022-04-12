@@ -194,8 +194,8 @@ export default function UserSettings({ closeModal }) {
         }
     }
     return (
-        <div className="modalBackground ">
-            <div className="modalContainer col-sm-10 offset-md-1 mt-2">
+        <div className="modalBackground-user">
+            <div className="modalContainer-user col-sm-10 offset-md-1 my-5">
                 <div className="title">
                     <h1>Settings</h1>
                 </div>
@@ -203,7 +203,7 @@ export default function UserSettings({ closeModal }) {
                     <>
                         <div id="accordion" style={{ display: "block" }}>
 
-                            <div class="card">
+                            <div class="card card-user mb-0">
                                 <div class="card-header" id="headingOne">
                                     <h5 class="mb-0">
                                         <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -213,7 +213,7 @@ export default function UserSettings({ closeModal }) {
                                 </div>
 
                                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                                    <div class="card-body">
+                                    <div class="card-body card-body-user my-0">
                                         <div className="body">
                                             <form class="w-75 mx-auto" onSubmit={onSubmitPassword}>
                                                 <div class="form-group">
@@ -239,7 +239,7 @@ export default function UserSettings({ closeModal }) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card card-user my-0">
                                 <div class="card-header" id="headingTwo">
                                     <h5 class="mb-0">
                                         <button class="btn collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -248,7 +248,7 @@ export default function UserSettings({ closeModal }) {
                                     </h5>
                                 </div>
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                                    <div class="card-body">
+                                    <div class="card-body card-body-user">
                                         <div className="body">
 
                                             {!codeForEmail.sent &&
@@ -288,7 +288,7 @@ export default function UserSettings({ closeModal }) {
                                 </div>
                             </div>
 
-                            <div class="card">
+                            <div class="card card-user mt-0">
                                 <div class="card-header" id="headingThree">
                                     <h5 class="mb-0">
                                         <button class="btn collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -297,7 +297,7 @@ export default function UserSettings({ closeModal }) {
                                     </h5>
                                 </div>
                                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                                    <div class="card-body">
+                                    <div class="card-body card-body-user">
                                         <div className="body">
                                             <form class="w-75 mx-auto" onSubmit={onSubmitDelete}>
                                                 <div class="form-group">

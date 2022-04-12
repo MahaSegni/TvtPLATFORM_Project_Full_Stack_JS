@@ -13,12 +13,11 @@ export default function UpdateUser({ closeModal }) {
     })
     const onChangeFile = (e) => {
         setUploadImage({ ...uploadImage, image: e.target.files[0] })
-        //updateImage()
+        
     }
     const dispatch = useDispatch();
     var connectedUser = useSelector(selectConnectedUser);
     const [formErrors, setFormErrors] = useState({})
-    //const [birthdate, setBirthdate] = useState(new Date(connectedUser.birthDate))
 
     const [formData, setFormData] = useState({
         id: connectedUser.id,
@@ -86,8 +85,8 @@ export default function UpdateUser({ closeModal }) {
     }
     return (
 
-        <div className="modalBackground ">
-            <div className="modalContainer col-sm-10 offset-md-1 my-5">
+        <div className="modalBackground-user ">
+            <div className="modalContainer-user col-sm-10 offset-md-1 my-5">
                 <div className="title my-5">
                     <h1>Your Account's General Informations</h1>
                 </div>

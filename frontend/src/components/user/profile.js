@@ -1,3 +1,4 @@
+import "../../assets/css/user.css"
 import React from 'react';
 import { useHistory } from "react-router-dom";
 import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
@@ -16,11 +17,12 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
+
 export default function Profile(props) {
     const history = useHistory();
     const dispatch = useDispatch();
 
-
+    
     useEffect(() => {
         if (connectedUser.type == "disconnected") {
             history.push('/signin')
@@ -151,13 +153,13 @@ export default function Profile(props) {
     return openModal == true ? (<UpdateUser closeModal={setOpenModal} />) :
         openPasswordModal == true ? (<UserSettings closeModal={setOpenPasswordModal} />) : (
             <>
-                <div id="main" data-aos="fade-in" className="mt-5" >
-                    <div className="container">
+                <div id="main" data-aos="fade-in">
+                    <div className="container mt-5">
                         <div className="main-body">
                             <div className="row">
                                 <div className="col-md-4 mb-3">
-                                    <div className="card">
-                                        <div className="card-body">
+                                    <div className="card card-user">
+                                        <div className=" card-body-user">
 
                                             <div className="d-flex flex-column align-items-center text-center">
                                                 <div>
@@ -178,8 +180,8 @@ export default function Profile(props) {
                                     </div>
                                 </div>
                                 <div className="col-md-8">
-                                    <div className="card mb-3">
-                                        <div className="card-body">
+                                    <div className="card-user mb-3">
+                                        <div className="card-body card-body-user">
                                             <div className="row">
                                                 <div className="col-sm-3">
                                                     <h6 className="mb-0">Name</h6>
@@ -239,21 +241,23 @@ export default function Profile(props) {
                                                     setOpenPasswordModal(true)
                                                 }}><FontAwesomeIcon icon={faGear}></FontAwesomeIcon></button>
                                             </div>
+                                            {connectedUser.type != "admin" && 
                                             <div className="mx-auto" style={{ float: "right" }}>
                                                 <button type="submit" className="btn btn-template-user me-3" onClick={() => {
                                                     toLibrary()
                                                 }}><FontAwesomeIcon icon={faBook}></FontAwesomeIcon></button>
                                             </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-md-6 my-3">
-                                    <div className="card mb-3">
+                                    <div className="card card-user mb-3">
                                         <div className="mx-auto my-auto">
-                                            <h3 className="my-3">Points of Interest</h3>
+                                            <h4 className="my-3">Points of Interest</h4>
                                         </div>
                                         <hr />
-                                        <div className="card-body">
+                                        <div className="card-body card-body-user">
                                             {userIPs && userIPs.map((ip, index) => (
                                                 <>
                                                     <div className="row">
@@ -293,12 +297,12 @@ export default function Profile(props) {
                                     </div>
                                 </div>
                                 <div className="col-md-6 my-3">
-                                    <div className="card mb-3">
+                                    <div className="card card-user mb-3">
                                         <div className="mx-auto my-auto">
-                                            <h3 className="my-3">Course Preferences</h3>
+                                            <h4 className="my-3">Course Preferences</h4>
                                         </div>
                                         <hr />
-                                        <div className="card-body">
+                                        <div className="card-body card-body-user">
                                             {userCPs && userCPs.map((cp, index) => (
                                                 <>
                                                     <div className="row">
