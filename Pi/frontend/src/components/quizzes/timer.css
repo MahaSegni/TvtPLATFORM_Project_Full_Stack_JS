@@ -1,0 +1,20 @@
+.maintimer{
+    width: 100%;
+    background-color: #3ac162;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    padding: 5px;
+    
+
+}
+.timerValue{
+    display: flex;
+    justify-content: space-around;
+}
+.timerValue>div{
+    border-left:3px solid rgb(255, 255, 255);
+    border-right:3px solid rgb(255, 255, 255);
+    border-radius: 50px;
+    color: white;
+    padding: 5px;
+}

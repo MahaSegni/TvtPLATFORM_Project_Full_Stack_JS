@@ -1,0 +1,19 @@
+#main{
+    background-color: rgb(255, 255, 255) !important;
+}
+.card-user {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%) !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    word-wrap: break-word !important;
+    background-color: rgb(255, 255, 255) !important;
+    background-clip: border-box !important;
+    border: 0px solid rgba(0,0,0,.125) !important;
+    border-radius: 1rem !important;
+}
+
+.card-body-user{   
+    border: 0px !important;
+}

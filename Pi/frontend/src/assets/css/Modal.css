@@ -1,0 +1,58 @@
+.modalBackground-user {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(184, 174, 174, 0.247);
+    position: absolute;
+    display: block;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalContainer-user {
+    height: auto;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+  }
+  
+  .modalContainer-user .title {
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .titleCloseBtn-user {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .titleCloseBtn-user button {
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  
+  .modalContainer-user .body {
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.7rem;
+    text-align: center;
+  }
+  
+  .modalContainer-user .footer {
+    flex: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #cancelBtn {
+    background-color: #FF0000;
+  }
+
+  

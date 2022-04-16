@@ -1,0 +1,23 @@
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .flex-container > div {
+    background-color: #3ac162;
+    margin: 5%;
+    text-align: center;
+    padding: 5%;
+    color: white;
+  }
+  .flex-container .active{
+      background-color: grey;
+  }
+  .flex-container .skiped{
+    background-color: rgb(255, 0, 0);
+}
+.list-group .active{
+  background-color: transparent;
+  color: #3ac162;
+  border:2px solid #3ac162;
+}

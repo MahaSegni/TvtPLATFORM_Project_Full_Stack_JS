@@ -1,0 +1,28 @@
+Fluent API:
+fournit plus d'options de configuration que les DataAnnotations en plus de la priorité qui plus élevée
+
+Configuration du modèle: mappage de bd
+Configuration de l'entité: clé primaire, nom de la table, relations
+Configuration de la propriété: mappage de la propriété vers la colonne 
+
+Redéfinir OnModelCreating() dans DbContext et y mettre toute la configuration -> problème -> 
+Créer dossier Configurations contenant un fichier de configuration pour chaque classe 
+
+Stratégire d'héritage:
+Table par hiérarchie ( methode par défaut): 1 sele table products toutes les propriétés et une colonne discriminator fait la distinction entre les classes d'héritage
+Table par type: tables individuelles 
+
+Custom conventions:
+exemple pour configurer toute les propriétés de type string et dont le nom commence par “Name” leur nom dans bd doit être “MyName”
+var properties = modelBuilder.Model.GetEntityTypes()
+                .SelectMany(e => e.GetProperties()).Where(p=> p.ClrType == typeof(string) && p.Name.StartsWith("Name"));
+            foreach (var item in properties)
+            {
+                item.SetColumnName("MyName");
+            }
+
+Table porteuse de données:
+créer des entités de jointure exemple la classe facture entre Client et Product
+
+Chargement des données
+Lazy loading: methode de chargement et de traitement des données uniquement nécessaires pour exécuter l'application

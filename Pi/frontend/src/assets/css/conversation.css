@@ -1,0 +1,58 @@
+.conversation {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.divname {
+ 
+  margin-left: 5%;
+}
+
+.conversation:hover {
+  background-color: #5fcf80 ;
+  opacity: 0.8;
+  color:white;
+  
+}
+
+
+.conversationImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.conversationName {
+  font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+  .conversationName {
+    display: none;
+  }
+}
+
+
+
+
+.conversationImgContainer {
+  position: relative;
+  margin-right: 10px;
+}
+
+
+
+.chatOnlineBadge {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: limegreen;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+

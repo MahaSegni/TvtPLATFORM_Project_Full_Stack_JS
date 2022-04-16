@@ -1,0 +1,75 @@
+body{
+  background-color: white;    
+}
+
+.panel-body{
+  background-color: white; 
+  border: 1px solid white;
+  padding:1%;
+  
+}
+.panel{
+  margin:2%;
+}
+
+.cardSuggestions-body{
+  background-color: white; 
+  border-radius: 15px;
+  border: 1px solid rgb(5, 68, 104);
+  padding:3%;
+
+}
+.cardSuggestions{
+  margin:2%;
+  border-radius: 15px;
+}
+
+img.profile-photo-lg {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+}
+
+.btn-primary, 
+.btn-primary:hover, 
+.btn-primary:focus, 
+.btn-primary:active, 
+.btn-primary.active, 
+.btn-primary.focus, 
+.btn-primary:active, 
+.btn-primary:focus, 
+.btn-primary:hover, 
+.open>.dropdown-toggle.btn-primary {
+  background-color: #3bc0c3;
+  border: 1px solid #3bc0c3;
+}
+.p-t-10 {
+  padding-top: 10px !important;
+}
+.media-main a.pull-left {
+  width: 100px;
+  
+}
+.thumb-lg {
+  height: 84px;
+  width: 84px;
+}
+.media-main .info {
+  overflow: hidden;
+  color: #000;
+}
+.media-main .info h4 {
+  padding-top: 10px;
+  margin-bottom: 5px;
+}
+.social-links li a {
+  background: #EFF0F4;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  display: inline-block;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  color: #7A7676;
+}

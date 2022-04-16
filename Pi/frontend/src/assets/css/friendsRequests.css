@@ -1,0 +1,50 @@
+.list-content{
+    min-height:300px;
+    margin-top: 3%;
+   }
+   .list-content .list-group .title{
+     background:#5fcf80;
+     border:2px solid #DDDDDD;
+     font-weight:bold;
+     color:#FFFFFF;
+     text-align: center;
+   }
+   .list-group-item img {
+       height:80px; 
+       width:80px;
+   }
+   
+  
+   .btn-accept{
+    background: #5fcf80;
+    opacity: 0.8;
+    color: white;
+    transition: 0.3s;
+    margin-right: 5px;
+  
+  }
+  .btn-accept:hover{
+    opacity: 1;
+    color: white;
+    
+    transition: 0.3s;
+  
+  }
+   .prj-name {
+       color:#5bc0de;    
+   }
+   .break{
+       width:100%;
+       margin:20px;
+   }
+   .name {
+     margin-left:1%;
+     font-size: large;
+    color: #000;   
+   }
+
+   img.profile-photo-lg {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+  }
