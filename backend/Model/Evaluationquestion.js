@@ -1,14 +1,10 @@
 var mongoose = require('mongoose');
 const Evaluation = require('./Evaluation');
-const Evquestionresponse = require('./Evquestionresponse');
 var Schema = mongoose.Schema;
 
 var Evaluationquestion = new Schema({
 
-  texte: {
-    type: String
-  },
-  image: {
+  text: {
     type: String
   },
   responseType: {
@@ -18,17 +14,12 @@ var Evaluationquestion = new Schema({
     type: [
       {
         responsesId:String,
-
-        texte: String,
-        image: String,
+        text: String,
         value: Number,
         refsubmitters:[String]
-
       }
     ],
   }
-
-
 });
 
 module.exports = mongoose.model('evaluationquestion', Evaluationquestion);

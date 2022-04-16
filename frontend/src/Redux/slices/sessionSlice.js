@@ -10,7 +10,7 @@ const sessionSlice = createSlice({
     reducers: {
         chnageConenctedUser(state, action){
             state.connectedUser = action.payload
-        },
+        }
     }
 });
 
@@ -19,7 +19,7 @@ export const selectConnectedUser = (state) => {
 };
 
 export const {
-    chnageConenctedUser,
+    chnageConenctedUser
 } = sessionSlice.actions;
 
 

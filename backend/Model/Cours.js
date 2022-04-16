@@ -6,10 +6,12 @@ var Cours = new Schema({
   title: {
     type: String
   },
+  date_creation : {
+    type:Date
+},
   file: {
     type: [
         {
-          fileId:String,
           typeFile: String,
           lienFile: String,
         }
@@ -17,21 +19,21 @@ var Cours = new Schema({
   },
   comments: {
     type: [
-      {
-        commenterId:String,
+      { ownerComment:String,
         nomUser: String,
-        text: String,
-        dateComment: Date,
+        imageUser:String,
+        texte: String,
+        dateComment: Date
       }
     ],
   },
-  Texte:{
+  texte:{
       type:String
   },
   likers: {
     type: [String],
   },
-
+  
 
   
 

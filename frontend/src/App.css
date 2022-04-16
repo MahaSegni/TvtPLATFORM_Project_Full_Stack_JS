@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden; /* Hide scrollbars */
+}
+
 .App {
   text-align: center;
 }

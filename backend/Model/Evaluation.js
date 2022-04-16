@@ -15,13 +15,37 @@ var Evaluation = new Schema({
     date : {
         type:Date
     },
-  
+    lastEdit: {
+        type:Date
+    },
     refquestions : {
         type:[String]
     }, 
     refmodule : {
-        type:[String]
+        type:String
     }, 
+    nomModule: {
+        type: String
+    },
+    public :{
+        type:Boolean
+    },
+    containsQuestions:{
+        type: Boolean
+    },
+
+    submissions: {
+        type: [
+          {
+            submissionsId:String,
+            idSubmitter: String,
+            nameSubmitter: String,
+            result: Number,
+          
+          }
+        ],
+      }
+   
   
 });
 

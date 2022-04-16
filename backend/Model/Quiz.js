@@ -7,22 +7,29 @@ var Quiz = new Schema({
     type: String
   },
   dateQuiz: {
-    type: String
+    type: Date
   },
   title: {
     type: String
   },
+  chrono: {
+    type: Boolean,
+    default:false
+  },
+  chronoVal:{
+      type:Number
+  },
+ 
   Questions: {
     type: [
         {
-          QuestionId:String,
           texte: String,
+          QuestionType:String,
+
           Responses: {
               type:
             [{
-                ResponsId:String,
-                ReponseType:String,
-                valeur:String,
+                texte:String,
                 correct:Boolean,
                 idUsers:[String],
 
@@ -33,20 +40,16 @@ var Quiz = new Schema({
       ],
   },
   Results:{
-      type:[
-          {
-            idUser:String,
-            Note:Number,
-          }
-      ]
-  },
+    type:[
+        {
+          idUser:String,
+          Note:Number,
+        }
+    ]
+}
   
-  chrono: {
-    type: Boolean
-  },
-  chronoVal:{
-      type:Number
-  }
+  
+ 
 
 
 
