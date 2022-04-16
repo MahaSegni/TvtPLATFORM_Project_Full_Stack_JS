@@ -320,7 +320,7 @@ export default function UserSettings({ closeModal }) {
                     <div className="alert alert-warning mt-5 mx-5" role="alert">
                         You are now connected with your Google credentials, please switch to your own credentials (email and password)
                         in order to procceed to your settings. If you don't already have a password, please sign out, click on
-                        "ForgetPassword" and create one.
+                        "Forgot Password" and create one.
                         <br/>
                         <br/>
                         NOTE : After creating a password you can continue to sign in with your Google Account. 

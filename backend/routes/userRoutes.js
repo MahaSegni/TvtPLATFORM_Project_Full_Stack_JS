@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const userController = require('../controllers/userController')
+const userController = require('../controllers/usercontroller')
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function(req,file,cb) {
-        cb(null,'D:/PiMern/Project_Full_Stack_JS/frontend/src/assets/uploads/user');
+        cb(null,'../frontend/src/assets/uploads/user');
     },
     filename: function(req,file,cb) {
         cb(null, (Math.random() + 1).toString(36).substring(7)+file.originalname)
@@ -34,6 +34,6 @@ router.get("/allUsers/:id",userController.getAllUsers)
 router.get("/ban/:aid/:id",userController.ban)
 router.get("/unban/:aid/:id",userController.unban)
 router.get("/getGeneralInfo/:id",userController.getGeneralInformations);
-router.get("/refreshUser/:secret/:id",userController.refreshUser)
-router.get("/autoSignOut/:secret/:id",userController.autoSignOut)
+router.get("/refreshUser/:id",userController.refreshUser)
+router.get("/autoSignOut/:id",userController.autoSignOut)
 module.exports=router;

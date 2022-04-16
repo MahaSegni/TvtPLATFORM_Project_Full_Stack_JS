@@ -10,7 +10,7 @@ export default function Navbar() {
   
   
   const autoSignOut = async () => {
-    const [res, err] = await queryApi('user/autoSignOut/f5bc2de53fb87ca782918b25504e1f402cd0b4b47099b7aeba2a3/'+ connectedUser.id);
+    const [res, err] = await queryApi('user/autoSignOut/'+ connectedUser.id, null,'GET',false ,process.env.REACT_APP_SECRET );
     history.push('/signin')
     dispatch(chnageConenctedUser({ type: "disconnected" }))
   }

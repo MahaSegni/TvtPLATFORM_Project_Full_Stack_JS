@@ -83,7 +83,7 @@ export default function ForgetPassword() {
             return;
         }
         else {
-            const [res, err] = await queryApi('user/forgetPassword/', formPass, 'PUT', false);
+            const [res, err] = await queryApi('user/forgetPassword/', formPass, 'PUT', false,process.env.REACT_APP_SECRET);
             if (res == 'success') {
                 history.push('/signin')
             }

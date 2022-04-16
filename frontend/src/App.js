@@ -30,7 +30,7 @@ function App() {
 
 
   const refreshUser = async () => {
-    const [result, err] = await queryApi('user/refreshUser/' + process.env.REACT_APP_SECRET + "/" + connectedUser.id);
+    const [result, err] = await queryApi('user/refreshUser/'+ connectedUser.id, null,'GET',false ,process.env.REACT_APP_SECRET );
     if (result.image.startsWith('https')) {
       let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: connectedUser.connectionType, pictureType: "external" }
       dispatch(chnageConenctedUser(userResult))

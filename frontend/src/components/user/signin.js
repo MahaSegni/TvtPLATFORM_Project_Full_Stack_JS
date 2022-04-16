@@ -21,8 +21,8 @@ export default function Signin(props) {
   const onSubmit = async (e) => {
     e.preventDefault()
     const [result, err] = await queryApi('user/signin', formData, "POST", false)
-
-    if ((result == 'Incorrect password') || (result == 'Incorrect email') || (result == 'You are Trying to connect with a google account that does not has a password, click Forget Password to create one') || (result == 'Account Banned')) {
+    console.log(result)
+    if ((result == 'Incorrect password') || (result == 'Incorrect email') || (result == 'You are Trying to connect with a google account that does not have a password, click Forgot Password to create one') || (result == 'Account Banned')) {
       setErrorDisplay(result)
     } else {
       if (result.image.startsWith('https')) {
@@ -74,7 +74,7 @@ export default function Signin(props) {
         <div class="form-group my-2">
           <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password" onChange={(e) => onChange(e)} />
         </div>
-        <Link to={'/forgetPassword'}>Forget Password</Link>
+        <Link to={'/forgetPassword'}>Forgot Password</Link>
         <div style={{ textAlign: "center", color: "red" }}>{errorDisplay}</div>
         <button type="submit" class="ms-auto my-2 btn btn-template-user">Submit</button>
         <div style={{ float: "right" }}>

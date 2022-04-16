@@ -1,20 +1,18 @@
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.REACT_APP_TVT_PLATFORM_GOOGLE_CLIENT_ID)
 require('dotenv').config()
-const multer = require('multer')
-const upload = multer({ dest: 'D:/PiMern/Project_Full_Stack_JS/frontend/src/assets/uploads/user' })
 var nodemailer = require('nodemailer');
 const UserModel = require('../Model/User');
 const ModuleModel = require('../Model/Module');
 const FriendModel = require('../Model/Friend');
-const FriendController = require('../controllers/friendController');
+const FriendController = require('./friendController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'tvtplatform@gmail.com',
-        pass: 'tvtplatformforpi'
+        user: process.env.EMAIL,
+        pass: process.env.PASS
     }
 });
 
@@ -109,7 +107,7 @@ module.exports.signIn = async (req, res) => {
                         res.send('Incorrect password');
                     }
                 } else {
-                    res.send('You are Trying to connect with a google account that does not has a password, click Forget Password to create one');
+                    res.send('You are Trying to connect with a google account that does not have a password, click Forgot Password to create one');
                 }
             }
             else {
@@ -200,20 +198,24 @@ module.exports.updateUser = async (req, res) => {
     }
 }
 module.exports.forgetPassword = async (req, res) => {
-    try {
-        UserModel.findOne({ email: req.body.email }, async (err, user) => {
-            bcrypt.hash(req.body.password, 10, function (err, hash) {
-                user.password = hash
-                if (checkIfGoogle(user.email)) {
-                    user.typeUser = "user"
-                }
-                user.save()
-                res.send('success')
-            });
-        })
 
-    } catch (err) {
-        res.send(err)
+    if (req.headers['authorization'] == process.env.ACCESS_TOKEN_SECRET) {
+        try {
+            UserModel.findOne({ email: req.body.email }, async (err, user) => {
+                bcrypt.hash(req.body.password, 10, function (err, hash) {
+                    user.password = hash
+                    if (checkIfGoogle(user.email)) {
+                        user.typeUser = "user"
+                    }
+                    user.save()
+                    res.send('success')
+                });
+            })
+        } catch (err) {
+            res.send(err)
+        }
+    }else{
+        res.status(401).send()
     }
 }
 module.exports.changePassword = async (req, res) => {
@@ -560,18 +562,20 @@ module.exports.getGeneralInformations = async (req, res) => {
 }
 
 module.exports.refreshUser = async (req, res) => {
-    if (req.params.secret == process.env.ACCESS_TOKEN_SECRET) {
+    if (req.headers['authorization'] == process.env.ACCESS_TOKEN_SECRET) {
         UserModel.findById(req.params.id, (err, user) => {
             if (user.typeUser == "googleUser") {
                 user.typeUser = "user"
             }
             res.send(user)
         })
+    }else {
+        res.status(401).send()
     }
 }
 
 module.exports.autoSignOut = async (req, res) => {
-    if (req.params.secret == process.env.ACCESS_TOKEN_SECRET) {
+    if (req.headers['authorization'] == process.env.ACCESS_TOKEN_SECRET) {
         UserModel.findById({ _id: req.params.id }, (err, result) => {
             if (result != null && result.state > 0) {
                 result.state = result.state - 1
@@ -579,13 +583,15 @@ module.exports.autoSignOut = async (req, res) => {
             }
             res.status(200).send('disconnected')
         });
+    }else {
+        res.status(401).send()
     }
 }
 
 const deleteFriend = async (user, friend) => {
-    for(let i in friend.reffriends){
-        await FriendModel.findById(friend.reffriends[i],(err,fr) => {
-            if(fr.iduser == user._id){
+    for (let i in friend.reffriends) {
+        await FriendModel.findById(friend.reffriends[i], (err, fr) => {
+            if (fr.iduser == user._id) {
                 fr.remove()
                 friend.reffriends.pull(friend.reffriends[i])
                 friend.save()
