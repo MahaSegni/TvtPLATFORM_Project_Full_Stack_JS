@@ -36,4 +36,5 @@ router.get("/unban/:aid/:id",userController.unban)
 router.get("/getGeneralInfo/:id",userController.getGeneralInformations);
 router.get("/refreshUser/:id",userController.refreshUser)
 router.get("/autoSignOut/:id",userController.autoSignOut)
+router.get("/courseRecommendations/:id",userController.courseRecommendations)
 module.exports=router;

@@ -22,7 +22,7 @@ export default function Profile(props) {
     const history = useHistory();
     const dispatch = useDispatch();
 
-    
+
     useEffect(() => {
         if (connectedUser.type == "disconnected") {
             history.push('/signin')
@@ -35,6 +35,7 @@ export default function Profile(props) {
     var [userIPs, err, reloadUserIPs] = useApi('interestpoint/userInterestPoints/' + connectedUser.id, null, 'GET', false, connectedUser.token);
     var [userCPs, err2, reloadUserCPs] = useApi('user/coursepreferences/' + connectedUser.id, null, 'GET', false, connectedUser.token);
     var [allIPs, err3, reloadAllIPs] = useApi('interestpoint/getAll/', null, 'GET', false);
+    var [CRs, err, reloadUserCRs] = useApi('user/courseRecommendations/' + connectedUser.id, null, 'GET', false, connectedUser.token);
     const [otherIPs, setOtherIPs] = useState([])
     const [exist, setExist] = useState({
         add: "",
@@ -100,8 +101,8 @@ export default function Profile(props) {
     const handleKeyPress = async (event) => {
         let error = false;
         if (event.key === 'Enter') {
-            userCPs.forEach(e=> {
-                if (e.toString().toUpperCase() == addCP.inputValue.toUpperCase()){
+            userCPs.forEach(e => {
+                if (e.toString().toUpperCase() == addCP.inputValue.toUpperCase()) {
                     error = true;
                 }
             })
@@ -128,8 +129,8 @@ export default function Profile(props) {
     const handleKeyPressUpdate = async (event) => {
         let error = false;
         if (event.key === 'Enter') {
-            userCPs.forEach(e=> {
-                if (e.toString().toUpperCase() == updateCP.inputValue.toUpperCase()){
+            userCPs.forEach(e => {
+                if (e.toString().toUpperCase() == updateCP.inputValue.toUpperCase()) {
                     error = true;
                 }
             })
@@ -241,12 +242,12 @@ export default function Profile(props) {
                                                     setOpenPasswordModal(true)
                                                 }}><FontAwesomeIcon icon={faGear}></FontAwesomeIcon></button>
                                             </div>
-                                            {connectedUser.type != "admin" && 
-                                            <div className="mx-auto" style={{ float: "right" }}>
-                                                <button type="submit" className="btn btn-template-user me-3" onClick={() => {
-                                                    toLibrary()
-                                                }}><FontAwesomeIcon icon={faBook}></FontAwesomeIcon></button>
-                                            </div>
+                                            {connectedUser.type != "admin" &&
+                                                <div className="mx-auto" style={{ float: "right" }}>
+                                                    <button type="submit" className="btn btn-template-user me-3" onClick={() => {
+                                                        toLibrary()
+                                                    }}><FontAwesomeIcon icon={faBook}></FontAwesomeIcon></button>
+                                                </div>
                                             }
                                         </div>
                                     </div>
@@ -356,6 +357,31 @@ export default function Profile(props) {
 
                                         </div>
                                     </div>
+                                </div>
+                                <div className="col-md-12 my-3">
+
+                                    <div className="card card-user mb-3">
+                                        <div className="mx-auto my-auto">
+                                            <h4 className="my-3">Course Recommendations</h4>
+                                        </div>
+                                        <hr />
+                                        <div className="card-body card-body-user">
+                                            <div className="row">
+                                                {CRs && CRs.map((cr, index) => (
+
+                                                    <div className="card card-user col-md-3 mx-5 mb-5" style={{ width: "18rem;" }}>
+                                                        <img src={cr.img} alt="" style={{ width: '100%', height: '13vw', objectFit: 'cover' }}></img>
+                                                        <div className="card-body card-body-user">
+                                                            <h5 className="card-title" style={{ textAlign: "center" }}>{cr.title}</h5>
+                                                            <a className="btn btn-template-user my-2" style={{ float: "right" }} href={cr.link} target="_blank">Check</a>
+                                                        </div>
+                                                    </div>
+
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

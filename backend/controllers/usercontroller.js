@@ -8,6 +8,7 @@ const FriendModel = require('../Model/Friend');
 const FriendController = require('../controllers/friendController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const puppeteer = require('puppeteer');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -585,6 +586,30 @@ module.exports.autoSignOut = async (req, res) => {
             res.status(200).send('disconnected')
         });
     }
+}
+
+module.exports.courseRecommendations = async (req, res) => {
+
+    console.log("here")
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto('https://www.edx.org/search?tab=program');
+    let courses = await page.evaluate(() => {
+        let cours = [];
+        let elements = document.querySelectorAll('div.discovery-card');
+        
+        for (elem of elements) {
+            titre = elem.querySelector('h3.card-title').querySelector('span').querySelector('span').textContent.trim().match(/[A-Z][a-z]+/g),
+            cours.push({
+                title: titre.join(' '),
+                img : elem.querySelector('img.hero-bg-image').src,
+                link : 'https://www.edx.org/'+elem.querySelector('a.discovery-card-link').getAttribute("href"),
+            })
+        }
+        return cours;
+    })
+    await browser.close();
+    res.send(courses.slice(0,6))
 }
 
 const deleteFriend = async (user, friend) => {
