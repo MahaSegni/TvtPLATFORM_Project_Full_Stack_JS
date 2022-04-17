@@ -26,6 +26,6 @@ router.post('/:id/addComment',coursRoutes.createComment);
 router.patch('/:id/deleteComment', coursRoutes.deleteComment);
 router.patch('/:id/UpdateComment', coursRoutes.UpdateComment);
 router.post("/uploadimage", upload.single("files"),coursRoutes.uploadImage);
-
+router.post("/AddfileToCourse/:id", upload.single("file"),coursRoutes.uploadFile);
 
 module.exports=router;

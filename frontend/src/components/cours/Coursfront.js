@@ -25,7 +25,6 @@ const Coursfront = () => {
         history.push("/signin")
   
       }
-    console.log(isLoaded)
     async function getData(){
         await fetch(`${process.env.REACT_APP_API_URL}/cours/getModuleofcours/${idModule}`, {
             method: 'GET',
@@ -46,7 +45,6 @@ const Coursfront = () => {
                     setError(error);
                 }
             )
-            console.log("PRINT MODULE"+JSON.stringify(modulecour));
         if(isLoaded===true){
           fetch(`${process.env.REACT_APP_API_URL}/cours/getModuleowner/`+ownerId,{
                 method: 'GET',        
@@ -67,13 +65,28 @@ const Coursfront = () => {
         }
 
     }
-    async function clickAlert(data,idmodule,ckeditordata){
+    async function clickAlert(data,idmodule,ckeditordata,file){
     
-     const [, err] =  await queryApi('cours/'+ idmodule+'/create' ,{
+     const [c, err] =  await queryApi('cours/'+ idmodule+'/create' ,{
          title:data.title,
-         texte:ckeditordata
+         texte:ckeditordata,
+        
      }
     , 'POST', false,connectedUser.token);
+    if(file){
+        file.forEach(element => {
+            const body = new FormData();
+            body.append("file", element[0]);
+            fetch(`${process.env.REACT_APP_API_URL}/cours/AddfileToCourse/${c._id}`, {
+                method: "POST",
+                body: body
+                // mode: "no-cors"
+              })
+        });
+        
+        
+
+    }
     setIsLoaded(false);
     }
     useEffect(() => {

@@ -11,21 +11,31 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { FileUploader } from "react-drag-drop-files";
+
 const schema = yup.object({
   title: yup.string().required().max(30),
 }).required();
-const AjouterCour = ({idmodule, onChildClick}) => {
+const AjouterCour = ({ idmodule, onChildClick }) => {
   var connectedUser = useSelector(selectConnectedUser)
-  const[ckedtiorValue,setckedtiorValue]=useState("");
-  const[ckedtiorValide,setckedtiorValide]=useState(false);
-  const[ckedtiormessage,setckedtiormessage]=useState("");
-  const { register, handleSubmit, formState:{ errors } } = useForm({
+  const [ckedtiorValue, setckedtiorValue] = useState("");
+  const [ckedtiorValide, setckedtiorValide] = useState(false);
+  const [ckedtiormessage, setckedtiormessage] = useState("");
+  const [files, setFiles] = useState([]);
+  const fileTypes = ["ZIP", "PDF", "DOC"];
+
+  const handleChange = (file) => {
+    setFiles(files => [file, ...files]);
+
+
+  };
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
-  const onSubmit =  (data) => { 
+  const onSubmit = (data) => {
 
-    onChildClick(data,idmodule,ckedtiorValue);
-    
+    onChildClick(data, idmodule, ckedtiorValue,files);
+
   }
   function uploadAdapter(loader) {
     return {
@@ -34,8 +44,6 @@ const AjouterCour = ({idmodule, onChildClick}) => {
           const body = new FormData();
           loader.file.then((file) => {
             body.append("files", file);
-            // let headers = new Headers();
-            // headers.append("Origin", "http://localhost:3000");
             fetch(`${process.env.REACT_APP_API_URL}/cours/uploadimage`, {
               method: "POST",
               body: body
@@ -43,13 +51,13 @@ const AjouterCour = ({idmodule, onChildClick}) => {
             })
               .then(res => res.json())
               .then((res) => {
-                
+
                 resolve({
-                  default: '/courUploads/'+res.filename
-                  
+                  default: '/courUploads/' + res.filename
+
                 });
               }
-            )
+              )
               .catch((err) => {
                 reject(err);
               });
@@ -67,13 +75,13 @@ const AjouterCour = ({idmodule, onChildClick}) => {
     <div class="post-content">
       <div class="post-container">
         {connectedUser.pictureType == "external" &&
-                                                     
-                                                     <img src={connectedUser.image} class="profile-photo-md pull-left" 
-                                                         referrerpolicy="no-referrer"></img>
-                                                 }
-                                                 {connectedUser.pictureType == "internal" && <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="" class="profile-photo-md pull-left" 
-                                                     />
-                                                 }
+
+          <img src={connectedUser.image} class="profile-photo-md pull-left"
+            referrerpolicy="no-referrer"></img>
+        }
+        {connectedUser.pictureType == "internal" && <img src={require('../../assets/uploads/user/' + connectedUser.image)} alt="" class="profile-photo-md pull-left"
+        />
+        }
         <div class="post-detail">
           <div class="user-info">
             <h5><a href="timeline.html" class="profile-link">{connectedUser.name}</a> </h5>
@@ -81,47 +89,57 @@ const AjouterCour = ({idmodule, onChildClick}) => {
           <div class="line-divider"></div>
           <form onSubmit={handleSubmit(onSubmit)}>
 
-          <div class="post-text">
+            <div class="post-text">
               <div class="form-group my-3">
                 <input type="text" class="form-control" id="title" {...register("title")} placeholder="Title " />
               </div>
-              <div class="alert alert-danger" role="alert"  hidden={!errors.title}>
-              {errors.title?.message}
-              </div>
-              
-              <div class="form-group my-3">
-              <CKEditor 
-                    editor={ ClassicEditor }
-                    config={{
-                      extraPlugins: [uploadPlugin]
-                    }}
-                    onChange={ ( event, editor ) => {
-                        const data = editor.getData();
-                        setckedtiorValue(data);
-                        
-                        if(data.length==0){
-                          setckedtiormessage("texte is required");
-                          setckedtiorValide(false);
-                        }else{
-                          setckedtiormessage("");
-                          setckedtiorValide(true);
-                        }
-                        console.log(ckedtiorValide)
-                       
-                    } 
-                  }
-                />
-                </div>
-              <div class="alert alert-danger" role="alert" hidden={ckedtiormessage.length==0}>
-              {ckedtiormessage}
+              <div class="alert alert-danger" role="alert" hidden={!errors.title}>
+                {errors.title?.message}
               </div>
 
+              <div class="form-group my-3">
+                <CKEditor
+                  editor={ClassicEditor}
+                  config={{
+                    extraPlugins: [uploadPlugin]
+                  }}
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                    setckedtiorValue(data);
+
+                    if (data.length == 0) {
+                      setckedtiormessage("texte is required");
+                      setckedtiorValide(false);
+                    } else {
+                      setckedtiormessage("");
+                      setckedtiorValide(true);
+                    }
+
+                  }
+                  }
+                />
+              </div>
+              <div class="alert alert-danger" role="alert" hidden={ckedtiormessage.length == 0}>
+                {ckedtiormessage}
+              </div>
+              <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
+              {files.length > 0 &&
+                <ul>
+
+                  {files.map((f, index) => (
+
+
+                    <li key={index}>{f[0].name}</li>))
+                  }   </ul>
+
+              }
+
               <div className="form-group my-3">
-                <input type="submit" value="Save"className="form-control btn btn-template " disabled={!ckedtiorValide}/>
+                <input type="submit" value="Save" className="form-control btn btn-template " disabled={!ckedtiorValide} />
               </div>
 
             </div>
-            </form>
+          </form>
 
 
 

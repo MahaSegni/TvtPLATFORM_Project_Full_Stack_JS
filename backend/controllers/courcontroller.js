@@ -53,9 +53,9 @@ const cour = await newCour.save();
       },
       { new: true },
       (err, docs) => {
-        if (!err) res.send(docs);
+        if (!err) res.send(cour);
         else 
-        return res.status(500).send(err);
+        return res.status(500).send(cour);
       });
 
 }
@@ -261,5 +261,32 @@ module.exports.uploadImage = async (req, res) => {
   if(req.file){
     return res.send({filename: req.file.filename})
   }
+};
+module.exports.uploadFile = async (req, res) => {
+  //originalname:
+  //mimetype
+  //filename
+  console.log(req.params.id)
+  if (!ObjectID.isValid(req.params.id))
+  return res.status(400).send("ID unknown : " + req.params.id);
+   CoursModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          files: {
+          originalname:req.file.originalname,
+          typeFile: req.file.mimetype,
+          filenamelocation: req.file.filename,
+          },
+        },
+      },
+      { new: true },
+      (err, docs) => {
+        if (!err) return res.send(docs);
+        else return res.status(400).send(err);
+      }
+    )
+  
+
 };
 

@@ -9,11 +9,11 @@ var Cours = new Schema({
   date_creation : {
     type:Date
 },
-  file: {
+  files: {
     type: [
-        {
+        { originalname:String,
           typeFile: String,
-          lienFile: String,
+          filenamelocation: String,
         }
       ],
   },
