@@ -29,6 +29,14 @@ var Module = new Schema({
     statusModule : {
         type : Boolean
     },
+    rating :{
+        type: [
+            {
+              user: String,
+              ratemodule:Number,
+            }
+        ]    
+    }
 });
 
 module.exports = mongoose.model('module',Module);
