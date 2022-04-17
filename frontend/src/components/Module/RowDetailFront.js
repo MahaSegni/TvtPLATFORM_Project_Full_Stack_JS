@@ -1,10 +1,10 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions } from '@mui/material';
+import { Button, CardActionArea, CardActions, toggleButtonClasses } from '@mui/material';
 import DayJS from 'react-dayjs';
 import { useSelector } from 'react-redux';
 import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
@@ -13,10 +13,12 @@ import { Link } from 'react-router-dom'
 
 import "../../assets/css/cardmodule.css"
 import axios from 'axios';
-function RowDetailsFront({ label, image, idowner, refStudents ,id }) {
+function RowDetailsFront({ label, image, idowner, refStudents ,id , rating  }) {
 
   var connectedUser = useSelector(selectConnectedUser)
-
+  const [tot, setTot] = useState({
+    ratetot : 0, 
+  });
   const join = (id__) => {
     axios.put(`http://localhost:3000/api/module/adduser/${id__}/${connectedUser.id}`)
       .then(res => {
@@ -24,6 +26,36 @@ function RowDetailsFront({ label, image, idowner, refStudents ,id }) {
       })
       
   }
+  /*
+  const total =  (rating) => {
+    let sum=0;
+    if (rating.length != 0 ){
+    for (let i = 0; i<rating.length; i++){
+ sum +=rating[i].rate;
+    }
+    tot=sum;
+  }else{
+    tot=0;
+  }
+    
+    
+console.log(tot);
+  }*/
+  
+  useEffect(() => { 
+    let sum=0;
+    if (rating?.length != 0 ){
+    for (let i = 0; i<rating?.length; i++){
+ sum +=rating[i].ratemodule;
+ 
+    }
+let moy= sum/(rating?.length);
+    tot.ratetot=parseInt(moy,10);
+  }else{
+    tot.ratetot=parseInt(0,10);
+  }
+  })
+  
 
   return (
     <>
@@ -47,7 +79,7 @@ function RowDetailsFront({ label, image, idowner, refStudents ,id }) {
             <div class="trainer-rank d-flex align-items-center">
               <i class="fa fa-users" style={{ color: "green" }}></i>&nbsp;{refStudents.length}
               &nbsp;&nbsp;
-              <i class="fa fa-heart" style={{ color: "red" }}></i>&nbsp;65
+              <i class="fa fa-heart" style={{ color: "red" }}></i>&nbsp; {tot.ratetot}
             </div>
 
           </div>

@@ -79,7 +79,25 @@ module.exports = {
      modul.save()
      return  res.send(modul)
   },
-
+  updateModuleRating: async (req, res) => {
+    ModuleModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          rating: {
+            user:req.body.user,
+            ratemodule: req.body.ratemodule,
+          },
+        },
+      },
+      { new: true },
+      (err, docs) => {
+        if (!err) {return res.send(docs);
+        console.log(docs);}
+        else return res.status(400).send(err);
+      }
+    )
+   },
   deleteModule: async (req, res) => {
     try {
      const dataFind = await CategorieModel.updateMany( {

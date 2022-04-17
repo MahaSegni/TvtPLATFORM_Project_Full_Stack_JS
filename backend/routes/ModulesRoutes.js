@@ -18,6 +18,7 @@ router.post('/add', modulescontroller.addModule);
 router.get('/getById/:id', modulescontroller.getModuleById);
 router.get('/getModuleBylabel/:label', modulescontroller.getModuleBylabel);
 router.put('/update', modulescontroller.updateModule);
+router.put('/updateRating/:id', modulescontroller.updateModuleRating);
 router.put("/uploadPicture/:id",upload.single('image'),modulescontroller.uploadPicture);
 router.put('/adduser/:id/:idUser', modulescontroller.addUserToModule);
 router.delete('/delete/:id', modulescontroller.deleteModule);

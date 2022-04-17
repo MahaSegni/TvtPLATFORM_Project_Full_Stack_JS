@@ -129,11 +129,11 @@ export default function ListModule() {
   useEffect(async () => {
     await axios.get('http://localhost:3000/api/module/get').then(res => {
       setModules(res.data)
-    })
+    });
     await axios.get('http://localhost:3000/api/category/get').then(resu => {
       setCategoory(resu.data)
-    })
-  }, [])
+    });
+  },[])
   $(document).ready(function () {
     $("#search").on("keyup", function () {
       var value = $(this).val().toLowerCase();
@@ -142,18 +142,7 @@ export default function ListModule() {
       });
     });
   });
-  // affichage category 
-  /*
-                  <ul className="pl-0">
-                    {category.map((category)=>(
-                      <ul style={{cursor: 'pointer', listStyleType : 'none'}} 
-                      key={category} onClick={()=> setCategoory(category)}>
-                          {category.label}
-                      </ul>
-                    )
-                      )}
-                  </ul>
-                  */
+
 
   return connectedUser.type == "user" ? (
     <div >
@@ -214,7 +203,7 @@ export default function ListModule() {
 
               {categoryid == "" && <>
                 {add == false && <>
-                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents }) => {
+                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents , rating }) => {
                   
                     if (refStudents.filter(r=>r==connectedUser.id).length==0 && connectedUser.id != idowner) {
                       return (
@@ -223,7 +212,7 @@ export default function ListModule() {
                             <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                               <div class="course-item" id="mydiv">
 
-                                <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} />
+                                <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating} />
 
                                 <div class="my-2">
                                   <button type="button" class="btn btn-template ms-5" onClick={() => join(_id)}>Register now</button>
@@ -310,7 +299,7 @@ export default function ListModule() {
 
               {categoryid == "" && <>
                 {add == false && <>
-                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents }) => {
+                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents, rating }) => {
 
                     return (
                       <>
@@ -318,7 +307,7 @@ export default function ListModule() {
                           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                             <div class="course-item">
 
-                              <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} />
+                              <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating}  />
                               <div class="my-2">
                                 <button type="button" class="btn btn-template ms-5" onClick={handleClick}>Register now</button>
 
