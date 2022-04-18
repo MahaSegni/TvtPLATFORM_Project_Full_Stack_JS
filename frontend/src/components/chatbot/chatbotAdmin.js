@@ -12,14 +12,77 @@ import { useSelector } from "react-redux";
 export default function ChatbotMessage() {
   let connectedUser = useSelector(selectConnectedUser)
   const [add, setAdd] = useState(false);
-  const [questions, err, reload] = useApi('evquestion/get/' + "", null, 'GET', false, connectedUser.token);
+  const [questions, err, reload] = useApi('chatbot/get' , null, 'GET', false, connectedUser.token);
+
+  const deleteQ = async (e) => {
+    const [result, err] = await queryApi('chatbot/delete/'+e, null, "GET", false, connectedUser.token);
+    reload();
+}
     return (
-      <div class="container">
-      <label style={{marginLeft:"83%"}}>
+
+      <div class="container ">
+        <label style={{marginLeft:"83%"}}>
         <Button  onClick={() => setAdd(!add)}>Add question</Button>&nbsp;&nbsp;
       </label>  
-    {add==true && <AddChatbotAdmin add={setAdd} reload={reload}/>}
+      <br/>
+  
+    {add==true && <AddChatbotAdmin  add={setAdd} reload={reload}/>}
+    <div class="customTable" style={{marginTop:"2%"}}>
+                    <div class="table-wrapper">
+                        {questions &&
+                            <table class="fl-table">
+                                <thead>
+                                    <tr>
+                                        <th>Question</th>
+                                        <th>Visibility</th>
+                                        <th>Date Creation</th>
+                                        <th>Response type</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {questions &&
+                                        questions.map((q, index) => (  
+                                            <>
+                                            <tr key={index}>        
+                                              <td style={{"textAlign":"left"}}>{q.message}</td>
+                                              <td style={{"textAlign":"left"}}>{q.visibility}</td>
+                                              <td style={{"textAlign":"left"}}>{q.createdAt.substring(0, 10)}</td>
+                                              <td style={{"textAlign":"left"}}>{q.responseType}</td>
+                                              <td><a class="text-danger" title="" data-original-title="Delete"
+                                              data-toggle="modal" data-target={`#ConfirmationModal${q._id}`}><i class="far fa-trash-alt"></i></a></td>
+                                            </tr>
+                                            {/*  -----------------------------------------------------ConfirmationModal----------------------------------------------*/}
+                                            <div class="modal fade" id={`ConfirmationModal${q._id}`} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                  <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-body">
+                                                        <h4 class=" text-center" style={{ color: "#5fcf80" }}>Confirm Delete</h4>
+
+                                                        <hr></hr>
+                                                      </div>
+                                                      <div class="modal-body text-center">
+                                                        <p>Validate your deletion ?  </p>
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-template " id="cancelBtn" data-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-template" data-dismiss="modal" onClick={() => { deleteQ(q._id) }}>Submit</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                            </div></>
+                                        ))}
+                                    {questions.length <= 0 &&
+                                        <tr>No questions avaible</tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                    
+                </div>
      </div>
+
 
     );
   }

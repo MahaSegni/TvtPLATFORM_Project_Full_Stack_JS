@@ -2,8 +2,14 @@ const ChatbotModel = require('../Model/ChatbotMessage');
 const ModuleModel = require('../Model/Module');
 const UserModel = require('../Model/User');
 
+
+  
 module.exports.addChatbotMessage = async (req, res) => {
-  let type= req.body.type;
+  UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
+    let type= req.body.type;
   if(type!=="satisfaction" && type!=="importance" && type!=="agreement" && type!=="utility" ){
     type="satisfaction"
   }
@@ -33,14 +39,20 @@ module.exports.addChatbotMessage = async (req, res) => {
     rep3= "Neutral";
     rep4= "Not useful";
     rep5= "Not useful at all";
-  }   
+  } 
+  
     let visibility= req.body.visibility
+    
+  console.log("visibility",visibility)
+  console.log("idModule"+req.body.idModule)
     let tabVisibility=[]
     if(visibility=="site"){
         tabVisibility.push("site")
     }else if(visibility=="module"){
-        let m = await ModuleModel.findById(req.params.idModule);
+     
+        let m = await ModuleModel.findById(req.body.idModule);
         tabVisibility=m.refStudents; }
+        console.log(tabVisibility)
     let c=await new ChatbotModel({
         responseType: type,
         message: req.body.message,
@@ -78,9 +90,13 @@ module.exports.addChatbotMessage = async (req, res) => {
           else return res.status(400).send(err);
         }
       ) 
-  };
+  }};
 
   module.exports.submitResponse = async (req, res) => {
+    UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
     let c= await ChatbotModel.findById(req.body.id)
     if(c.visibility[0]=="site"){
         ChatbotModel.findByIdAndUpdate(
@@ -118,9 +134,13 @@ module.exports.addChatbotMessage = async (req, res) => {
             }
         ) 
     }
-   }
+   }};
   
    module.exports.deleteChatbotMessageForUser = async (req, res) => {
+    UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
     let c= await ChatbotModel.findById(req.params.id)
     let userId=req.params.idUser;
     ChatbotModel.findByIdAndUpdate(
@@ -136,9 +156,22 @@ module.exports.addChatbotMessage = async (req, res) => {
           else return res.status(400).send(err);
         }
     ) 
-  };
+  }};
 
   module.exports.deleteChatbotMessage = async (req, res) => {
+    UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
     await ChatbotModel.findByIdAndRemove(req.params.id)
     res.send("Chatbot message deleted");
-  };
+  }};
+
+  module.exports.getChatbotMessages = async (req, res) => {
+    UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+  if(UserTok==null){
+    return res.send('authorization failed')
+  }else{
+    let m=await ChatbotModel.find()
+    res.send(m);
+  }};

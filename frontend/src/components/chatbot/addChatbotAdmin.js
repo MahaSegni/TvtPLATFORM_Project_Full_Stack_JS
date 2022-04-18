@@ -1,14 +1,17 @@
-import styled from "styled-components";
 import { useEffect, useState } from 'react';
 import { queryApi } from "../../utils/queryApi";
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import "../../assets/css/evaluations.css"
+import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
+import { useSelector } from "react-redux";
+
 
 export default function AddEvaluation({ props, add, reload }) {
     const history = useHistory();
+    let connectedUser = useSelector(selectConnectedUser)
     const [showModules, setShowModules] = useState(false);
-    const [showForm, setShowForm] = useState(true);
+    const [showForm, setShowForm] = useState(false);
     const [modules, setModules] = useState();
     const [typeQuestion, settypeQuestion] = useState("satisfaction");
     const [first, setFirst] = useState("Very satisfied");
@@ -26,7 +29,7 @@ export default function AddEvaluation({ props, add, reload }) {
         type: "",
         message: "",
         visibility: "",
-        idModule:""
+        idModule: ""
     })
 
     const onChange = (e) => {
@@ -39,32 +42,36 @@ export default function AddEvaluation({ props, add, reload }) {
     };
 
     const handleChangeModule = (e) => {
-        setShowForm(true)
+   
+         setShowForm(true)
         onChange(e)
     };
 
     const handleChangeVisibility = async (e) => {
-     
+
         if (e.target.value == "site") {
+             formData.idModule=null
             setShowModules(false)
             setShowForm(true);
-            onChange(e)
+
         }
         else if (e.target.value == "module") {
             setShowForm(false)
             setShowModules(true)
             await axios.get('http://localhost:3000/api/module/get').then(res => { setModules(res.data) })
-        }
+        } 
+        onChange(e)
+          
     };
 
 
 
-    
+
 
 
     const onAdd = async (e) => {
         e.preventDefault();
-        const [result, err] = await queryApi('chatbot/add/', formData, "POST", false);
+        const [result, err] = await queryApi('chatbot/add/', formData, "POST", false, connectedUser.token);
         reload();
         add(false);
     }
@@ -73,28 +80,37 @@ export default function AddEvaluation({ props, add, reload }) {
     const { type, message } = formData;
 
     return (
-        <div class="card-body">
+        
+        <div class="card-body " style={{border: "2px solid #CED4DA" ,padding:30, borderRadius:30,marginTop:15, marginBottom:10}} >
             <div className="body">
                 <form class="w-75 mx-auto" onSubmit={onAdd}>
                     <h5 style={{ color: "red" }}></h5>
-                    <select class="form-control"  name="visibility" onChange={handleChangeVisibility} >
-                        <option value="site">Site</option>
-                        <option value="module">Module</option>
-                    </select>
+                    <div class="form-group">
+                        <label style={{ float: "left" }}><h5>Concerned users :</h5></label>
+
+                        <select class="form-control" name="visibility" onChange={handleChangeVisibility} >
+                            <option value="..." disabled selected hidden  >please select an option</option>
+                            <option value="site">All users</option>
+                            <option value="module">Specific module users</option>
+                        </select></div>
 
                     <br />
                     {showModules &&
-                        <select class="form-control"  name="idModule" onChange={handleChangeModule} >
-                            {modules&& modules.map((module, index) => (  <option key={index} value={module._id}>{module.label}</option>))}
-                        </select>
+                        <div class="form-group">
+                            <label style={{ float: "left" }}><h5>Concerned module :</h5></label>
+
+                            <select class="form-control" name="idModule" onChange={handleChangeModule} >
+                                <option value="..." disabled selected hidden  >please select an option</option>
+                                {modules && modules.map((module, index) => (<option key={index} value={module._id}>{module.label}</option>))}
+                            </select><br /> </div>
                     }
 
-                    <br />
+                    
                     {showForm &&
                         <>
                             <div class="form-group">
                                 <label id="inputAddQuestion" style={{ float: "left" }}><h5>Question:</h5></label>
-                                <input type="text" class="form-control"
+                                <input type="text" class="form-control" id="message"
                                     name="message"
                                     onChange={(e) => onChange(e)} />
                             </div>
@@ -110,21 +126,22 @@ export default function AddEvaluation({ props, add, reload }) {
                                 </select>
                             </div>
                             <br />
-                            <h5 class="pull-left"><span class="bi bi-emoji-laughing" style={{ color: "#4AB70E" }}> </span>{first}</h5><br />
-                            <h5 class="pull-left"><span class="bi bi-emoji-smile" style={{ color: "#7BCA52" }}> </span>{second}</h5><br />
+                            <label style={{display:"inline-block"}}>
+                            <h5 class="pull-left "><span class="bi bi-emoji-laughing" style={{ color: "#4AB70E" }}> </span>{first}</h5><br />
+                            <h5 class="pull-left "><span class="bi bi-emoji-smile" style={{ color: "#7BCA52" }}> </span>{second}&nbsp;&nbsp;&nbsp;</h5><br />
                             <h5 class="pull-left"><span class="bi bi-emoji-neutral" style={{ color: "#FFBF32" }}> </span>{third}</h5><br />
                             <h5 class="pull-left"><span class="bi bi-emoji-frown" style={{ color: "#EC611F" }}> </span>{fourth}</h5><br />
                             <h5 class="pull-left"><span class="bi bi-emoji-angry" style={{ color: "	#8B0000" }}> </span>{fifth}</h5><br />
-
+                            </label>
                             <h5 style={{ color: "red" }}></h5>
                             <h5 style={{ textAlign: "center", color: "red" }}></h5></>}
-                    <div className="mt-3">
-                        <button className="btn get-started-btn" id="cancelBtn" type="reset" data-toggle="collapse" data-target="#collapseOne">Cancel</button>
-                        <button type="submit" className="btn get-started-btn" data-toggle="collapse" data-target="#collapseOne" disabled={!showForm}>Submit</button>
+                    <div className="mt-3 text-center" >
+                        <button className="btn get-started-btn" id="cancelBtn" type="reset" onClick={()=>{add(false)}}>Cancel</button>
+                        <button type="submit" className="btn get-started-btn" data-toggle="collapse" data-target="#collapseOne" disabled={!showForm || formData.message[0]=="" || formData.message[0]==" " }>Submit</button>
                     </div>
                 </form >
             </div>
         </div>
-
+ 
     );
 }
