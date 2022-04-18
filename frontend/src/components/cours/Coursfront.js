@@ -76,7 +76,7 @@ const Coursfront = () => {
     if(file){
         file.forEach(element => {
             const body = new FormData();
-            body.append("file", element[0]);
+            body.append("file", element);
             fetch(`${process.env.REACT_APP_API_URL}/cours/AddfileToCourse/${c._id}`, {
                 method: "POST",
                 body: body

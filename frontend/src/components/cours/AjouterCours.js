@@ -12,6 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FileUploader } from "react-drag-drop-files";
+import { prototype } from "apexcharts";
 
 const schema = yup.object({
   title: yup.string().required().max(30),
@@ -22,11 +23,16 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
   const [ckedtiorValide, setckedtiorValide] = useState(false);
   const [ckedtiormessage, setckedtiormessage] = useState("");
   const [files, setFiles] = useState([]);
-  const fileTypes = ["ZIP", "PDF", "DOC"];
+  const fileTypes = ["ZIP", "PDF", "DOCX"];
 
-  const handleChange = (file) => {
-    setFiles(files => [file, ...files]);
-
+  const handleChange =  (file) => {
+    if(file.constructor.name=="FileList"){
+      setFiles(files=>[file[0],...files])
+    }else{
+      setFiles(files=>[file,...files]);
+    }
+     console.log(files);
+     
 
   };
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -127,9 +133,14 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
                 <ul>
 
                   {files.map((f, index) => (
-
-
-                    <li key={index}>{f[0].name}</li>))
+ 
+                    f?(
+<li key={index}>{f.name}</li>
+                    
+                    ):(
+<></>
+                    )
+                    ))
                   }   </ul>
 
               }
