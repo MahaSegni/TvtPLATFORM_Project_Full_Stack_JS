@@ -68,7 +68,7 @@ export default function Chatbot() {
                 <div id="chat-circle" class="btn btn-raised">
 
                     <div id="chat-overlay"></div>
-                    <center><p style={{fontSize:"large"}}>,,</p></center>
+                    <center><p style={{fontSize:"large"}}></p></center>
                 </div>
 
                 <div class="chat-box">

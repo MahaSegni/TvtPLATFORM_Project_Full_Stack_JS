@@ -12,6 +12,7 @@ const conversationRoute = require("./routes/conversationsRoutes");
 const messageRoute = require("./routes/messagesRoutes");
 const ModulesRoutes=require('./routes/ModulesRoutes')
 const CategoryRoutes=require('./routes/CategoryRoutes')
+const chatbotRoutes=require('./routes/chatbotRoutes')
 
 const cors = require('cors');
 
@@ -41,6 +42,7 @@ app.use('/api/quiz',quizRoutes)
 
 app.use('/api/evaluation',evaluationRoutes);
 app.use('/api/evquestion',evquestionRoutes);
+app.use('/api/chatbot',chatbotRoutes);
 
 app.use('/api/module',ModulesRoutes);
 app.use('/api/category',CategoryRoutes);

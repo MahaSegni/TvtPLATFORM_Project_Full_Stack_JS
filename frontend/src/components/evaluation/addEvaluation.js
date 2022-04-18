@@ -5,10 +5,9 @@ import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import "../../assets/css/evaluations.css"
 
-export default function AddEvaluation({props, add, reload}){
+export default function AddEvaluation({props,idModule, add, reload}){
   var fileName = ""; 
   let myCurrentDate = new Date();
-  let idModule="622e1c68ecacff8056ddbc18"
   const history = useHistory();
   const [fileuploaded,setfileuploaded]=useState(false)
   const [uploadImage, setUploadImage] = useState({image:""})

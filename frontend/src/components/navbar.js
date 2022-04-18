@@ -53,6 +53,7 @@ export default function Navbar() {
             <li><Link to={'/category'}>Category</Link></li>
             <li><Link to={'/AdminCours'}>Courses</Link></li>
             <li><Link to={'/evaluations'}>Evaluations</Link></li>
+            <li><Link to={'/chatbot'}>Chatbot</Link></li>
             <li><Link to={'/SocialMedia'}>Community</Link></li>
             <li className="dropdown"><a>More</a>
               <ul>

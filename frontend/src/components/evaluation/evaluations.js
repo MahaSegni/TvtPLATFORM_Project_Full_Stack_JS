@@ -105,7 +105,7 @@ const Evaluations = (props) => {
             </label>  
           }
           {add==true &&
-          <AddEvaluation add={setAdd} reload={reloadEv}/>
+          <AddEvaluation idModule={idModule} add={setAdd} reload={reloadEv}/>
           }
           <div class="row">
             <div class="table-responsive">

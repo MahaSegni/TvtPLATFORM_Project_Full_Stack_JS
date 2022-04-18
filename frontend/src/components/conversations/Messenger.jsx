@@ -35,6 +35,17 @@ export default function Messenger({ setMessenger }) {
   const ref = useRef();
  
 
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+        image:data.image
+      });
+    });}, []);
+
  //---getConversations---//
 const [conversations, errr, rload] = useApi('conversations/' + id, null, 'GET', false)  
  //---getFriends before conversation---//  
@@ -82,16 +93,6 @@ const onChangeFile = (e) => {  setfileuploaded(true)
 
   //---getMessages---//
   
-  useEffect(() => {
-    socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-        image:data.image
-      });
-    });}, []);
 
   useEffect(() => {
     arrivalMessage &&

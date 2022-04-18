@@ -25,6 +25,7 @@ const Coursfront = React.lazy(() => import('./components/cours/Coursfront'));
 const QuizComp = React.lazy(() => import('./components/quizzes/QuizTeacher'));
 const QuizStudent = React.lazy(() => import('./components/quizzes/QuizStudent'))
 const Evaluations = React.lazy(() => import('./components/evaluation/evaluations'));
+const ChatbotAdmin = React.lazy(() => import('./components/chatbot/chatbotAdmin'));
 const CategoryModule = React.lazy(() => import('./components/Category/admincategory'));
 const Module = React.lazy(() => import('./components/Module/listModule'));
 const MyModules = React.lazy(() => import('./components/Module/MyModules'));
@@ -95,7 +96,7 @@ function App() {
               <Route path='/SocialMedia' render={props => <SocialMedia {...props} />}></Route>
               <Route path='/studentQuizAll/:idModule' render={props => <QuizStudentListe {...props} />}></Route>
               <Route path='/AdminCours' render={props=><AdminCours{...props}/>}></Route>
-
+              <Route path='/chatbot' render={props=><ChatbotAdmin{...props}/>}></Route>
             </Switch>
           }
         </Suspense>
