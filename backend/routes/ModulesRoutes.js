@@ -11,6 +11,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage:storage})
 router.get('/get', modulescontroller.getModule);
+
 router.get('/getOwner/:id', modulescontroller.getOwner);
 //router.get("/get/:idUser/:idModule",modulescontroller.getEvaluation);
 router.get("/getToken/:idUser",modulescontroller.getToken);
@@ -23,4 +24,6 @@ router.put("/uploadPicture/:id",upload.single('image'),modulescontroller.uploadP
 router.put('/adduser/:id/:idUser', modulescontroller.addUserToModule);
 router.delete('/delete/:id', modulescontroller.deleteModule);
 router.put('/removeuser/:id/:idUser', modulescontroller.removeUserFromModule);
+router.get("/modulerecom",modulescontroller.moduleReco)
+router.get("/modulerecomm",modulescontroller.moduleReco1)
 module.exports=router;

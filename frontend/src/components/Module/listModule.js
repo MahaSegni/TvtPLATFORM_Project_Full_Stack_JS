@@ -22,8 +22,10 @@ import UpdateModule from "./UpdateModule";
 import { useApi } from "../../utils/useApi";
 import DetailModule from "./DetailModule";
 import "../../assets/css/cardmodule.css"
+import "../../assets/css/modulerecom.css"
 import RowDetailsFront from "./RowDetailFront";
 import $ from "jquery"
+import ListRecom from "./ListRecom";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -268,8 +270,10 @@ export default function ListModule() {
             <p>Find the right online course to elevate your career to next level </p>
           </div>
         </div>
-
-
+        <div id="hp-ctn-howItWorks">
+    <a className="btn" onClick={()=> history.push('/ListRecom')} style={{color:'white'}}>recommendation</a>
+   
+</div>
         <section id="courses" class="courses">
           {add == false && <div class=" col-lg-2 col-md-2 ">
             <FormControl fullWidth>

@@ -1,0 +1,29 @@
+* {
+    margin:0;
+    padding:0;
+}
+#hp-ctn-howItWorks img {
+    vertical-align:middle;
+}
+#hp-ctn-howItWorks {
+    padding:0px 0px 0px 0px;
+    text-align: center;
+    margin:0px;
+    width: 160px;
+    height:40px;
+    background: #5FCF80; /*#FF931E*/
+    z-index:15;
+    border-radius: 5px 5px 0px 0px;
+    -moz-transform:rotate(-90deg);
+    -ms-transform:rotate(-90deg);
+    -o-transform:rotate(-90deg);
+    -webkit-transform:rotate(-90deg);
+    transform-origin: bottom right;
+    position: fixed;
+    right: 0px;
+}
+#hp-ctn-howItWorks p {
+    color:#fff;
+    display:inline-block;
+    line-height:40px;
+}
