@@ -188,7 +188,7 @@ module.exports.updateUser = async (req, res) => {
                 if (user.typeUser == "googleUser") {
                     user.typeUser = "user"
                 }
-                
+
                 res.status(200).send(user)
             } else {
                 res.status(401).send()
@@ -216,7 +216,7 @@ module.exports.forgetPassword = async (req, res) => {
         } catch (err) {
             res.send(err)
         }
-    }else{
+    } else {
         res.status(401).send()
     }
 }
@@ -571,7 +571,7 @@ module.exports.refreshUser = async (req, res) => {
             }
             res.send(user)
         })
-    }else {
+    } else {
         res.status(401).send()
     }
 }
@@ -589,33 +589,58 @@ module.exports.autoSignOut = async (req, res) => {
 }
 
 module.exports.courseRecommendations = async (req, res) => {
+    try {
+        UserModel.findById(req.params.id, async (err, user) => {
+            if (req.headers['authorization'] == user.token) {
+                let coursesList = []
+                const browser = await puppeteer.launch({ headless: true });
+                const page = await browser.newPage();
+                const urls = [
+                    "https://www.edx.org/search?tab=program",
+                    "https://www.edx.org/search?tab=program&page=2",
+                ]
+                for (let i = 0; i < urls.length; i++) {
+                    const url = urls[i];
+                    const promise = page.waitForNavigation({ waitUntil: 'networkidle2' });
+                    await page.goto(`${url}`);
+                    await promise;
+                    let courses = await page.evaluate(() => {
+                        let cours = [];
+                        let elements = document.querySelectorAll('div.discovery-card');
 
-    console.log("here")
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.goto('https://www.edx.org/search?tab=program');
-    let courses = await page.evaluate(() => {
-        let cours = [];
-        let elements = document.querySelectorAll('div.discovery-card');
-        
-        for (elem of elements) {
-            titre = elem.querySelector('h3.card-title').querySelector('span').querySelector('span').textContent.trim().match(/[A-Z][a-z]+/g),
-            cours.push({
-                title: titre.join(' '),
-                img : elem.querySelector('img.hero-bg-image').src,
-                link : 'https://www.edx.org/'+elem.querySelector('a.discovery-card-link').getAttribute("href"),
-            })
-        }
-        return cours;
-    })
-    await browser.close();
-    res.send(courses.slice(0,6))
+                        for (elem of elements) {
+                            titre = elem.querySelector('h3.card-title').querySelector('span').querySelector('span').textContent.trim().match(/[A-Z][a-z]+/g),
+                                cours.push({
+                                    title: titre.join(' '),
+                                    img: elem.querySelector('img.hero-bg-image').src,
+                                    link: 'https://www.edx.org/' + elem.querySelector('a.discovery-card-link').getAttribute("href"),
+                                })
+                        }
+                        return cours;
+                    })
+                    coursesList.push.apply(coursesList, courses)
+                }
+                await browser.close();
+                let number = Math.floor(Math.random() * (coursesList.length - 6))
+                res.send(coursesList.slice(number, number + 6))
+            } else {
+                res.status(401).send()
+            }
+        })
+    } catch (err) {
+        res.send(err)
+    }
+
 }
 
+
+
+
+
 const deleteFriend = async (user, friend) => {
-    for(let i in friend.reffriends){
-        await FriendModel.findById(friend.reffriends[i],(err,fr) => {
-            if(fr.iduser == user._id){
+    for (let i in friend.reffriends) {
+        await FriendModel.findById(friend.reffriends[i], (err, fr) => {
+            if (fr.iduser == user._id) {
                 fr.remove()
                 friend.reffriends.pull(friend.reffriends[i])
                 friend.save()
