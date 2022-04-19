@@ -56,7 +56,8 @@ module.exports.addChatbotMessage = async (req, res) => {
     let c=await new ChatbotModel({
         responseType: type,
         message: req.body.message,
-        visibility:tabVisibility
+        visibility:tabVisibility,
+        refModule:req.body.idModule
     }).save();
 
     ChatbotModel.findByIdAndUpdate(
@@ -175,3 +176,20 @@ module.exports.addChatbotMessage = async (req, res) => {
     let m=await ChatbotModel.find()
     res.send(m);
   }};
+
+  module.exports.getGeneralInformations = async (req, res) => {
+   if(req.params.id!="null"){
+    try {
+        UserModel.findById(req.params.id, (err, user) => {
+            user.password = null
+            user.token = null
+            user.refmodules = null
+            user.reffriends = null
+            user.typeUser = null
+            res.send(user)
+        })
+    }
+    catch (err) {
+        res.send(err)
+    }}else res.send(null)
+}

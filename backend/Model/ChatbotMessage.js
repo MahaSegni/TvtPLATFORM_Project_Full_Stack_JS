@@ -22,6 +22,9 @@ var ChatbotMessage = new Schema({
           }
         ]
     },
+    refModule:{
+      type:String
+    },
     submissions : {
         type: [
             {

@@ -5,6 +5,11 @@ import { selectConnectedUser } from "../../../Redux/slices/sessionSlice";
 import $, { map } from 'jquery';
 import { queryApi } from "../../../utils/queryApi";
 import { useApi } from "../../../utils/useApi";
+import { faX } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencil } from '@fortawesome/free-solid-svg-icons'
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
 
 export default function Questions({ props, owner, evq, consult, rlEv }) {
   const [typeQuestion, settypeQuestion] = useState("satisfaction");
@@ -80,7 +85,6 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
     })})
   } 
 
-
   const onUpdate = async () => {
     console.log(formDataUpdate)
     const [result, err] = await queryApi('evquestion/update/' , formDataUpdate, "PUT", false);
@@ -94,7 +98,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
 
   const { text, type } = formData;
   const { id, textu, typeu } = formDataUpdate;
-
+  
   return (
     <>
       {questions &&
@@ -151,7 +155,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                           <h5 style={{ color: "red" }}></h5>
                           <h5 style={{ textAlign: "center", color: "red" }}></h5>
                           <div className="mt-3">
-                            <button className="btn get-started-btn" id="cancelBtn" type="reset" data-toggle="collapse" data-target="#collapseOne">Cancel</button>
+                            <button className="btn get-started-btn" id="cancelBtn" type="reset" data-toggle="collapse" data-target="#collapseOne" style={{color:"white"}}>Cancel</button>
                             <button type="submit" className="btn get-started-btn" data-toggle="collapse" data-target="#collapseOne">Submit</button>
                           </div>
                         </form >
@@ -165,9 +169,10 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                     questions.map((question, index) => (
                       <>
                         <div style={{ marginTop: "2%", marginBottom: "2%" }}>
+    
                           <p>
                             <strong class="text-capitalize" style={{ color: "rgb(5, 68, 104)" }}>Q{index + 1}. {question.text}</strong>
-                            {owner == true &&
+                            {owner == true && 
                               <div class="pull-right">
                                 {evq.public == false && <>
                                   <a  href={`#collapse${index}`} data-toggle="collapse" onClick={

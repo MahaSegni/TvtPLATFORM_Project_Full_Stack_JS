@@ -6,5 +6,5 @@ router.get("/get/",chatbotController.getChatbotMessages);
 router.post("/submit/:idUser",chatbotController.submitResponse);
 router.get("/delete/:id",chatbotController.deleteChatbotMessage);
 router.get("/delete/:id/:idUser",chatbotController.deleteChatbotMessageForUser);
-
+router.get("/getGeneralInfo/:id",chatbotController.getGeneralInformations);
 module.exports=router;

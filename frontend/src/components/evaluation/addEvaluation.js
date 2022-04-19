@@ -74,8 +74,8 @@ export default function AddEvaluation({props,idModule, add, reload}){
                       <center><img src={imgSrc} style={{height:"40%", width:"50%"}} /></center>}
                   </FormGroup>
                   <div className="mt-3 text-center" >
-                    <button type="submit" className="btn btn-md btn-template" style={{marginRight:"2%"}}>Save</button>
-                    <button className="btn btn-md btn-template" id="cancelBtn" type="reset" onClick={()=> add(false)}>Cancel</button>
+                    <button className="btn  btn-template" style={{color:"white"}} id="cancelBtn" type="reset" onClick={()=> add(false)}>Cancel</button>
+                    <button type="submit" className="btn btn-md btn-template" style={{marginLeft:"2%"}}>Save</button>
                   </div>
               </Form>
             </Wrapper>
