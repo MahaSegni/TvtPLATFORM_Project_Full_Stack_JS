@@ -7,29 +7,21 @@ import { useApi } from "../../utils/useApi";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import { useSelector } from "react-redux";
 import axios from 'axios';
+import MessageChatbotAdmin from "./messageChatbotAdmin";
 
 
 export default function ChatbotMessage() {
   let connectedUser = useSelector(selectConnectedUser)
   const [add, setAdd] = useState(false);
   const [questions, err, reload] = useApi('chatbot/get' , null, 'GET', false, connectedUser.token);
-  let [userV,setUserV]=useState({})  
-  let [module,setModule]=useState({})  
+  const [moduleSetted,setModuleSetted]=useState(false)
   const deleteQ = async (e) => {
     const [result, err] = await queryApi('chatbot/delete/'+e, null, "GET", false, connectedUser.token);
+    setModuleSetted(true)
     reload();
 }
 
-function getModule(v) {
-  axios.get("http://localhost:3000/api/module/getById/" + v).then( res => {
-setModule(res.data)  })                                                   
-};
 
-
-  function getUser(v) {
-     axios.get("http://localhost:3000/api/chatbot/getGeneralInfo/" + v).then( res => {
-  setUserV(res.data)  })                                                   
-  };
     return (
 
       <div class="container ">
@@ -56,28 +48,12 @@ setModule(res.data)  })
                                     {questions &&
                                         questions.map((q, index) => (  
                                             <>
-                                            <tr key={index}>        
-                                              <td style={{"textAlign":"left"}}>{q.message}</td>
-                                              <td style={{"textAlign":"left"}}>   {q.visibility[0]=="site" &&
-                                        <a>All Users</a>}
-                                         {q.visibility[0]!="site" &&
-                                         <>
-                                         { getModule(q.refModule)}
-                                           {module&& <a >{module.label}'s  subscribers</a>}
-                                           </>}
-                                                                                                             
-                                         {/*q.visibility[0]!="site" &&
-                                        q.visibility.map((v, indexv) =>  (
-                                          <> 
-                                             {getUser(v)}
-                                           {userV&& <a key={indexv}>{userV.name} &nbsp; {userV.lastName} &nbsp; | &nbsp; </a>}
-                                        </>  ))*/}
-                                              </td>
-                                              <td style={{"textAlign":"left"}}>{q.createdAt.substring(0, 10)}</td>
-                                              <td style={{"textAlign":"left"}}>{q.responseType}</td>
-                                              <td><a class="text-danger" title="" data-original-title="Delete"
-                                              data-toggle="modal" data-target={`#ConfirmationModal${q._id}`}><i class="far fa-trash-alt"></i></a></td>
-                                            </tr>
+                                            <MessageChatbotAdmin
+                                              key={index}
+                                              q={q}
+                                              mSetted={moduleSetted}
+                                              setMSetted={setModuleSetted}
+                                            ></MessageChatbotAdmin>
                                             {/*  -----------------------------------------------------ConfirmationModal----------------------------------------------*/}
                                             <div class="modal fade" id={`ConfirmationModal${q._id}`} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                   <div class="modal-dialog modal-dialog-centered" role="document">
