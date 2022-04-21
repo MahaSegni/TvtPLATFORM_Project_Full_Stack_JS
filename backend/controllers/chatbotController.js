@@ -3,7 +3,30 @@ const ModuleModel = require('../Model/Module');
 const UserModel = require('../Model/User');
 
 
+module.exports.getOneChatbotMessage = async (req, res) => {
+  UserTok= await UserModel.findOne({token :req.headers['authorization'] })
+if(UserTok==null){
+  return res.send('authorization failed')
+}else{
   
+  let m=await ChatbotModel.find()
+  for (let i in m)
+  {if(m[i].visibility=="site")
+    {for(let j in m[i].submissions)
+      {if(m[i].submissions[j].idSubmitter!=req.params.idUser)
+       res.send(m[i])
+      }
+    }else
+    {
+      for(let j in m[i].visibility)
+      {if(req.params.idUser==m[i].visibility[j])
+        {res.send(m[i])}
+      }
+    }
+  }
+
+}};  
+
 module.exports.addChatbotMessage = async (req, res) => {
   UserTok= await UserModel.findOne({token :req.headers['authorization'] })
   if(UserTok==null){
