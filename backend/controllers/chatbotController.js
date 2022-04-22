@@ -2,28 +2,49 @@ const ChatbotModel = require('../Model/ChatbotMessage');
 const ModuleModel = require('../Model/Module');
 const UserModel = require('../Model/User');
 
-
+ 
 module.exports.getOneChatbotMessage = async (req, res) => {
   UserTok= await UserModel.findOne({token :req.headers['authorization'] })
 if(UserTok==null){
   return res.send('authorization failed')
-}else{
+}else{ 
+ 
   
   let m=await ChatbotModel.find()
+
   for (let i in m)
-  {if(m[i].visibility=="site")
-    {for(let j in m[i].submissions)
-      {if(m[i].submissions[j].idSubmitter!=req.params.idUser)
-       res.send(m[i])
+  {let test=false
+    if(m[i].visibility[0]=="site")
+    {
+      for(let j in m[i].submissions)
+       {if(m[i].submissions[j].idSubmitter==req.params.idUser  )
+       {test=true      }
+       }
+       if (test==false){ 
+       for(let k in m[i].visibility)
+
+       {
+         if(m[i].visibility[k]==req.params.idUser)
+          {test=true }
+        }
+        if (test==false){return  res.send(m[i])}
+
+      
       }
-    }else
+
+    }
+    else
     {
       for(let j in m[i].visibility)
       {if(req.params.idUser==m[i].visibility[j])
-        {res.send(m[i])}
+        {       
+         return  res.send(m[i])}
+      
       }
     }
-  }
+      }
+      return res.send({text:"thank you there is no more questions for you today ",own:false})
+      
 
 }};  
 
@@ -41,6 +62,7 @@ module.exports.addChatbotMessage = async (req, res) => {
   let rep3= "Neutral";
   let rep4= "Dissatisfied";
   let rep5= "Very dissatisfied";
+  
  
   if(type=="importance"){
     rep1= "Strongly important";
@@ -78,7 +100,7 @@ module.exports.addChatbotMessage = async (req, res) => {
         console.log(tabVisibility)
     let c=await new ChatbotModel({
         responseType: type,
-        message: req.body.message,
+        text: req.body.text,
         visibility:tabVisibility,
         refModule:req.body.idModule
     }).save();
@@ -106,6 +128,7 @@ module.exports.addChatbotMessage = async (req, res) => {
               text:rep5,
               value:1,
             },
+         
           ]
         },
         { new: true },
@@ -121,29 +144,29 @@ module.exports.addChatbotMessage = async (req, res) => {
   if(UserTok==null){
     return res.send('authorization failed')
   }else{
-    let c= await ChatbotModel.findById(req.body.id)
+    let c= await ChatbotModel.findById(req.params.id)
     if(c.visibility[0]=="site"){
         ChatbotModel.findByIdAndUpdate(
-            req.body.id,
+            req.params.id,
             { $push: {
               submissions: {
                 idSubmitter: req.params.idUser,
-                value:req.body.value,
+                value:req.params.value,
                 }   }
             },
             { new: true },
             (err, docs) => {
-              if (!err) return res.send(docs);
+              if (!err)  return res.send(docs);
               else return res.status(400).send(err);
             }
           ) 
     }else{
         ChatbotModel.findByIdAndUpdate(
-            req.body.id,
+            req.params.id,
             { $push: {
               submissions: {
                 idSubmitter: req.params.idUser,
-                value:req.body.value,
+                value:req.params.value,
                 }   }
             },
             { $pull: {
@@ -167,19 +190,34 @@ module.exports.addChatbotMessage = async (req, res) => {
   }else{
     let c= await ChatbotModel.findById(req.params.id)
     let userId=req.params.idUser;
-    ChatbotModel.findByIdAndUpdate(
+    if(c.visibility[0]=="site")
+    {ChatbotModel.findByIdAndUpdate(
         req.params.id,
-        { $pull: {
+        { $push: {
             visibility: 
                 req.params.idUser
                 }
           },
         { new: true },
         (err, docs) => {
-          if (!err) return res.send(docs);
+          if (!err)  return res.send("ok");
           else return res.status(400).send(err);
         }
-    ) 
+    )}else 
+    {ChatbotModel.findByIdAndUpdate(
+      req.params.id,
+      { $pull: {
+          visibility: 
+              req.params.idUser
+              }
+        },
+      { new: true },
+      (err, docs) => {
+        if (!err)  return res.send("ok");
+        else return res.status(400).send(err);
+      }
+  )}
+
   }};
 
   module.exports.deleteChatbotMessage = async (req, res) => {

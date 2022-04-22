@@ -6,7 +6,6 @@ import { queryApi } from "../../utils/queryApi";
 import { useApi } from "../../utils/useApi";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import { useSelector } from "react-redux";
-import axios from 'axios';
 import MessageChatbotAdmin from "./messageChatbotAdmin";
 
 

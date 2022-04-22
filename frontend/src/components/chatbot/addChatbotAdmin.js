@@ -27,7 +27,7 @@ export default function AddEvaluation({ props, add, reload }) {
     });
     const [formData, setFormData] = useState({
         type: "",
-        message: "",
+        text: "",
         visibility: "",
         idModule: ""
     })
@@ -77,7 +77,7 @@ export default function AddEvaluation({ props, add, reload }) {
     }
 
 
-    const { type, message } = formData;
+   
 
     return (
         
@@ -111,7 +111,7 @@ export default function AddEvaluation({ props, add, reload }) {
                             <div class="form-group">
                                 <label id="inputAddQuestion" style={{ float: "left" }}><h5>Question:</h5></label>
                                 <input type="text" class="form-control" id="message"
-                                    name="message"
+                                    name="text"
                                     onChange={(e) => onChange(e)} />
                             </div>
                             <br />
@@ -137,7 +137,7 @@ export default function AddEvaluation({ props, add, reload }) {
                             <h5 style={{ textAlign: "center", color: "red" }}></h5></>}
                     <div className="mt-3 text-center" >
                         <button className="btn get-started-btn" id="cancelBtn" type="reset" onClick={()=>{add(false)}}>Cancel</button>
-                        <button type="submit" className="btn get-started-btn" data-toggle="collapse" data-target="#collapseOne" disabled={!showForm || formData.message[0]=="" || formData.message[0]==" " }>Submit</button>
+                        <button type="submit" className="btn get-started-btn" data-toggle="collapse" data-target="#collapseOne" disabled={!showForm || formData.text[0]=="" || formData.text[0]==" " }>Submit</button>
                     </div>
                 </form >
             </div>

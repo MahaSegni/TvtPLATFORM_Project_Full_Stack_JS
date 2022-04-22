@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var ChatbotMessage = new Schema({
 
-    message : {
+    text : {
         type:String
     },
     visibility : {
@@ -33,6 +33,10 @@ var ChatbotMessage = new Schema({
               value:String
             }
           ],
+    },
+    own:{
+        type:Boolean,
+        default:false
     },
     createdAt:{
         type:Date,
