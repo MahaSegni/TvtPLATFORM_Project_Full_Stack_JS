@@ -60,6 +60,7 @@ export default function Navbar() {
                 <li><Link to={'/profile'}>Profile</Link></li>
                 <li><a onClick={async () => {
                   const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false,connectedUser.token);
+                  localStorage.removeItem('chatbotsession');
                   history.push('/signin')
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                   Cookies.remove('connected')
@@ -89,7 +90,7 @@ export default function Navbar() {
                 <li><Link to={'/ModuleList'}>Module List</Link></li>
                 <li><Link onClick={async () => { 
                   const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false,connectedUser.token);
-                  localStorage.clear();
+                  localStorage.removeItem('chatbotsession');
                   history.push('/signin')
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                   Cookies.remove('connected')

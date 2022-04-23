@@ -9,6 +9,7 @@ export default function AddEvaluation({props,idModule, add, reload}){
   var fileName = ""; 
   let myCurrentDate = new Date();
   const history = useHistory();
+  const [formErrors, setFormErrors] = useState({})
   const [fileuploaded,setfileuploaded]=useState(false)
   const [uploadImage, setUploadImage] = useState({image:""})
   const [imgSrc,setimgSrc]=useState()
@@ -34,18 +35,42 @@ export default function AddEvaluation({props,idModule, add, reload}){
     reader.onloadend = function (e) {
       setimgSrc(reader.result) }.bind(this);
      setUploadImage({ ...uploadImage, image: e.target.files[0] })}
-      
-       const onSubmit = async (e) =>{
-        e.preventDefault();
-        if (fileuploaded){
+
+     const AddEvaluation=async()=>{
+      if (fileuploaded){
         const [result,err] = await queryApi('evaluation/add/'+ idModule,formData,"POST",false);
         if(!err){
          await queryApi('evaluation/upload/'+ result,uploadImage,"PUT",true);}}
         else {const [result,err] = await queryApi('evaluation/add/'+ idModule,formData,"POST",false);}
         reload();
          add(false);
+     }
+     const validate = (values) => {
+      const errors = {};
+      const isValidLength = /^.{6,50}$/;
+      let err = false;
+      if (!values.title) {
+          errors.title = "Title is required";
+          err = true;
+      }
+      else if (!isValidLength.test(values.title)) {
+        errors.title = "Title length must be between 6 and 50 caracters";
+        err = true;
+        }
+      if (!err) {
+          AddEvaluation()
+      }
+      return errors;
+  }
+      
+       const onSubmit =  (e) =>{
+        e.preventDefault();
+        setFormErrors(validate(formData))
+      
        }
+      
        
+
        const {title,date}= formData;
  
    return (
@@ -53,15 +78,16 @@ export default function AddEvaluation({props,idModule, add, reload}){
               <Form class="w-50 mx-auto" onSubmit={onSubmit} style={{border: "2px solid #5FCF80" ,padding:30, borderRadius:30, width:"84%", marginBottom:10, boxShadow:"2px 2px 2px #5FCF80"}}>
               <h4 class="logo  " style={{ textAlign: "center", color: "#5fcf80", fontSize:"200%"  }}>Add evaluation</h4>
                   <div class="form-group">
-                      {errors.visbile && <FormError>{errors.message}</FormError>}
-                  </div>
-                  <div class="form-group">
                     <input style={{ marginTop:30}} class="form-control" placeholder="Title" 
                             type='text'
                             name="title"
                             value={title}
                             onChange={(e)=>onChange(e)} />
                   </div>
+                  <div class="form-group">
+                    <div style={{ color: "red" }}>{formErrors.title}</div>
+                  </div>
+           
                   <FormGroup>
                     
                   <label for="file" class="label-file">Choose image</label>

@@ -27,7 +27,7 @@ export default function MessageChatbotAdmin({ props,q,setMSetted,mSetted}) {
   
 
   return (
-    <tr >
+    <tr id="mydiv">
       <td style={{ "textAlign": "left" }}>{q.text}</td>
       <td style={{ "textAlign": "left" }}>
         {q.visibility[0] == "site" && <a>All Users</a>}

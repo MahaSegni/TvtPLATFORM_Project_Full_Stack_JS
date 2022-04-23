@@ -47,7 +47,7 @@ export default function Chatbot() {
           try{
             await axios.get("http://localhost:3000/api/chatbot/delete/" + id+"/"+b,  { headers: {"Authorization" : ` ${connectedUser.token}`} }).then(async res  => {
               await axios.get("http://localhost:3000/api/chatbot/get/" + id, { headers: {"Authorization" : ` ${connectedUser.token}`} }).then(res => {
-              console.log(res.data) 
+               
                chatbotsession.push(res.data)
                 localStorage.setItem("chatbotsession",JSON.stringify (chatbotsession))
                 setNewMessage(res.data)
@@ -58,13 +58,17 @@ export default function Chatbot() {
             catch (err) {console.log(err);}
           
         }
-        else{
-        try{
-        await axios.post("http://localhost:3000/api/chatbot/submit/" + id+"/"+b+"/"+ a.value,  { headers: {"Authorization" : ` ${connectedUser.token}`} }).then(res => {
-           
-           chatbotsession.push(res.data)
-            localStorage.setItem("chatbotsession",JSON.stringify (chatbotsession))
-            setNewMessage(res.data)
+        else{ 
+        try{console.log("ok",id,b,a.value)
+        await axios.post("http://localhost:3000/api/chatbot/submit/" + id+"/"+b+"/"+ a.value,null ,{ headers: {"Authorization" : ` ${connectedUser.token}`} }).then(async res => {
+          await axios.get("http://localhost:3000/api/chatbot/get/" + id, { headers: {"Authorization" : ` ${connectedUser.token}`} }).then(res => {
+               
+            chatbotsession.push(res.data)
+             localStorage.setItem("chatbotsession",JSON.stringify (chatbotsession))
+             setNewMessage(res.data)
+             
+          
+           })
             
       })}
         catch (err) {console.log(err);} }
@@ -73,7 +77,7 @@ export default function Chatbot() {
 
       else{
         if(a.text=="yes"){ 
-          try{ console.log("ok")
+          try{ 
             
           await axios.get("http://localhost:3000/api/chatbot/get/" + id, { headers: {"Authorization" : ` ${connectedUser.token}`} }).then(res => {
             chatbotsession.push(res.data)

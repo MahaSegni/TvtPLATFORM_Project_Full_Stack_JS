@@ -127,7 +127,7 @@
   box-shadow: 0px 10px 20px rgba( 0, 0, 0, 0.2 );
 }
 
-.fl-table {
+.fl-tableBot {
   border-radius: 5px;
   font-size: 12px;
   font-weight: normal;
@@ -139,35 +139,35 @@
   background-color: white;
 }
 
-.fl-table td, .fl-table th {
+.fl-tableBot td, .fl-tableBot th {
   text-align: center;
   padding: 8px;
 }
 
-.fl-table td {
+.fl-tableBot td {
   border-right: 1px solid #f8f8f8;
   font-size: 12px;
 }
 
-.fl-table thead th {
+.fl-tableBot thead th {
   color: #ffffff;
   background: #5fcf80;
 }
 
 
-.fl-table thead th:nth-child(odd) {
+.fl-tableBot thead th:nth-child(odd) {
   color: #ffffff;
   background: #324960;
 }
 
-.fl-table tr:nth-child(even) {
+.fl-tableBot tr:nth-child(even) {
   background: #F8F8F8;
 }
 
 /* Responsive */
 
 @media (max-width: 767px) {
-  .fl-table {
+  .fl-tableBot {
       display: block;
       width: 100%;
   }
@@ -179,21 +179,21 @@
       color: white;
       padding: 0 0 10px;
   }
-  .fl-table thead, .fl-table tbody, .fl-table thead th {
+  .fl-tableBot thead, .fl-tableBot tbody, .fl-tableBot thead th {
       display: block;
   }
-  .fl-table thead th:last-child{
+  .fl-tableBot thead th:last-child{
       border-bottom: none;
   }
-  .fl-table thead {
+  .fl-tableBot thead {
       float: left;
   }
-  .fl-table tbody {
+  .fl-tableBot tbody {
       width: auto;
       position: relative;
       overflow-x: auto;
   }
-  .fl-table td, .fl-table th {
+  .fl-tableBot td, .fl-tableBot th {
       padding: 20px .625em .625em .625em;
       height: 60px;
       vertical-align: middle;
@@ -204,27 +204,27 @@
       font-size: 13px;
       text-overflow: ellipsis;
   }
-  .fl-table thead th {
+  .fl-tableBot thead th {
       text-align: left;
       border-bottom: 1px solid #f7f7f9;
   }
-  .fl-table tbody tr {
+  .fl-tableBot tbody tr {
       display: table-cell;
   }
-  .fl-table tbody tr:nth-child(odd) {
+  .fl-tableBot tbody tr:nth-child(odd) {
       background: none;
   }
-  .fl-table tr:nth-child(even) {
+  .fl-tableBot tr:nth-child(even) {
       background: transparent;
   }
-  .fl-table tr td:nth-child(odd) {
+  .fl-tableBot tr td:nth-child(odd) {
       background: #F8F8F8;
       border-right: 1px solid #E6E4E4;
   }
-  .fl-table tr td:nth-child(even) {
+  .fl-tableBot tr td:nth-child(even) {
       border-right: 1px solid #E6E4E4;
   }
-  .fl-table tbody td {
+  .fl-tableBot tbody td {
       display: block;
       text-align: left;
   }

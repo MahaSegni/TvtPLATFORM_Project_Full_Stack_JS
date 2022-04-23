@@ -8,11 +8,14 @@ import { useSelector } from "react-redux";
 
 
 export default function AddEvaluation({ props, add, reload }) {
+    const [formErrors, setFormErrors] = useState({})
     const history = useHistory();
     let connectedUser = useSelector(selectConnectedUser)
     const [showModules, setShowModules] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [modules, setModules] = useState();
+
+    
     const [typeQuestion, settypeQuestion] = useState("satisfaction");
     const [first, setFirst] = useState("Very satisfied");
     const [second, setSecond] = useState("Satisfied");
@@ -64,13 +67,34 @@ export default function AddEvaluation({ props, add, reload }) {
           
     };
 
+    const validate = (values) => {
+        const errors = {};
+        const isValidLength = /^.{6,500}$/;
+        let err = false;
+        if (!values.text) {
+            errors.text = "Question is required";
+            err = true;
+        }
+        else if (!isValidLength.test(values.text)) {
+          errors.text = "Question length must be between 6 and 500 caracters";
+          err = true;
+          }
+        if (!err) {
+            addQuestion()
+        }
+        return errors;
+    }
+        
+         const onAdd =  (e) =>{
+          e.preventDefault();
+          setFormErrors(validate(formData))
+        
+         }
 
 
 
 
-
-    const onAdd = async (e) => {
-        e.preventDefault();
+    const addQuestion = async () => {
         const [result, err] = await queryApi('chatbot/add/', formData, "POST", false, connectedUser.token);
         reload();
         add(false);
@@ -113,6 +137,9 @@ export default function AddEvaluation({ props, add, reload }) {
                                 <input type="text" class="form-control" id="message"
                                     name="text"
                                     onChange={(e) => onChange(e)} />
+                            </div>
+                            <div class="form-group">
+                                <div style={{ color: "red" }}>{formErrors.text}</div>
                             </div>
                             <br />
                             <div class="form-group">

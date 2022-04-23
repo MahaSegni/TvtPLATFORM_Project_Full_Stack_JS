@@ -7,7 +7,7 @@ import { useApi } from "../../utils/useApi";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import { useSelector } from "react-redux";
 import MessageChatbotAdmin from "./messageChatbotAdmin";
-
+import $ from "jquery"
 
 export default function ChatbotMessage() {
   let connectedUser = useSelector(selectConnectedUser)
@@ -20,10 +20,22 @@ export default function ChatbotMessage() {
     reload();
 }
 
+    $(document).ready(function () {
+      $("#search").on("keyup", function () {
+          var value = $(this).val().toLowerCase();
+          $("#mydiv ").filter(function () {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+      });
+    });
+
+
+
 
     return (
 
       <div class="container ">
+        <input type="text" id="search" name="example-input1-group2" class="form-control mt-4" placeholder="Search" />
         <label style={{marginLeft:"83%"}}>
         <Button  onClick={() => setAdd(!add)}>Add question</Button>&nbsp;&nbsp;
       </label>  
@@ -33,7 +45,7 @@ export default function ChatbotMessage() {
     <div class="customTable" style={{marginTop:"2%"}}>
                     <div class="table-wrapper">
                         {questions &&
-                            <table class="fl-table">
+                            <table class="fl-tableBot">
                                 <thead>
                                     <tr>
                                         <th>Question</th>

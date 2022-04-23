@@ -111,7 +111,6 @@ module.exports.updateStatus = async (req, res, next) => {
 module.exports.deleteEvaluation = async (req, res) => {
   let questions=[];
   let ev= await EvaluationModel.findById(req.params.id);
-  console.log(ev.id)
   for (i in ev.refquestions){
     await QuestionModel.findByIdAndRemove(ev.refquestions[i])
   }

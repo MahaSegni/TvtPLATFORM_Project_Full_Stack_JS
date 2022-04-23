@@ -43,7 +43,7 @@ if(UserTok==null){
       }
     }
       }
-      return res.send({text:"thank you there is no more questions for you today ",own:false})
+      return res.send({text:"Thank you there are no more questions for today ",own:false})
       
 
 }};  
@@ -168,8 +168,8 @@ module.exports.addChatbotMessage = async (req, res) => {
                 idSubmitter: req.params.idUser,
                 value:req.params.value,
                 }   }
-            },
-            { $pull: {
+            ,
+             $pull: {
                 visibility: 
                     req.params.idUser
                     }

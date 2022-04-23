@@ -74,7 +74,9 @@ function App() {
       <BrowserRouter>
         <Suspense fallback={<h1>Loading...</h1>}>
           <Navbar />
-         {connectedUser.type != "disconnected" &&  <Chatbot />}
+         {connectedUser.type != "disconnected" &&
+          connectedUser.type != "admin" &&
+           <Chatbot />}
           {refresh == true &&
             <Switch>
               <Route exact path='/signup' render={props => <Signup {...props} />}></Route>
