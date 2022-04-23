@@ -16,10 +16,12 @@ const Statistique = ({category})=> {
 
   category.map((e) => {
     names.push(e.label)
+    
     data.push(e.modules.length)
     //colors.push("#"+Math.floor(Math.random()*(16777215*2)).toString(16))
         colors.push(getRandomColor())
 })
+
 const [chart, setChart] = useState({
   
   series:data,

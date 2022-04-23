@@ -26,21 +26,7 @@ function RowDetailsFront({ label, image, idowner, refStudents ,id , rating  }) {
       })
       
   }
-  /*
-  const total =  (rating) => {
-    let sum=0;
-    if (rating.length != 0 ){
-    for (let i = 0; i<rating.length; i++){
- sum +=rating[i].rate;
-    }
-    tot=sum;
-  }else{
-    tot=0;
-  }
-    
-    
-console.log(tot);
-  }*/
+  
   
   useEffect(() => { 
     let sum=0;
@@ -61,7 +47,7 @@ let moy= sum/(rating?.length);
     <>
       <div  >
       {image != null &&
-         <img class="img-fluid" alt="..." src={require('../../assets/uploads/module/' + image)} style={{ height: "200px", width: "330px" }} />
+         <img class="img-fluid" alt="..." src={require('../../assets/uploads/module/' + image)} style={{ height: "200px", width: "400px" }} />
         }
       {image == null &&
         <img class="img-fluid" src={require('../../assets/img/Courses.jpg')} alt="" style={{ height: "200px", width: "400px" }} />}

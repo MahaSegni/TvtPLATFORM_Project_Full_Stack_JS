@@ -15,8 +15,8 @@ import Rate from "./rate";
 export default function DetailModule({ id }) {
   var connectedUser = useSelector(selectConnectedUser)
   let history = useHistory();
-  /*const [token, errtoken, reloadToken] = useApi('module/getToken/' + connectedUser.id, null, 'GET', false, connectedUser.token);
-  if (token == "authorization failed") {
+  //const [token, errtoken, reloadToken] = useApi('module/getToken/' + connectedUser.id, null, 'GET', false, connectedUser.token);
+  /*if (token == "authorization failed") {
     history.push('/signin')
   }*/
   const [form, setForm] = useState({});
@@ -37,7 +37,19 @@ export default function DetailModule({ id }) {
        }
       )
   }, [])
- 
+ /*
+ {form.rating?.length!=null && 
+             form.rating?.filter(r=>r.user ==connectedUser.id).length==0 &&
+               
+                <Rate id={id} test={true}  /> 
+             }
+            { form.rating?.length != null && form.rating?.filter(r=>r.user !=connectedUser.id).length==0 &&
+           <Rate id={id}  test={false} />
+                                   
+            }
+            {form.rating?.length == null && <Rate id={id}  test={true} /> } 
+
+            */
   return (
     <div class="container">
       <a class="btn btn-template" onClick={refresh} ><i class="fas fa-arrow-left"></i></a>
@@ -58,16 +70,11 @@ export default function DetailModule({ id }) {
           <div class="col-md-6 col-md-offset-1 col-sm-12 col-xs-12">
             <h2 class="name">
               <p>{form.label}</p>
-             {form.rating?.length!=null && 
-             form.rating?.filter(r=>r.user ==connectedUser.id).length==0 &&
-               
-                <Rate id={id} test={true}  /> 
-             }
-            { form.rating?.length != null && form.rating?.filter(r=>r.user !=connectedUser.id).length==0 &&
-           <Rate id={id}  test={false} />
-                                   
+              
+             {connectedUser.type != "disconnected" && form.refStudents?.filter(r => r == connectedUser.id).length > 0 && <>
+             <Rate id={id}  test={true} rat={form.rating} />
+            </>
             }
-            {form.rating?.length == null && <Rate id={id}  test={true} /> }
              
             </h2>
             <hr />
@@ -82,7 +89,7 @@ export default function DetailModule({ id }) {
             <hr />
             <div class="description description-tabs">
 
-              <span href="#more-information" data-toggle="tab" class="no-margin">Module Description <br /> {form.description} </span>
+              <span href="#more-information" data-toggle="tab" class="no-margin">Module Description <br /> {form.description?.replace(/<[^>]*>/g, "")} </span>
               <hr />
               <div class="row">
                 <div class="col-sm-12 col-md-6 col-lg-6">

@@ -45,7 +45,7 @@
     "react": "^17.0.2",
     "react-alert": "^7.0.3",
     "react-apexcharts": "^1.4.0",
-    "react-bootstrap": "^2.2.0",
+    "react-bootstrap": "^2.3.0",
     "react-confirm-alert": "^2.8.0",
     "react-dayjs": "^0.3.2",
     "react-doc-viewer": "^0.1.5",

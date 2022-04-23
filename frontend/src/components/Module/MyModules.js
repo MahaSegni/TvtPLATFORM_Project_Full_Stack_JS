@@ -113,7 +113,7 @@ export default function MyModules() {
                                                                 <div class="col-sm-5">
                                                                     <h4 class="h5" style={{ color: "black", fontFamily: 'cursive' }}>{label}</h4>
                                                                     <span style={{ color: "black" }}>Created at : </span><span style={{ color: "rgb(5, 68, 104)" }}>{date_creation.substring(0, 10)}</span>
-                                                                    &nbsp;  &nbsp;  &nbsp;{date_update!=null&& <><span style={{ color: "black" }}>Last edit : </span><span style={{ color: "rgb(5, 68, 104)" }}>{date_update.substring(0, 10)}</span></>}
+                                                                    &nbsp;  &nbsp;  &nbsp;{date_update != null && <><span style={{ color: "black" }}>Last edit : </span><span style={{ color: "rgb(5, 68, 104)" }}>{date_update.substring(0, 10)}</span></>}
                                                                 </div>
 
                                                                 <div class="col-sm-6 text-lg-end mx-3">
@@ -134,7 +134,7 @@ export default function MyModules() {
                                                                             <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                                                                         </span>
                                                                     </a>
-                                                                    <a onClick={() => history.push("/module/"+_id+"/allcours")} class="btn btn-sm pull-right btn-template mx-3 mt-1" >
+                                                                    <a onClick={() => history.push("/module/" + _id + "/allcours")} class="btn btn-sm pull-right btn-template mx-3 mt-1" >
                                                                         show courses
                                                                     </a>
                                                                 </div>

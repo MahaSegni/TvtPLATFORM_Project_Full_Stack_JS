@@ -25,7 +25,34 @@ module.exports = {
       res.send('authorization succeeded')
     }
   },
-
+  moduleReco: async (req, res) => {
+    try {const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto(`https://www.edx.org/search?partner=Harvard+University&subject=Computer+Science&tab=course`, {
+      waitUntil: 'load',
+      timeout: 0,
+    });
+  const modules = await page.evaluate(() => {
+      let module = [];
+      let elements = document.querySelectorAll('div.discovery-card');
+      for (element of elements) {
+        module.push({
+          img: element.querySelector('img.d-card-hero-image')?.src,
+          title: element.querySelector('div.d-card-body').querySelector('h3.h4').querySelector('span').querySelector('span').querySelector('span').innerText,
+          lien: 'https://www.edx.org/' + element.querySelector('a.discovery-card-link').getAttribute("href"),
+        })
+      }
+      return module;
+    });
+    await browser.close();
+    let number = Math.floor(Math.random() * (modules.length - 3))
+   if(module != null) res.send(modules.slice(number, number + 3))
+   else  res.status(401).send();
+    //res.send(modules.slice(6,-2))
+  } catch (err) {
+    res.status(401).send();
+}
+  },
   getModuleById: async (req, res) => {
     try {
       res
@@ -101,6 +128,28 @@ module.exports = {
         else return res.status(400).send(err);
       }
     )
+  },
+ editrating : (req, res) => {
+  ModuleModel.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        rating: {
+          user: req.body.user,
+          ratemodule: req.body.ratemodule,
+        },
+      },
+    },
+    { new: true },
+    (err, docs) => {
+      if (!err) {
+        
+        return res.send(docs);
+       
+      }
+      else return res.status(400).send(err);
+    }
+  )
   },
   deleteModule: async (req, res) => {
     try {
@@ -235,32 +284,9 @@ module.exports = {
   },
 
 
-  moduleReco: async (req, res) => {
-    const browser = await puppeteer.launch({headless: true});
-    const page = await browser.newPage();
-    await page.goto(`https://www.edx.org/search?partner=Harvard+University&subject=Computer+Science&tab=course`, {
-      waitUntil: 'load',
-      timeout: 0
-  });
-    const modules = await page.evaluate(() => {
-      let modules = [];
-      let elements = document.querySelectorAll('div.discovery-card');
-      for (element of elements) {
-        modules.push({
-          img: element.querySelector('img.d-card-hero-image')?.src,
-        title: element.querySelector('div.d-card-body').querySelector('h3.h4').querySelector('span').querySelector('span').querySelector('span').textContent.trim(),
-         lien : 'https://www.edx.org/'+ element.querySelector('a.discovery-card-link').getAttribute("href"),
-        })
-      }
-      return modules;
-    });
-   
-    res.send(modules.slice(15,-2))
-  
-    await browser.close();
-  },
+
   moduleReco1: async (req, res) => {
-    const browser = await puppeteer.launch({headless: true});
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(`https://www.futurelearn.com/courses`);
     const modulesl = await page.evaluate(() => {
@@ -270,7 +296,7 @@ module.exports = {
         modulesl.push({
           img: element.querySelector('a.link-wrapper_1GLAu').querySelector('div.Image-wrapper_2xvdD').querySelector('img')?.src,
           title: element.querySelector('div.Body-wrapper_1NnVP').querySelector('a').querySelector('div.Content-wrapper_1O_KH').querySelector('div.Title-wrapper_11axP').querySelector('h3').textContent.trim(),
-         
+          lien: 'https://www.futurelearn.com' + element.querySelector('a.index-module_anchor__24Vxj').getAttribute("href"),
         })
       }
       return modulesl;

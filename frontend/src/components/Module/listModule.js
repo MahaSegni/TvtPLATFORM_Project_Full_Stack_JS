@@ -26,39 +26,7 @@ import "../../assets/css/modulerecom.css"
 import RowDetailsFront from "./RowDetailFront";
 import $ from "jquery"
 import ListRecom from "./ListRecom";
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tabpanel-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
+import { fontSize } from "@mui/system";
 
 export default function ListModule() {
 
@@ -135,7 +103,7 @@ export default function ListModule() {
     await axios.get('http://localhost:3000/api/category/get').then(resu => {
       setCategoory(resu.data)
     });
-  },[])
+  }, [])
   $(document).ready(function () {
     $("#search").on("keyup", function () {
       var value = $(this).val().toLowerCase();
@@ -145,7 +113,7 @@ export default function ListModule() {
     });
   });
 
-
+  //  <a className="btn" onClick={()=> history.push('/ListRecom')} style={{color:'white'}}>recommendation</a>
   return connectedUser.type == "user" ? (
     <div >
       <main id="main" data-aos="fade-in">
@@ -155,7 +123,6 @@ export default function ListModule() {
             <p style={{ color: "black" }}>Find the right online course to elevate your career to next level </p>
           </div>
         </div>
-
 
         <section id="courses" class="courses">
           <div class="mx-5 row  ">
@@ -181,19 +148,19 @@ export default function ListModule() {
             </div>
             }
             {add == false &&
-            <div className="col-12 col-lg-7 ms-5 pt-2 ">
-              <div class="panel panel-default">
-                <div class="panel-body p-t-0">
-                  <div class="input-group">
-                    <input type="text" id="search" name="example-input1-group2" class="form-control" placeholder="Search" />
-                    <span class="input-group-btn">
-                      <button type="button" class="btn btn-effect-ripple btn-template"><i class="fa fa-search" ></i></button>
-                    </span>
+              <div className="col-12 col-lg-7 ms-5 pt-2 ">
+                <div class="panel panel-default">
+                  <div class="panel-body p-t-0">
+                    <div class="input-group">
+                      <input type="text" id="search" name="example-input1-group2" class="form-control" placeholder="Search" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-effect-ripple btn-template"><i class="fa fa-search" ></i></button>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-}
+            }
 
           </div>
 
@@ -205,9 +172,9 @@ export default function ListModule() {
 
               {categoryid == "" && <>
                 {add == false && <>
-                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents , rating }) => {
-                  
-                    if (refStudents.filter(r=>r==connectedUser.id).length==0 && connectedUser.id != idowner) {
+                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents, rating }) => {
+
+                    if (refStudents.filter(r => r == connectedUser.id).length == 0 && connectedUser.id != idowner) {
                       return (
                         <>
                           {<>
@@ -258,7 +225,13 @@ export default function ListModule() {
           </div>
         </section>
       </main>
+      <div  class="container">
+      <div > <label style={{color:"black", fontSize:"20px"}}>Recommendation</label> </div>
+        <hr/>
+      <div><ListRecom /></div>
+      </div>
     </div>
+   
 
   ) : connectedUser.type == "disconnected" ? (
 
@@ -270,10 +243,7 @@ export default function ListModule() {
             <p>Find the right online course to elevate your career to next level </p>
           </div>
         </div>
-        <div id="hp-ctn-howItWorks">
-    <a className="btn" onClick={()=> history.push('/ListRecom')} style={{color:'white'}}>recommendation</a>
-   
-</div>
+
         <section id="courses" class="courses">
           {add == false && <div class=" col-lg-2 col-md-2 ">
             <FormControl fullWidth>
@@ -311,7 +281,7 @@ export default function ListModule() {
                           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                             <div class="course-item">
 
-                              <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating}  />
+                              <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating} />
                               <div class="my-2">
                                 <button type="button" class="btn btn-template ms-5" onClick={handleClick}>Register now</button>
 

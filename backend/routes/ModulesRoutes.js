@@ -26,4 +26,5 @@ router.delete('/delete/:id', modulescontroller.deleteModule);
 router.put('/removeuser/:id/:idUser', modulescontroller.removeUserFromModule);
 router.get("/modulerecom",modulescontroller.moduleReco)
 router.get("/modulerecomm",modulescontroller.moduleReco1)
+router.put('/editrating/:id', modulescontroller.editrating);
 module.exports=router;

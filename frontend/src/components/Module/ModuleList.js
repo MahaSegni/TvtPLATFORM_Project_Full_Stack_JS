@@ -12,6 +12,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 export default function ModuleList() {
 
     const [modules, setModules] = useState([]);
+    
     const [selectedId, SetselectedId] = useState(-1);
     const [add, setAdd] = useState(false);
     var connectedUser = useSelector(selectConnectedUser)
@@ -50,7 +51,7 @@ export default function ModuleList() {
 
 
                             {add == false && <>
-                                {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents }) => {
+                                {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents, rating }) => {
                                     if (refStudents.filter(r=>r==connectedUser.id).length>0  && connectedUser.id != idowner) {
                                         return (
                                             <>
@@ -58,7 +59,7 @@ export default function ModuleList() {
                                                     <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                                                         <div class="course-item">
 
-                                                            <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} />
+                                                            <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating} />
                                                             <div class="my-2">
 
 

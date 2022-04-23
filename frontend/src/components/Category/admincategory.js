@@ -17,7 +17,7 @@ import "../../assets/css/cardmodule.css"
 import Statistique from "./Statistique";
 function Admincategory() {
   const [category, setCategory] = useState([]);
-  
+  const [modules, setModules] = useState([]);
   const [form, setForm] = useState({
     label: ""
   });
@@ -96,6 +96,10 @@ function Admincategory() {
       setCategory(res.data);
       setShowStat(true)
     })
+    await axios.get("http://localhost:3000/api/module/get").then((res) => {
+      setModules(res.data);
+      
+    })
     
 
   });
@@ -106,7 +110,11 @@ function Admincategory() {
           {add == false && !update &&  <><div class="container mt-2 mb-2" >
             <button className="btn btn-template mb-3" type="submit" onClick={() => setAdd(!add)}><i class="fas fa-plus"></i></button>
             </div>
-            {showstat==true &&  <div className="col-12 col-lg-4 mt-4"><span className="mx-4">statistic modules by category</span> <Statistique category={category}/></div>}
+            {showstat==true &&  <div className="col-12 col-lg-4 mt-4">
+              <span className="mx-4">statistic modules by category</span>
+             <Statistique category={category}/>
+             
+            </div>}
               </>
           }{add == true && !update &&  <div class="container mt-2 mb-2" >
             <button className="btn btn-template mb-3" type="submit" onClick={() => setAdd(!add)}>Hide</button>
