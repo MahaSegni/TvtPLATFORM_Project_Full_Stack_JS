@@ -13,7 +13,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FileUploader } from "react-drag-drop-files";
 import { prototype } from "apexcharts";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 const schema = yup.object({
   title: yup.string().required().max(30),
 }).required();
@@ -24,15 +25,19 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
   const [ckedtiormessage, setckedtiormessage] = useState("");
   const [files, setFiles] = useState([]);
   const fileTypes = ["ZIP", "PDF", "DOCX"];
-
-  const handleChange =  (file) => {
-    if(file.constructor.name=="FileList"){
-      setFiles(files=>[file[0],...files])
-    }else{
-      setFiles(files=>[file,...files]);
+  function getType(value) {
+    let ext = value.split(".");
+    ext = ext[ext.length - 1];
+    return ext;
+  }
+  const handleChange = (file) => {
+    if (file.constructor.name == "FileList") {
+      setFiles(files => [file[0], ...files])
+    } else {
+      setFiles(files => [file, ...files]);
     }
-     console.log(files);
-     
+    console.log(files);
+
 
   };
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -40,7 +45,7 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
   });
   const onSubmit = (data) => {
 
-    onChildClick(data, idmodule, ckedtiorValue,files);
+    onChildClick(data, idmodule, ckedtiorValue, files);
 
   }
   function uploadAdapter(loader) {
@@ -128,20 +133,48 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
               <div class="alert alert-danger" role="alert" hidden={ckedtiormessage.length == 0}>
                 {ckedtiormessage}
               </div>
-              <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
+              <FileUploader handleChange={handleChange} name="file" types={fileTypes}  />
               {files.length > 0 &&
-                <ul>
-
+     <div id="main-content" class="file_manager my-2">
+     <div class="container">
+       <div class="row clearfix">
                   {files.map((f, index) => (
- 
-                    f?(
-<li key={index}>{f.name}</li>
-                    
-                    ):(
-<></>
-                    )
-                    ))
-                  }   </ul>
+               
+                          f?(
+                          <div class="col ">
+                          <div class="cardForFile">
+                            <div class="file">
+                              <a>
+                                <div class="icon">
+                                  {getType(f.name)=="docx"&&
+                                  <i class="fa fa-file text-info"></i>
+                                  }
+                                   {getType(f.name)=="pdf"&&
+                                  <i class="fa fa-file-pdf" style={{"color":"red"}}></i>
+                                }
+                              
+                               {f.type.startsWith("image") &&
+                                <i class="fas fa-image"></i>
+
+                               } {getType(f.name)!="pdf"&&getType(f.name)!="docx"&&!f.type.startsWith("image")&&
+                               <i class="fa fa-file-archive-o"></i>
+                             }
+                       
+                                </div>
+                                <div class="file-name">
+                                  <p class="m-b-5 text-muted">{f.name}</p>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                          </div>
+                  ):(
+                  <></>
+                  )
+                  ))
+                  }  
+                  </div>
+                  </div></div>
 
               }
 

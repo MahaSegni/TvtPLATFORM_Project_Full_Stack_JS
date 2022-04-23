@@ -34,6 +34,7 @@ const QuizStudentListe=React.lazy(()=>import('./components/quizzes/QuizStudentLi
 const AdminCours=React.lazy(()=>import('./components/cours/AdminCours'))
 
 const SocialMedia = React.lazy(() => import('./components/friends/socialMediaMenu'));
+const MicrosoftDocsViewer=React.lazy(()=>import("./components/cours/MicrosoftDocsViewer"));
 
 function App() {
 
@@ -95,6 +96,7 @@ function App() {
               <Route path='/SocialMedia' render={props => <SocialMedia {...props} />}></Route>
               <Route path='/studentQuizAll/:idModule' render={props => <QuizStudentListe {...props} />}></Route>
               <Route path='/AdminCours' render={props=><AdminCours{...props}/>}></Route>
+              <Route path='/viewMicrosftDoc/:filenamelocation' render={props=><MicrosoftDocsViewer{...props}/>}></Route>
 
             </Switch>
           }
