@@ -32,7 +32,7 @@ const ListRecom = () => {
                                         <img class="img-fluid" src={require('../../assets/img/Courses.jpg')} alt="" style={{ height: "200px", width: "400px" }} />}
                                 </div>
                                 <div class="course-content">
-                                    <h3><a href={e.lien}>{e.title}</a></h3>
+                                    <h3 ><a style={{color:"black",fontSize:"15px",fontWeight:"bold", fontFamily:"sans-serif"}} href={e.lien}>{e.title?.toUpperCase()}</a></h3>
                                 </div>
                             </div>
                         </div>

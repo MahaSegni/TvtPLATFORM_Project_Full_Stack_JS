@@ -55,7 +55,7 @@ let moy= sum/(rating?.length);
         <div class="course-content">
 
 
-          <h3><a >{label}</a></h3>
+          <h3><a style={{fontFamily:"sans-serif"}}>{label?.toUpperCase()}</a></h3>
 
           <div class="trainer d-flex justify-content-between align-items-center">
             <div class="trainer-profile d-flex align-items-center">

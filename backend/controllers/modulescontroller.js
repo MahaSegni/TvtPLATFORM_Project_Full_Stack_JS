@@ -28,7 +28,7 @@ module.exports = {
   moduleReco: async (req, res) => {
     try {const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
-    await page.goto(`https://www.edx.org/search?partner=Harvard+University&subject=Computer+Science&tab=course`, {
+    await page.goto(`https://www.edx.org/search?partner=Harvard+University&tab=course&page=2`, {
       waitUntil: 'load',
       timeout: 0,
     });
