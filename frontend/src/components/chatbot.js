@@ -132,12 +132,11 @@ export default function Chatbot() {
                         <div class="chat-box-overlay">
                         </div>
                         <div class="chat-logs">
-                        {messages && messages.map((m) => (
-                            
-                      <div ref={scrollRef}>
-                        <Message tabmessages={messages} message={m} ConfirmResponse={ConfirmResponse}  user={connectedUser}  />
-                      </div>
-                    ))}
+                          {messages && messages.map((m) => (
+                            <div ref={scrollRef}>
+                              <Message tabmessages={messages} message={m} ConfirmResponse={ConfirmResponse}  user={connectedUser}  />
+                            </div>
+                          ))}
                         </div>
                     </div>
                     {/*

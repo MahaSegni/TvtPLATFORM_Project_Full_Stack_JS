@@ -99,6 +99,7 @@
   }
   .chat-box-toggle {
       margin-left:70%;
+      cursor: pointer;
   }
   .chat-box-header {
     background: #5FCF80;
@@ -112,9 +113,8 @@
   }
   .chat-box-body {
     position: relative;  
-    height:370px;  
-    height:auto;
-    border:1px solid #ccc;  
+    height:400px;  
+
     overflow: hidden;
   }
   .chat-box-body:after {
@@ -176,9 +176,9 @@
   }
   .chat-logs {
     padding:15px; 
-    height:370px;
+    height: 400px;
     overflow-y:scroll;
-
+    overflow-x:hidden;
   }
   
   .chat-logs::-webkit-scrollbar-track

@@ -31,7 +31,7 @@ const Module = React.lazy(() => import('./components/Module/listModule'));
 const MyModules = React.lazy(() => import('./components/Module/MyModules'));
 const ModuleList = React.lazy(() => import('./components/Module/ModuleList'));
 const QuizStudentListe=React.lazy(()=>import('./components/quizzes/QuizStudentListe'));
-
+const Home=React.lazy(()=>import('./components/home'));
 const AdminCours=React.lazy(()=>import('./components/cours/AdminCours'))
 
 const SocialMedia = React.lazy(() => import('./components/friends/socialMediaMenu'));
@@ -99,6 +99,7 @@ function App() {
               <Route path='/studentQuizAll/:idModule' render={props => <QuizStudentListe {...props} />}></Route>
               <Route path='/AdminCours' render={props=><AdminCours{...props}/>}></Route>
               <Route path='/chatbot' render={props=><ChatbotAdmin{...props}/>}></Route>
+              <Route path='/Home' render={props=><Home{...props}/>}></Route>
             </Switch>
           }
         </Suspense>

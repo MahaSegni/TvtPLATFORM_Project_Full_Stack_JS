@@ -10,44 +10,44 @@ function disableButton () {
  }
   return (
     <>
-      <div className={own ? "message own" : "message"} >
-        <div className="messageTop" >
+      <div className={own ? "messageBot own" : "messageBot"} >
+        <div className="messageBotTop" >
 
           {user.image.startsWith("https") && own == true && <>
-            <p className="messageText">{message.text}</p>
+            <p className="messageBotText">{message.text}</p>
             <img src={user.image} className="messageImg" referrerpolicy="no-referrer"></img></>}
 
           {!user.image.startsWith("https") && own == true && <>
-            <p className="messageText">{message.text}</p>
-            <img className="messageImg" src={require('../../assets/uploads/user/' + user.image)} alt="" /></>}
+            <p className="messageBotText">{message.text}</p>
+            <img className="messageBotImg" src={require('../../assets/uploads/user/' + user.image)} alt="" /></>}
 
-          {own == false && <><img className="messageImgNotOwner" src={require('../../assets/img/chatbot1.png')} alt="" />
-            <p className="messageText" >{message.text}</p>
+          {own == false && <><img className="messageBotImgNotOwner" src={require('../../assets/img/chatbot1.png')} alt="" />
+            <p className="messageBotText" >{message.text}</p>
           </>}
         </div>
       </div>
 
       {message.responses && tabmessages.length<4 &&
-        <div className="message"  style={{ marginTop: "1%" }}>
-          <div className="messageTop"  >
-            <a className="messageImgNotOwner" style={{ backgroundColor: "white", borderColor: "white" }} alt="" />
+        <div className="messageBot"  style={{ marginTop: "1%" }}>
+          <div className="messageBotTop"  >
+            <a className="messageBotImgNotOwner" style={{ backgroundColor: "white", borderColor: "white" }} alt="" />
             {message.responses.length > 1 && message.responses.map((rsp, indexr) =>
-              <label style={{ marginRight: "2%" }}><a onClick={() => { ConfirmResponse(rsp,message._id) }} key={indexr} className="messageTextResponse">{rsp.text}</a></label>
+              <label style={{ marginRight: "2%" }}><a onClick={() => { ConfirmResponse(rsp,message._id) }} key={indexr} className="messageBotTextResponse">{rsp.text}</a></label>
             )}
           </div>
         </div>}
         
       {message.responses && tabmessages.length>=4 &&
-        <div className="message"  style={{ marginTop: "1%" }}>
-          <div className="messageTop" style={{display:"block"}} >
-            <a className="messageImgNotOwner" style={{ backgroundColor: "white", borderColor: "white" }} alt="" />
+        <div className="messageBot" >
+          <div className="messageBotTop" style={{display:"block"}} >
+            <a className="messageBotImgNotOwner" style={{ backgroundColor: "white", borderColor: "white" }} alt="" />
             {message.responses.length > 1 && message.responses.map((rsp, indexr) =>
             
-            <p  onClick={() => { ConfirmResponse(rsp,message._id) }} key={indexr} className="messageTextResponse">{rsp.text}</p>
+            <p onClick={() => { ConfirmResponse(rsp,message._id) }} key={indexr} className="messageBotTextRsp">{rsp.text}</p>
             )}
             
             
-             <p ref={buttonRef} onClick={() => {disableButton(); ConfirmResponse({text:"I dont want to answer",value:0},message._id) }}  className="messageTextResponse">I don't want to answer</p>
+             <p ref={buttonRef} onClick={() => {disableButton(); ConfirmResponse({text:"I dont want to answer",value:0},message._id) }}  className="messageBotTextRsp">I don't want to answer</p>
           </div>
         </div>}
     </>

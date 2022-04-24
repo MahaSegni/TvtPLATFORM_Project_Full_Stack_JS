@@ -14,7 +14,7 @@ import Messenger from "../conversations/Messenger";
 
 const SocialMediaMenu = (props) => {
     const history = useHistory();
-    const [messenger, setMessenger] = useState(false);
+    const [messenger, setMessenger] = useState(true);
     const [friendList, setFriendList] = useState(false);
     const [friendRequests, setFriendRequests] = useState(false);
     const [suggestions, setSuggestions] = useState(false);

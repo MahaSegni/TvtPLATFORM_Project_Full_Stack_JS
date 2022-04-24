@@ -11,6 +11,7 @@ export default function Navbar() {
   
   const autoSignOut = async () => {
     const [res, err] = await queryApi('user/autoSignOut/'+ connectedUser.id, null,'GET',false ,process.env.REACT_APP_SECRET );
+    localStorage.removeItem('chatbotsession');
     history.push('/signin')
     dispatch(chnageConenctedUser({ type: "disconnected" }))
   }
@@ -31,7 +32,7 @@ export default function Navbar() {
         <h1 class="logo me-auto"><a href="index.html">TvtPlatform</a></h1>
         <nav id="navbar" className="navbar order-last order-lg-0">
           <ul>
-            <li><Link to={'/'}>Home</Link></li>
+            <li><Link to={'/home'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
             <li><Link to={'/module'}>Modules</Link></li>
             <li><Link to={'/signin'}>Sign In</Link></li>
@@ -79,7 +80,7 @@ export default function Navbar() {
         <h1 className="logo me-auto"><a href="index.html">TvtPlatform</a></h1>
         <nav id="navbar" className="navbar order-last order-lg-0">
           <ul>
-            <li><Link to={'/'}>Home</Link></li>
+            <li><Link to={'/Home'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
             <li><Link to={'/module'}>Modules</Link></li>
             <li><Link to={'/SocialMedia'}>Community</Link></li>

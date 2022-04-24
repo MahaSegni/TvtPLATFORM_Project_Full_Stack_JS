@@ -1503,3 +1503,29 @@ input[type=number]:focus,
   ::-webkit-scrollbar-thumb:hover {
     background: #5ac279; 
   }
+
+
+  .btnHome{
+    padding: 13px;
+    font-size: large;
+    border-radius: 35px;
+    background-color: transparent;
+    opacity: 0.8;
+    color: #5fcf80;
+    border:#5fcf80 1px solid;
+    width: 200px;
+    margin: 20px 5px !important;
+  }
+  
+  .btnHome:hover{
+      padding: 13px;
+      font-size: large;
+      border-radius: 35px;
+      background-color: #5fcf80;
+      opacity: 0.8;
+      color: white;
+      width: 200px ;
+      border:#5fcf80 1px solid;
+      cursor: pointer;
+      margin:20px 5px  !important;
+  }
