@@ -12,13 +12,12 @@ const Rate = ({ id, test, rat }) => {
   const [tot, setTot] = useState({
     ratetot: 0,
   });
-  // const [userRate, setUsetRate] = useState(true);
+
   useEffect(() => {
     let sum = 0;
     if (rat?.length != 0) {
       for (let i = 0; i < rat?.length; i++) {
         sum += rat[i].ratemodule;
-
       }
       let moy = sum / (rat?.length);
       tot.ratetot = parseInt(moy, 10);
@@ -32,19 +31,13 @@ const Rate = ({ id, test, rat }) => {
     formData.ratemodule = nextValue;
     if (rat.filter(r => r.user == connectedUser.id).length == 0) {
       queryApi('module/updateRating/' + id, formData, "PUT", false);
-      console.log("added new rating user ");
     } else {
-
       queryApi('module/editrating/' + id, formData, "PUT", false);
-      console.log("edit rating user ");
     }
-    //setUsetRate(false);
-    console.log(formData)
   }
   const { rating } = formData.ratemodule;
   return (
     <div>
-
       <StarRatingComponent
         name="rate1"
         starCount={5}
@@ -53,13 +46,8 @@ const Rate = ({ id, test, rat }) => {
         emptyStarColor={`#B8B8B8`}
         onStarClick={onStarClick.bind(this)}
       />
-
-
-
     </div>
-
   )
-
 }
 
 export default Rate;

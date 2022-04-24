@@ -6,15 +6,6 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 const ListRecom = () => {
     var [modulerecom, setmodulerecom] = useApi('module/modulerecom', null, 'GET', false);
-    /*
-    
-      <div class="breadcrumbs">
-            <div class="container">
-              <h2>Recommendation</h2>
-           </div>
-          </div>
-    
-          */
     return (
         <>
             <div class="container" data-aos="fade-up">

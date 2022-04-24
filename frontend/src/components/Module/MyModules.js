@@ -12,49 +12,8 @@ import "../../assets/css/cardmodule.css"
 import UpdateModule from "./UpdateModule";
 import AddModule from "./AddModule";
 import { useApi } from "../../utils/useApi";
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+import { queryApi } from "../../utils/queryApi";
 
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tabpanel-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-/* delete */
-function OnDelete(id__) {
-    if (window.confirm("are you sure to delete this module")) {
-
-        axios.delete(`http://localhost:3000/api/module/delete/${id__}`)
-            .then(res => {
-                window.location.reload(true);
-            })
-    }
-}
 
 export default function MyModules() {
     const [modules, setModules] = useState([]);
@@ -67,18 +26,18 @@ export default function MyModules() {
     if (token == "authorization failed") {
         history.push('/signin')
     }
+    const OnDelete = async (id__) => {
+        if (window.confirm("are you sure to delete this module")) {
+            await queryApi('module/delete/' + id__, null, 'DELETE', false);
+            window.location.reload(true);
+        }
+    }
     useEffect(async () => {
-        await axios.get('http://localhost:3000/api/module/get').then(res => {
-            setModules(res.data)
-        })
-
+        const [ca, err1] = await queryApi('module/get', null, 'GET', false);
+        setModules(ca);
     }, [])
 
-
-
     return connectedUser.type == "user" ? (
-        // connectedUser.id === "622cc35c8704627ac3801c98" ?(
-
         <div >
             <main id="main" data-aos="fade-in">
                 <div class="breadcrumbs">
@@ -86,7 +45,6 @@ export default function MyModules() {
                         <h2 >My Modules</h2>
                     </div>
                 </div>
-
 
                 <section id="courses" class="courses">
                     <div class="container" data-aos="fade-up">

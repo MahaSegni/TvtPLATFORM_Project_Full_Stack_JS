@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
     } 
 })
 const upload = multer({storage:storage})
-router.get('/get', Categorycontroller.readPost);
+router.get('/get', Categorycontroller.get);
 router.get('/get/:id', Categorycontroller.getModuleById);
 router.post('/add', Categorycontroller.createCategory);
 router.put('/update', Categorycontroller.updateCategory);

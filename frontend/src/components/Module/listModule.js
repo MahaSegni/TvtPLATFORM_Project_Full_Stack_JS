@@ -27,6 +27,7 @@ import RowDetailsFront from "./RowDetailFront";
 import $ from "jquery"
 import ListRecom from "./ListRecom";
 import { fontSize } from "@mui/system";
+import { queryApi } from "../../utils/queryApi";
 
 export default function ListModule() {
 
@@ -57,15 +58,11 @@ export default function ListModule() {
   const categoryhandleChange = (event, newValue) => {
     setValuee(newValue);
   };
-  const join = (id__) => {
-    axios.put(`http://localhost:3000/api/module/adduser/${id__}/${connectedUser.id}`)
-      .then(res => {
-        history.push("/ModuleList");
-      })
-      .then(
-        (data) => {
-          setAddUser(true);
-        })
+  const join = async (id__) => {
+    await queryApi('module/adduser/' + id__ + '/' + connectedUser.id, null, 'PUT', false);
+    setAddUser(true);
+    history.push("/ModuleList");
+
   }
 
 
@@ -81,12 +78,11 @@ export default function ListModule() {
     setValue(newValue);
   };
 
-  const showdetails = (id__) => {
+  const showdetails = async (id__) => {
     setshow(true);
-    axios.get(`http://localhost:3000/api/module/getById/${id__}`)
-      .then(res => {
-        setFormShowDetail(res);
-      })
+    const [mo, err] = await queryApi('module/getById/' + id__, null, 'GET', false);
+    setFormShowDetail(mo);
+
   }
   const handleChangee = (event) => {
     setmodelshow(false)
@@ -97,12 +93,12 @@ export default function ListModule() {
   };
   /* find all modules */
   useEffect(async () => {
-    await axios.get('http://localhost:3000/api/module/get').then(res => {
-      setModules(res.data)
-    });
-    await axios.get('http://localhost:3000/api/category/get').then(resu => {
-      setCategoory(resu.data)
-    });
+    const [ca, err1] = await queryApi('module/get', null, 'GET', false);
+    setModules(ca);
+
+    const [cat, err2] = await queryApi('category/get', null, 'GET', false);
+    setCategoory(cat);
+
   }, [])
   $(document).ready(function () {
     $("#search").on("keyup", function () {
@@ -113,7 +109,7 @@ export default function ListModule() {
     });
   });
 
-  //  <a className="btn" onClick={()=> history.push('/ListRecom')} style={{color:'white'}}>recommendation</a>
+
   return connectedUser.type == "user" ? (
     <div >
       <main id="main" data-aos="fade-in">
@@ -216,7 +212,6 @@ export default function ListModule() {
 
               {categoryid != "" &&
                 <>
-
                   <ModuleByCat cat={categoryid} ></ModuleByCat>
                 </>
               }
@@ -225,13 +220,13 @@ export default function ListModule() {
           </div>
         </section>
       </main>
-      <div  class="container">
-      <div > <label style={{color:"black", fontSize:"20px"}}>Recommendation</label> </div>
-        <hr/>
-      <div><ListRecom /></div>
-      </div>
+      {add == false && <div class="container">
+        <div > <label style={{ color: "black", fontSize: "20px" }}>Recommendation</label> </div>
+        <hr />
+        <div><ListRecom /></div>
+      </div>}
     </div>
-   
+
 
   ) : connectedUser.type == "disconnected" ? (
 
@@ -273,22 +268,19 @@ export default function ListModule() {
 
               {categoryid == "" && <>
                 {add == false && <>
-                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents, rating }) => {
-
+                  {modules.map((e) => {
                     return (
                       <>
                         {<>
                           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                             <div class="course-item">
 
-                              <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating} />
+                              <RowDetailsFront label={e.label} image={e.image} idowner={e.idowner} refStudents={e.refStudents} id={e._id} rating={e.rating} />
                               <div class="my-2">
                                 <button type="button" class="btn btn-template ms-5" onClick={handleClick}>Register now</button>
-
-
                                 <button type="button" class="btn btn-template mx-3" onClick={() => {
                                   setAdd(true)
-                                  SetselectedId(_id)
+                                  SetselectedId(e._id)
                                 }}>Show more</button>
                               </div>
                             </div>

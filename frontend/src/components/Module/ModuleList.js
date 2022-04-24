@@ -1,5 +1,3 @@
-
-
 import { useSelector } from "react-redux";
 import axios from "axios";
 import React, { useEffect, useState } from 'react';
@@ -8,6 +6,7 @@ import DetailModule from "./DetailModule";
 import "../../assets/css/cardmodule.css"
 import RowDetailsFront from "./RowDetailFront";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { queryApi } from "../../utils/queryApi";
 
 export default function ModuleList() {
 
@@ -16,20 +15,17 @@ export default function ModuleList() {
     const [selectedId, SetselectedId] = useState(-1);
     const [add, setAdd] = useState(false);
     var connectedUser = useSelector(selectConnectedUser)
-    const unsubscribe = (id__) => {
+    const unsubscribe =async (id__) => {
         if (window.confirm("are you sure to unsubscribe this module")) {
-
-            axios.put(`http://localhost:3000/api/module/removeuser/${id__}/${connectedUser.id}`)
-                .then(res => {
+            await queryApi('module/removeuser/' + id__ + '/' + connectedUser.id, null, 'PUT', false);
+           
                     window.location.reload(true);
-                })
+                
         }
     }
     useEffect(async () => {
-        await axios.get('http://localhost:3000/api/module/get').then(res => {
-            setModules(res.data)
-        })
-
+        const [ca, err1] = await queryApi('module/get', null, 'GET', false);
+        setModules(ca);
     }, [])
     return (
         <div >
@@ -51,23 +47,23 @@ export default function ModuleList() {
 
 
                             {add == false && <>
-                                {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents, rating }) => {
-                                    if (refStudents.filter(r=>r==connectedUser.id).length>0  && connectedUser.id != idowner) {
+                                {modules.map((e) => {
+                                    if (e.refStudents.filter(r=>r==connectedUser.id).length>0  && connectedUser.id != e.idowner) {
                                         return (
                                             <>
                                                 {<>
                                                     <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                                                         <div class="course-item">
 
-                                                            <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating} />
+                                                            <RowDetailsFront label={e.label} image={e.image} idowner={e.idowner} refStudents={e.refStudents} id={e._id} rating={e.rating} />
                                                             <div class="my-2">
 
 
                                                                 <button type="button" class="btn btn-template ms-5" onClick={() => {
                                                                     setAdd(true)
-                                                                    SetselectedId(_id)
+                                                                    SetselectedId(e._id)
                                                                 }}>Show more</button>
-                                                                <button type="button" class="btn btn-danger mx-3 " onClick={() => unsubscribe(_id)}>unsubscribe</button>
+                                                                <button type="button" class="btn btn-danger mx-3 " onClick={() => unsubscribe(e._id)}>unsubscribe</button>
                                                             </div>
                                                         </div>
                                                     </div>

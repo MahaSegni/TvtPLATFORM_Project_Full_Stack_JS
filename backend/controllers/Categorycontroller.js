@@ -2,7 +2,7 @@ const categoryModel = require("../Model/CategorieModule");
 const ObjectID = require("mongoose").Types.ObjectId;
 
 const ModuleModel = require("../Model/Module.js");
-module.exports.readPost = (req, res) => {
+module.exports.get = (req, res) => {
     categoryModel.find((err, docs) => {
     if (!err) res.send(docs);
     else console.log("Error to get data : " + err);

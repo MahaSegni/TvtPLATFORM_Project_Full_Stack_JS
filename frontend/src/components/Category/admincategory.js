@@ -12,8 +12,8 @@ import { queryApi } from "../../utils/queryApi";
 import { useApi } from "../../utils/useApi";
 import { useHistory } from "react-router-dom";
 import UpdateCategory from "./UpdateCategory";
-import "../../assets/css/mymodules.css"
-import "../../assets/css/cardmodule.css"
+//import "../../assets/css/mymodules.css"
+//import "../../assets/css/cardmodule.css"
 import Statistique from "./Statistique";
 function Admincategory() {
   const [category, setCategory] = useState([]);
@@ -104,7 +104,9 @@ function Admincategory() {
 
   });
   return (
-    <>
+    
+   
+    <div className="container">
       <div className="row p-4">
        
           {add == false && !update &&  <><div class="container mt-2 mb-2" >
@@ -216,8 +218,8 @@ function Admincategory() {
         </div>
       </div>
 
-
-    </>
+      </div>
+    
   );
 }
 

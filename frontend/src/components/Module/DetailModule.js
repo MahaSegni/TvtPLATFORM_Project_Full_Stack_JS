@@ -12,6 +12,7 @@ import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import { useApi } from "../../utils/useApi";
 //import Rating from "./Rating";
 import Rate from "./rate";
+import { queryApi } from "../../utils/queryApi";
 export default function DetailModule({ id }) {
   var connectedUser = useSelector(selectConnectedUser)
   let history = useHistory();
@@ -28,28 +29,12 @@ export default function DetailModule({ id }) {
     window.location.reload(true);
   }
 
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/module/getById/${id}`, { method: 'GET', })
-      .then(res => res.json())
-      .then(
-        (data) => {
-          setForm(data);
-       }
-      )
+  useEffect(async() => {
+    const [ca,err] = await queryApi('module/getById/'+id, null, 'GET', false);
+    setForm(ca);
+    
   }, [])
- /*
- {form.rating?.length!=null && 
-             form.rating?.filter(r=>r.user ==connectedUser.id).length==0 &&
-               
-                <Rate id={id} test={true}  /> 
-             }
-            { form.rating?.length != null && form.rating?.filter(r=>r.user !=connectedUser.id).length==0 &&
-           <Rate id={id}  test={false} />
-                                   
-            }
-            {form.rating?.length == null && <Rate id={id}  test={true} /> } 
-
-            */
+ 
   return (
     <div class="container">
       <a class="btn btn-template" onClick={refresh} ><i class="fas fa-arrow-left"></i></a>

@@ -15,7 +15,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import { InputLabel, MenuItem } from "@mui/material";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const schema = yup.object({
   label: yup.string().required().max(30),
 }).required();
@@ -34,7 +35,7 @@ export default function AddModule({ props, add, reload }) {
     label: "",
     description: "",
     date_creation: myCurrentDate.toDateString(),
-    image:"",
+    image: "",
     idowner: connectedUser.id,
   })
   const [categoryid, setcategoryid] = useState("");
@@ -42,16 +43,16 @@ export default function AddModule({ props, add, reload }) {
 
   const handleChange = (event) => {
     setcategoryid(event.target.value);
- 
+
   };
   useEffect(async () => {
-    await axios.get('http://localhost:3000/api/category/get').then(res => {
-      setCategory(res.data)
-    })
+    const [ca, err] = await queryApi('category/get', null, 'GET', false);
+    setCategory(ca);
   }, [])
 
-  const addModuleToCategory = (id, idModule) => {
-    axios.patch(`http://localhost:3000/api/category/addmoduletocategory/${id}/${idModule}`)
+  const addModuleToCategory = async (id, idModule) => {
+    const [, err] = await queryApi('category/addmoduletocategory/' + id + '/' + idModule, null, "PATCH ", false);
+    //axios.patch(`http://localhost:3000/api/category/addmoduletocategory/${id}/${idModule}`)
   }
 
   const onChange = (e) => {
@@ -59,35 +60,28 @@ export default function AddModule({ props, add, reload }) {
   }
   const [uploadImage, setUploadImage] = useState({
     image: ""
-})
-const onChangeFile = (e) => {
+  })
+  const onChangeFile = (e) => {
     setUploadImage({ ...uploadImage, image: e.target.files[0] })
-    //updateImage()
-}
-  
-  const refresh = async (e) => {
+  }
 
+  const refresh = async (e) => {
     window.location.reload(true);
   }
+
   const onSubmit = async (e) => {
-    //e.preventDefault();
     formData.description = ckedtiorValue;
-   let result=await updateModule()
-    // history.push("/module");
+    let result = await updateModule()
     addModuleToCategory(categoryid, result.result._id);
     window.location.reload(true);
-    // reload();
-
   }
   const updateModule = async () => {
     const [result, err2] = await queryApi('module/add', formData, "POST", false, connectedUser.token)
     if (uploadImage.image != "") {
-       const [imageResult, err] = await queryApi('module/uploadPicture/' + result.result._id, uploadImage, "PUT", true, connectedUser.token)
-       
+      const [imageResult, err] = await queryApi('module/uploadPicture/' + result.result._id, uploadImage, "PUT", true, connectedUser.token)
     }
-    
     return result
-}
+  }
 
   const { label, description, date_creation } = formData;
   ;
@@ -128,7 +122,7 @@ const onChangeFile = (e) => {
             }
           />
         </div>
-        
+
         <InputLabel id="demo-simple-select-autowidth-label">Category</InputLabel>
         <Select
           labelId="demo-simple-select-autowidth-label"
@@ -138,22 +132,22 @@ const onChangeFile = (e) => {
           autoWidth
           label="categoryid"
         >
-          
+
           {category.map(({ label, _id }) => (
             <MenuItem value={_id}>{label}</MenuItem>
           ))}
         </Select>
         <FormGroup>
-        <label for="file" class="label-file">Choose image</label>
-                  <input id="file" class="input-file" 
-                          type='file'
-                          name="image"
-                          onChange={(e)=>onChangeFile(e)}
-                  />
+          <label for="file" class="label-file">Choose image</label>
+          <input id="file" class="input-file"
+            type='file'
+            name="image"
+            onChange={(e) => onChangeFile(e)}
+          />
         </FormGroup>
-        
+
         <div className="mt-3 text-center" >
-          <button type="submit" className="btn btn-md btn-template" style={{ marginRight: "2%" }}disabled={!ckedtiorValide}>Save</button>
+          <button type="submit" className="btn btn-md btn-template" style={{ marginRight: "2%" }} disabled={!ckedtiorValide}>Save</button>
           <button className="btn btn-md btn-update" id="cancelBtn" type="reset" onClick={refresh} >Cancel</button>
         </div>
       </Form>
