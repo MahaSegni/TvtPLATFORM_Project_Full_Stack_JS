@@ -593,16 +593,19 @@ module.exports.courseRecommendations = async (req, res) => {
         UserModel.findById(req.params.id, async (err, user) => {
             if (req.headers['authorization'] == user.token) {
                 let coursesList = []
+                let result = []
                 const browser = await puppeteer.launch({ headless: true });
                 const page = await browser.newPage();
                 const urls = [
                     "https://www.edx.org/search?tab=program",
                     "https://www.edx.org/search?tab=program&page=2",
+                    "https://www.edx.org/search?tab=program&page=3",
+                    "https://www.edx.org/search?tab=program&page=4",
                 ]
                 for (let i = 0; i < urls.length; i++) {
-                    const url = urls[i];
+                    
                     const promise = page.waitForNavigation({ waitUntil: 'networkidle2' });
-                    await page.goto(`${url}`);
+                    await page.goto(`${urls[i]}`);
                     await promise;
                     let courses = await page.evaluate(() => {
                         let cours = [];
@@ -621,8 +624,27 @@ module.exports.courseRecommendations = async (req, res) => {
                     coursesList.push.apply(coursesList, courses)
                 }
                 await browser.close();
-                let number = Math.floor(Math.random() * (coursesList.length - 6))
-                res.send(coursesList.slice(number, number + 6))
+                for (let j = 0; j < coursesList.length; j++) {
+                    for (let k = 0; k < user.coursepreferences.length; k++) {
+                        if (coursesList[j].title.toUpperCase().indexOf(user.coursepreferences[k].toString().toUpperCase()) > -1) {
+                            if(!result.includes(coursesList[j])){
+                                result.push(coursesList[j])
+                            }
+                        }
+                    }
+                }
+                
+                if(result.length == 0){
+                    let number = Math.floor(Math.random() * (coursesList.length - 6))
+                    res.send(coursesList.slice(number, number + 6))
+                }
+                else if (result.length < 6) {
+                    res.send(result)
+                } 
+                else {
+                    let number = Math.floor(Math.random() * (result.length - 6))
+                    res.send(result.slice(number, number + 6))
+                }
             } else {
                 res.status(401).send()
             }

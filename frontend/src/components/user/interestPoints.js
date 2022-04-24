@@ -78,7 +78,6 @@ export default function InterestPoints() {
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
-                        <th>Id</th>
                         <th>Value</th>
                         <th>Edit</th>
                         <th>Delete</th>
@@ -87,13 +86,6 @@ export default function InterestPoints() {
                 <tbody>
                     {allIPs && allIPs.map((ip, index) => (
                         <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-3">
-                                        <p class="fw-normal mb-1">{ip._id}</p>
-                                    </div>
-                                </div>
-                            </td>
                             <td>
                                 {ip._id != updateInput.ipId &&
                                     <p class="fw-normal mb-1">{ip.value}</p>
@@ -123,14 +115,14 @@ export default function InterestPoints() {
                     ))}
                     <tr>
                         {addInput.inputDisplay == false &&
-                            <td colSpan={4} style={{ textAlign: "center" }}>
+                            <td colSpan={3} style={{ textAlign: "center" }}>
                                 <button onClick={() => openAddIP()} className="btn btn-template-user"><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
                             </td>
                         }
                         {addInput.inputDisplay == true &&
 
                             <>
-                                <td colSpan={3}>
+                                <td colSpan={2}>
                                     <div >
                                         <input type="text" className="form-control" id="inputValue" name="inputValue" value={addInput.inputValue} placeholder="Enter a new Interest Point" onChange={(e) => onAddIPinput(e)} onKeyPress={(e) => handleKeyPressAdd(e)} />
                                     </div>

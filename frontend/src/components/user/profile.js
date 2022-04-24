@@ -16,6 +16,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 import { useDispatch } from 'react-redux';
 
 export default function Profile(props) {
@@ -380,6 +382,19 @@ export default function Profile(props) {
                                                 ))}
                                             </div>
                                         </div>
+                                        {!CRs &&
+                                            <div className="card-body card-body-user">
+                                                <div className="row">
+                                                    <div style={{ textAlign : "center" }}>
+                                                        <FontAwesomeIcon icon={faSpinner} className="fa-5x"></FontAwesomeIcon>
+                                                    </div>
+                                                    <div style={{ textAlign : "center" }} className='my-3'>
+                                                        <h4>Loading, this may take up to 20 seconds</h4>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        }
                                     </div>
 
                                 </div>
