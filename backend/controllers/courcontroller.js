@@ -284,7 +284,11 @@ module.exports.uploadFile = async (req, res) => {
 console.log(req.file.mimetype)
   if(req.file.mimetype.startsWith("image")){
     result = await cloudinary.uploader.upload(req.file.path);
-  }else{
+  }else if (req.file.mimetype.startsWith("video")){
+    result = await cloudinary.uploader.upload(req.file.path,{resource_type: "video"});
+
+  }
+  else{
      result = await cloudinary.uploader.upload(req.file.path, { resource_type: "raw" });
   
   }

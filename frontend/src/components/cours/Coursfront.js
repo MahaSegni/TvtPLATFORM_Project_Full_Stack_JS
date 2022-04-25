@@ -73,6 +73,7 @@ const Coursfront = () => {
         
      }
     , 'POST', false,connectedUser.token);
+    let i=0;
     if(file){
         file.forEach(element => {
             const body = new FormData();
@@ -81,13 +82,21 @@ const Coursfront = () => {
                 method: "POST",
                 body: body
                 // mode: "no-cors"
+              }).then(()=>{
+                  i++;
+                  if(i==file.length){
+                    setIsLoaded(false);
+
+                  }
               })
         });
         
         
 
-    }
+    }else{
     setIsLoaded(false);
+
+    }
     }
     useEffect(() => {
         
