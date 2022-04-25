@@ -18,6 +18,9 @@ export default function ModuleByCat({ cat }) {
   const history = useHistory();
 
   const [modulesbycat, err, reload] = useApi('category/getmodulesfromcategory/' + cat, null, 'GET', false);
+
+
+  
   if (id != cat) {
     setid(cat)
     reload();
@@ -43,8 +46,8 @@ export default function ModuleByCat({ cat }) {
                 {<>
                   <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                     <div class="course-item">
-
-                      <RowDetailsFront label={module.label} image={module.image} idowner={module.idowner} refStudents={module.refStudents} id={module._id} rating={module.rating} />
+                   
+                      <RowDetailsFront module={module} label={module.label} image={module.image} idowner={module.idowner} refStudents={module.refStudents} id={module._id} rating={module.rating} />
                       <div class="my-2">
                         {module.idowner != connectedUser.id && <>
                           <button type="button" class="btn btn-template ms-5" onClick={() => join(module._id)}>Register now</button>
@@ -92,8 +95,9 @@ export default function ModuleByCat({ cat }) {
               {<>
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                   <div class="course-item">
+            
 
-                    <RowDetailsFront label={module.label} image={module.image} idowner={module.idowner} refStudents={module.refStudents} id={module._id} />
+                    <RowDetailsFront label={module.label} rating={module.rating} image={module.image} idowner={module.idowner} refStudents={module.refStudents} id={module._id} />
                     <div class="my-2">
                       <button type="button" class="btn btn-template ms-5" onClick={handleClick}>Register now</button>
 

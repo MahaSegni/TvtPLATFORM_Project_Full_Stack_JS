@@ -14,8 +14,8 @@ import { Link } from 'react-router-dom'
 import "../../assets/css/cardmodule.css"
 import axios from 'axios';
 import { queryApi } from '../../utils/queryApi';
-function RowDetailsFront({ label, image, idowner, refStudents, id, rating }) {
-
+function RowDetailsFront({ props,label, image, idowner,module, refStudents, id, rating }) {
+   const [calculdone,setcalculdone]=useState(false)
   var connectedUser = useSelector(selectConnectedUser)
   const [tot, setTot] = useState({
     ratetot: 0,
@@ -24,19 +24,27 @@ function RowDetailsFront({ label, image, idowner, refStudents, id, rating }) {
     await queryApi('module/adduser/' + id + '/' + connectedUser.id, null, 'PUT', false);
     window.location.reload(true);
   }
+  
 
   useEffect(() => {
     let sum = 0;
     if (rating?.length != 0) {
+
       for (let i = 0; i < rating?.length; i++) {
         sum += rating[i].ratemodule;
       }
       let moy = sum / (rating?.length);
       tot.ratetot = parseInt(moy, 10);
+      setcalculdone(true)
     } else {
       tot.ratetot = parseInt(0, 10);
+      setcalculdone(true)
     }
-  })
+    
+
+    
+  }) 
+
 
   return (
     <>
@@ -60,7 +68,9 @@ function RowDetailsFront({ label, image, idowner, refStudents, id, rating }) {
           <div class="trainer-rank d-flex align-items-center">
             <i class="fa fa-users" style={{ color: "green" }}></i>&nbsp;{refStudents.length}
             &nbsp;&nbsp;
-            <i class="fa fa-heart" style={{ color: "red" }}></i>&nbsp; {tot.ratetot}
+         
+          
+            <i class="fa fa-heart" style={{ color: "red" }}></i>&nbsp; {calculdone&& tot.ratetot}
           </div>
 
         </div>

@@ -27,8 +27,10 @@ export default function ModuleList() {
         const [ca, err1] = await queryApi('module/get', null, 'GET', false);
         setModules(ca);
     }, [])
+
     return (
-        <div >
+     
+         <div >
             <main id="main" data-aos="fade-in">
                 <div class="breadcrumbs">
                     <div class="container">
@@ -46,16 +48,17 @@ export default function ModuleList() {
                         <div class="row" data-aos="zoom-in" data-aos-delay="100">
 
 
-                            {add == false && <>
+                            {modules && add == false && <>
                                 {modules.map((e) => {
                                     if (e.refStudents.filter(r=>r==connectedUser.id).length>0  && connectedUser.id != e.idowner) {
+                                        console.log(e.rating);
                                         return (
                                             <>
                                                 {<>
                                                     <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                                                         <div class="course-item">
 
-                                                            <RowDetailsFront label={e.label} image={e.image} idowner={e.idowner} refStudents={e.refStudents} id={e._id} rating={e.rating} />
+                                                            <RowDetailsFront label={e.label} image={e.image} idowner={e.idowner} refStudents={e.refStudents} id={e._id}  rating={e.rating} />
                                                             <div class="my-2">
 
 

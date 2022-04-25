@@ -52,8 +52,8 @@ export default function ListModule() {
   }
 */
   const [valuee, setValuee] = React.useState(0);
-  const [modulesbycat, err, reload] = useApi('category/getmodulesfromcategory/' + categoryid, null, 'GET', false);
-
+   
+ 
 
   const categoryhandleChange = (event, newValue) => {
     setValuee(newValue);
@@ -176,7 +176,7 @@ export default function ListModule() {
                           {<>
                             <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                               <div class="course-item" id="mydiv">
-
+                             
                                 <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating} />
 
                                 <div class="my-2">
