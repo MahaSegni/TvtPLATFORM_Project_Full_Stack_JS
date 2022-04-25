@@ -96,7 +96,7 @@ function App() {
               <Route path='/SocialMedia' render={props => <SocialMedia {...props} />}></Route>
               <Route path='/studentQuizAll/:idModule' render={props => <QuizStudentListe {...props} />}></Route>
               <Route path='/AdminCours' render={props=><AdminCours{...props}/>}></Route>
-              <Route path='/viewMicrosftDoc/:filenamelocation' render={props=><MicrosoftDocsViewer{...props}/>}></Route>
+              <Route path='/viewMicrosftDoc/:idcour/:idfile' render={props=><MicrosoftDocsViewer{...props}/>}></Route>
 
             </Switch>
           }

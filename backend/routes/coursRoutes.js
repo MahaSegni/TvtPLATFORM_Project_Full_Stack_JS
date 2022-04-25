@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const coursRoutes = require('../controllers/courcontroller')
-const multer = require("multer");
+/*const multer = require("multer");
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -11,8 +11,10 @@ var storage = multer.diskStorage({
       ext = ext[ext.length - 1];
       cb(null, `${Date.now()}.${ext}`);
     }
-  });
-const upload = multer({storage:storage})
+  });*/
+const upload=require("../utils/custommulter");
+
+//const upload = multer({storage:storage})
 router.post("/testcreateModule",coursRoutes.createModule);
 router.get("/getModuleofcours/:idModule",coursRoutes.getModuleofcours);
 router.post("/:idModule/create",coursRoutes.create);

@@ -20,11 +20,14 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import 'reactjs-popup/dist/index.css';
 import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 
+import { Link } from "react-router-dom";
 
 import EditCour from "./EditCour";
 import { useHistory } from "react-router-dom";
 import "./cardFiles.css"
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import Iframe from 'react-iframe'
+
 const CoursfrontCard = (props) => {
 
   const [showComments, setShowComments] = useState(false);
@@ -42,14 +45,20 @@ const CoursfrontCard = (props) => {
   function getType(value) {
     let ext = value.originalname.split(".");
     ext = ext[ext.length - 1];
+    console.log(ext)
     return ext;
   }
   function zipfile(value){
 
-    const zips=["rar" ,"zip" ,"xlsx","csv"];
+    const zips=["rar" ,"zip" ,"xlsx","csv","pptx"];
     return (zips.indexOf(getType(value))>-1)
     }
+ function isVideo(value){
+  const videos=["MOV","MP4","AVI","WMF","FLV","WebM"];
+  return(videos.indexOf(getType(value).toUpperCase())>-1);
 
+  
+ }
 
   async function confirmDelete(id) {
     confirmAlert({
@@ -196,8 +205,8 @@ const CoursfrontCard = (props) => {
         <div class="container">            
         <div class="row clearfix">
                   {cour.files.map((value, index) => (
-                  <div class="col">
-                        {getType(value) == "pdf" &&
+                  <div class="col" key={index}>
+                        {value.resource_type!="image"&&getType(value) == "pdf" &&
                           <div class="cardForFile" onClick={() => {
                             setSelectedFile(value);
                             handleShow()
@@ -219,7 +228,7 @@ const CoursfrontCard = (props) => {
                           </div>
 
                       }
-                      {value.typeFile.startsWith("image") &&
+                      {value.resource_type=="image" &&
                           <div class="cardForFile" onClick={() => {
                             setSelectedFile(value);
                             handleShow()
@@ -230,7 +239,7 @@ const CoursfrontCard = (props) => {
                                   
                                 </div>
                                 <div class="icon">
-                                <i class="fas fa-image"></i>
+                                <i class="fas fa-image" ></i>
                                 </div>
                                 <div class="file-name">
                                   <p class="m-b-5 text-muted">{value.originalname}</p>
@@ -240,14 +249,33 @@ const CoursfrontCard = (props) => {
                           </div>
 
                       }
-                      {getType(value) == "docx" &&
+                      {isVideo(value) &&
+                          <div class="cardForFile"  onClick={() => {
+                            setSelectedFile(value);
+                            handleShow()
+                          }}>
+                            <div class="file">
+                              <a href="javascript:void(0);">
+                                <div class="hover">
+                                  
+                                </div>
+                                <div class="icon" >
+                                                                  <i class="fas fa-video"></i>
+                                </div>
+                                <div class="file-name">
+                                  <p class="m-b-5 text-muted">{value.originalname}</p>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+
+                      }
+                      {getType(value)== "docx" &&
                           <div class="cardForFile">
                             <div class="file">
-                              <a href={"/viewMicrosftDoc/"+value.filenamelocation}>
+                              <Link to={"/viewMicrosftDoc/"+cour._id+"/"+value._id}>
                                 <div class="hover">
-                                <button type="button" class="btn btn-icon btn-danger" onClick={() => {
-                                 history.push(value.filenamelocation)
-                                 }}>
+                                <button type="button" class="btn btn-icon btn-danger">
                                 <i class="fa fa-eye"></i>
                                 </button>
                                 </div>
@@ -258,15 +286,15 @@ const CoursfrontCard = (props) => {
                                 <div class="file-name">
                                   <p class="m-b-5 text-muted">{value.originalname}</p>
                                 </div>
-                              </a>
+                                </Link>
                             </div>
                           </div>
 
                       }
-                      {getType(value) && zipfile(value)&&
+                      {zipfile(value)&&
                           <div class="cardForFile">
                             <div class="file">
-                              <a href={"http://localhost:3001/courUploads/"+value.filenamelocation}>
+                              <a href={value.filenamelocation}>
                                 <div class="hover">
                                 <button type="button" class="btn btn-icon btn-secondary" onClick={() => {
                                  history.push(value.filenamelocation)
@@ -323,17 +351,17 @@ const CoursfrontCard = (props) => {
             </div>
           </div>
         </div>
-      }{selectedFile && getType(selectedFile) != "docx" &&
+      }{selectedFile && selectedFile.typeFile != "docx" &&
 
-        <Modal show={ShowModal} onHide={handleClose} size={"lg"}
+        <Modal show={ShowModal} onHide={handleClose} size={"xl"}  
 
         >
           <Modal.Header closeButton>
           </Modal.Header>
           <Modal.Body>
-            <DocViewer pluginRenderers={DocViewerRenderers} documents={[{ uri: "http://localhost:3001/courUploads/" + selectedFile.filenamelocation }]}
+           {/* <DocViewer  pluginRenderers={DocViewerRenderers} documents={[{ uri:  + selectedFile.filenamelocation }]}
             />
-
+    */}<Iframe sandbox url={selectedFile.filenamelocation} width={"100%"} height={"900px"}/>
             {/*<FileViewer
         fileType={getType(selectedFile)}
         filePath={"/courUploads/"+selectedFile.filenamelocation}

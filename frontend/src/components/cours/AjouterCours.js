@@ -54,6 +54,7 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
         return new Promise((resolve, reject) => {
           const body = new FormData();
           loader.file.then((file) => {
+            console.log(file);
             body.append("files", file);
             fetch(`${process.env.REACT_APP_API_URL}/cours/uploadimage`, {
               method: "POST",
@@ -64,7 +65,7 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
               .then((res) => {
 
                 resolve({
-                  default: '/courUploads/' + res.filename
+                  default: res.filename
 
                 });
               }
@@ -156,9 +157,16 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
                                {f.type.startsWith("image") &&
                                 <i class="fas fa-image"></i>
 
-                               } {getType(f.name)!="pdf"&&getType(f.name)!="docx"&&!f.type.startsWith("image")&&
+                               } 
+                               
+                               {f.type.startsWith("video") &&
+                                <i class="fas fa-video"></i>
+
+                               }
+                               {getType(f.name)!="pdf"&&getType(f.name)!="docx"&&!f.type.startsWith("image")&&!f.type.startsWith("video")&&
                                <i class="fa fa-file-archive-o"></i>
                              }
+
                        
                                 </div>
                                 <div class="file-name">

@@ -13,6 +13,7 @@ var Cours = new Schema({
     type: [
         { originalname:String,
           typeFile: String,
+          resource_type:String,
           filenamelocation: String,
         }
       ],
