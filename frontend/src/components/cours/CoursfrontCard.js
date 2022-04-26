@@ -50,7 +50,7 @@ const CoursfrontCard = (props) => {
   }
   function zipfile(value){
 
-    const zips=["rar" ,"zip" ,"xlsx","csv","pptx"];
+    const zips=["rar","zip","csv","xlsx"];
     return (zips.indexOf(getType(value))>-1)
     }
  function isVideo(value){
@@ -260,7 +260,7 @@ const CoursfrontCard = (props) => {
                                   
                                 </div>
                                 <div class="icon" >
-                                                                  <i class="fas fa-video"></i>
+                                <i class="fas fa-video" style={{"color":"#70FFA8"}}></i>
                                 </div>
                                 <div class="file-name">
                                   <p class="m-b-5 text-muted">{value.originalname}</p>
@@ -271,7 +271,7 @@ const CoursfrontCard = (props) => {
 
                       }
                       {getType(value)== "docx" &&
-                          <div class="cardForFile">
+                         /* <div class="cardForFile">
                             <div class="file">
                               <Link to={"/viewMicrosftDoc/"+cour._id+"/"+value._id}>
                                 <div class="hover">
@@ -288,9 +288,51 @@ const CoursfrontCard = (props) => {
                                 </div>
                                 </Link>
                             </div>
+                          </div>*/
+                          <div class="cardForFile" onClick={() => {
+                            setSelectedFile(value);
+                            handleShow()
+                          }}>
+                            <div class="file">
+                              <a href="javascript:void(0);">
+                                <div class="hover">
+                                  
+                                </div>
+                                <div class="icon">
+                                <i class="fa fa-file-word text-info"></i>
+
+                                </div>
+                                <div class="file-name">
+                                  <p class="m-b-5 text-muted">{value.originalname}</p>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+
+
+                      }
+                       {getType(value) == "pptx" &&
+                          <div class="cardForFile" onClick={() => {
+                            setSelectedFile(value);
+                            handleShow()
+                          }}>
+                            <div class="file">
+                              <a href="javascript:void(0);">
+                                <div class="hover">
+                                  
+                                </div>
+                                <div class="icon">
+                                <i class="fas fa-file-powerpoint" style={{"color":"orange"}}></i>
+                                </div>
+                                <div class="file-name">
+                                  <p class="m-b-5 text-muted">{value.originalname}</p>
+                                </div>
+                              </a>
+                            </div>
                           </div>
 
                       }
+                      
                       {zipfile(value)&&
                           <div class="cardForFile">
                             <div class="file">
@@ -351,7 +393,7 @@ const CoursfrontCard = (props) => {
             </div>
           </div>
         </div>
-      }{selectedFile && selectedFile.typeFile != "docx" &&
+      }{selectedFile &&
 
         <Modal show={ShowModal} onHide={handleClose} size={"xl"}  
 
@@ -359,14 +401,16 @@ const CoursfrontCard = (props) => {
           <Modal.Header closeButton>
           </Modal.Header>
           <Modal.Body>
-           {/* <DocViewer  pluginRenderers={DocViewerRenderers} documents={[{ uri:  + selectedFile.filenamelocation }]}
-            />
-    */}<Iframe sandbox url={selectedFile.filenamelocation} width={"100%"} height={"900px"}/>
-            {/*<FileViewer
-        fileType={getType(selectedFile)}
-        filePath={"/courUploads/"+selectedFile.filenamelocation}
-    />*/}
-
+          {getType(selectedFile) != "pptx" && getType(selectedFile)!= "docx" &&getType(selectedFile)!= "csv"&&
+          <Iframe sandbox url={selectedFile.filenamelocation} width={"100%"} height={"900px"}/>
+         }  
+         {getType(selectedFile)== "pptx"&&
+         <Iframe sandbox url={`https://view.officeapps.live.com/op/embed.aspx?src=${selectedFile.filenamelocation}`} width={"100%"} height={"900px"}/>
+        }  
+          {getType(selectedFile)== "docx"&&
+         <Iframe sandbox url={`https://view.officeapps.live.com/op/embed.aspx?src=${selectedFile.filenamelocation}`} width={"100%"} height={"900px"}/>
+        }  
+         
           </Modal.Body>
 
         </Modal>

@@ -148,22 +148,24 @@ const AjouterCour = ({ idmodule, onChildClick }) => {
                               <a>
                                 <div class="icon">
                                   {getType(f.name)=="docx"&&
-                                  <i class="fa fa-file text-info"></i>
-                                  }
+                                <i class="fa fa-file-word text-info"></i>
+                              }
                                    {getType(f.name)=="pdf"&&
-                                  <i class="fa fa-file-pdf" style={{"color":"red"}}></i>
-                                }
-                              
+                                <i class="fa fa-file-pdf" style={{"color":"red"}}></i>
+                              }
+                                   {getType(f.name)=="pptx"&&
+                                <i class="fas fa-file-powerpoint" style={{"color":"orange"}}></i>
+                              }
                                {f.type.startsWith("image") &&
                                 <i class="fas fa-image"></i>
 
                                } 
                                
                                {f.type.startsWith("video") &&
-                                <i class="fas fa-video"></i>
+                                <i class="fas fa-video" style={{"color":"#70FFA8"}}></i>
 
                                }
-                               {getType(f.name)!="pdf"&&getType(f.name)!="docx"&&!f.type.startsWith("image")&&!f.type.startsWith("video")&&
+                               {getType(f.name)!="pdf"&&getType(f.name)!="docx"&&getType(f.name)!="pptx"&&!f.type.startsWith("image")&&!f.type.startsWith("video")&&
                                <i class="fa fa-file-archive-o"></i>
                              }
 

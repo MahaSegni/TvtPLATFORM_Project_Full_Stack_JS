@@ -281,7 +281,7 @@ module.exports.uploadFile = async (req, res) => {
   return res.status(400).send("ID unknown : " + req.params.id);
   try{
     var result;
-console.log(req.file.mimetype)
+console.log(req.file)
   if(req.file.mimetype.startsWith("image")){
     result = await cloudinary.uploader.upload(req.file.path);
   }else if (req.file.mimetype.startsWith("video")){
@@ -289,7 +289,10 @@ console.log(req.file.mimetype)
 
   }
   else{
-     result = await cloudinary.uploader.upload(req.file.path, { resource_type: "raw" });
+    //raw_convert: "aspose" 
+        result = await cloudinary.uploader.upload(req.file.path, { resource_type: "raw" });
+
+      
   
   }
   console.log(result)
