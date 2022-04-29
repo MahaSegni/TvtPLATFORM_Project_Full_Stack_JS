@@ -9,6 +9,7 @@ const FriendController = require('../controllers/friendController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const puppeteer = require('puppeteer');
+const cloudinary=require("../utils/cloudinary");
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -378,11 +379,17 @@ module.exports.updateUserCoursePreferences = async (req, res) => {
 
 module.exports.uploadPicture = async (req, res) => {
     try {
-        UserModel.findById(req.params.id, (err, user) => {
+        UserModel.findById(req.params.id, async (err, user) => {
             if ((req.headers['authorization'] == user.token) && (user.state != -1)) {
-                user.image = req.file.filename
-                user.save()
-                res.status(200).send(user.image)
+                const result = await cloudinary.uploader.upload(req.file.path);
+                if (result) {
+                    user.image = result.secure_url
+                    user.save()
+                    res.status(200).send(user.image)
+                }
+                else{
+                    res.status(500).send()
+                }
             } else {
                 res.status(401).send()
             }
@@ -600,10 +607,9 @@ module.exports.courseRecommendations = async (req, res) => {
                     "https://www.edx.org/search?tab=program",
                     "https://www.edx.org/search?tab=program&page=2",
                     "https://www.edx.org/search?tab=program&page=3",
-                    "https://www.edx.org/search?tab=program&page=4",
                 ]
                 for (let i = 0; i < urls.length; i++) {
-                    
+
                     const promise = page.waitForNavigation({ waitUntil: 'networkidle2' });
                     await page.goto(`${urls[i]}`);
                     await promise;
@@ -627,20 +633,20 @@ module.exports.courseRecommendations = async (req, res) => {
                 for (let j = 0; j < coursesList.length; j++) {
                     for (let k = 0; k < user.coursepreferences.length; k++) {
                         if (coursesList[j].title.toUpperCase().indexOf(user.coursepreferences[k].toString().toUpperCase()) > -1) {
-                            if(!result.includes(coursesList[j])){
+                            if (!result.includes(coursesList[j])) {
                                 result.push(coursesList[j])
                             }
                         }
                     }
                 }
-                
-                if(result.length == 0){
+
+                if (result.length == 0) {
                     let number = Math.floor(Math.random() * (coursesList.length - 6))
                     res.send(coursesList.slice(number, number + 6))
                 }
                 else if (result.length < 6) {
                     res.send(result)
-                } 
+                }
                 else {
                     let number = Math.floor(Math.random() * (result.length - 6))
                     res.send(result.slice(number, number + 6))

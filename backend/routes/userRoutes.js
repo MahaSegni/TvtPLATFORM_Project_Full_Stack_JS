@@ -1,15 +1,6 @@
 const router = require('express').Router();
 const userController = require('../controllers/usercontroller')
-const multer = require('multer')
-const storage = multer.diskStorage({
-    destination: function(req,file,cb) {
-        cb(null,'../frontend/src/assets/uploads/user');
-    },
-    filename: function(req,file,cb) {
-        cb(null, (Math.random() + 1).toString(36).substring(7)+file.originalname)
-    } 
-})
-const upload = multer({storage:storage})
+const upload=require("../utils/custommulter");
 
 router.get("/check/:email",userController.checkMail);
 router.post("/signup",userController.signUp);

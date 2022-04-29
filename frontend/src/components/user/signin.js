@@ -55,13 +55,11 @@ export default function Signin(props) {
       else {
         if (resultGoogleLogin.image.startsWith('https')) {
           let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType: "google", pictureType: "external" }
-          dispatch(chnageConenctedUser(googleUserResult))
-          
+          dispatch(chnageConenctedUser(googleUserResult))          
          }
         else {
           let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType: "google", pictureType: "internal" }
           dispatch(chnageConenctedUser(googleUserResult))
-          
         }
         window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+resultGoogleLogin.name +" "+ resultGoogleLogin.lastName ,own:false}]));
         history.push('/')

@@ -68,7 +68,7 @@ export default function UpdateUser({ closeModal }) {
             const [imageResult, err] = await queryApi('user/uploadPicture/' + connectedUser.id, uploadImage, "PUT", true, connectedUser.token)
             const [result, err2] = await queryApi('user/update', formData, "PUT", false, connectedUser.token)
             if (!err2) {
-                let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: imageResult, token: result.token, connectionType: connectedUser.connectionType, pictureType: "internal" }
+                let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: imageResult, token: result.token, connectionType: connectedUser.connectionType, pictureType: "external" }
                 dispatch(chnageConenctedUser(userResult))
             }
             closeModal(false)
