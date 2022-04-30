@@ -6,6 +6,8 @@ import { chnageConenctedUser } from '../../Redux/slices/sessionSlice';
 import { Link } from "react-router-dom";
 import GoogleLogin from "react-google-login";
 import Cookies from 'js-cookie'
+import axios from 'axios';
+
 
 export default function Signin(props) {
   
@@ -37,6 +39,8 @@ export default function Signin(props) {
         dispatch(chnageConenctedUser(userResult))
       }
       window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+result.name +" "+ result.lastName ,own:false},{text:"Do you want to answer some questions? " ,own:false,responses:[{text:"yes",value:0},{text:"no",value:.0}]}]));
+      await axios.get("http://localhost:3000/api/conversations/getnotif/" + result._id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
+      
       history.push('/Home')
       Cookies.set('connected', 'true', { expires: 1 })
     }
@@ -65,6 +69,7 @@ export default function Signin(props) {
           
         }
         window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+resultGoogleLogin.name +" "+ resultGoogleLogin.lastName ,own:false},{text:"Do you want to answer some questions? " ,own:false,responses:[{text:"yes",value:0},{text:"no",value:.0}]}]));
+        await axios.get("http://localhost:3000/api/conversations/getnotif/" + resultGoogleLogin._id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
         history.push('/Home')
         Cookies.set('connected', 'true', { expires: 1 })
       }

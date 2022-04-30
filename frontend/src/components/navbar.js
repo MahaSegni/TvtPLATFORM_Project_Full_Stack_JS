@@ -7,7 +7,12 @@ import { useHistory } from "react-router-dom";
 import Cookies from 'js-cookie'
 import { useEffect, useState } from "react";
 export default function Navbar() {
-  
+  let CommunityNotif=0 
+  for(let i in JSON.parse(localStorage.getItem('notif'))){
+  CommunityNotif=CommunityNotif+JSON.parse(localStorage.getItem('notif'))[i].nbUnseen
+  }
+ 
+
   
   const autoSignOut = async () => {
     const [res, err] = await queryApi('user/autoSignOut/'+ connectedUser.id, null,'GET',false ,process.env.REACT_APP_SECRET );
@@ -55,7 +60,12 @@ export default function Navbar() {
             <li><Link to={'/AdminCours'}>Courses</Link></li>
             <li><Link to={'/evaluations'}>Evaluations</Link></li>
             <li><Link to={'/chatbot'}>Chatbot</Link></li>
-            <li><Link to={'/SocialMedia'}>Community</Link></li>
+            <li><label style={{display:"inline-flex"}}><Link to={'/SocialMedia'}>Community</Link>
+            { CommunityNotif>0 &&  <>  
+    <label  id="ex2" >   <span class="fa-stack has-badge" data-count="5">
+   <i class="fa fa-circle fa-stack-2x"></i>
+   <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+ </span></label></>}</label></li>
             <li className="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>
@@ -83,7 +93,14 @@ export default function Navbar() {
             <li><Link to={'/Home'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
             <li><Link to={'/module'}>Modules</Link></li>
-            <li><Link to={'/SocialMedia'}>Community</Link></li>
+            <li><label style={{display:"inline-flex"}}><Link to={'/SocialMedia'}>Community</Link>
+            { CommunityNotif>0 &&  <>  
+    <label  id="ex2" >   <span class="fa-stack has-badge" data-count="5">
+   <i class="fa fa-circle fa-stack-2x"></i>
+   <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+ </span></label></>}</label>
+            
+            </li>
             <li className="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>

@@ -12,7 +12,7 @@ const addUser = (userId, socketId) => {
 };
 
 const removeUser = (socketId) => {
-  users = users.filter((user) => user.socketId !== socketId);
+  users = users.filter((user) => user.socketId !== socketId );
 };
 
 const getUser = (userId) => {
@@ -42,15 +42,37 @@ io.on("connection", (socket) => {
   
 
   //send and get message
-  socket.on("sendMessage", ({ senderId, receiverId, text,image }) => {
+  socket.on("sendMessage", ({ senderId, receiverId, text,image,seen,conversationId }) => {
     const user = getUser(receiverId);
+    const socket=getUser(senderId)
+  
     io.to(user.socketId).emit("getMessage", {
       senderId,
       text,
       image,
+      seen,
+      conversationId,
+      socket,
     });
   });
 
+  socket.on("sendcurrent", ({  socket,iscurrent  }) => {
+
+    io.to(socket.socketId).emit("getCurrent", {
+      iscurrent
+    });
+  });
+  socket.on("sendrequestcurrent", ({ senderId, receiverId,conversationId }) => {
+
+    const user = getUser(receiverId);
+    const socket=getUser(senderId)
+  
+    io.to(user.socketId).emit("getRequestCurrent", {
+      senderId,
+      conversationId,
+      socket,
+    });
+  });
 
   //-----Bot-----//
 let usersBot = [];

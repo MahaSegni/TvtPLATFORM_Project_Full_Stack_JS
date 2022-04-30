@@ -10,12 +10,13 @@ import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import { Dropdown } from 'react-bootstrap';
-import $ from 'jquery'
+import $, { data } from 'jquery'
 import { queryApi } from "../../utils/queryApi";
 import Picker from 'emoji-picker-react';
 export default function Messenger({ setMessenger }) {
 
   const [uploadImage, setUploadImage] = useState({image:""})
+  const [notiftab,setnotiftab]=useState(JSON.parse(localStorage.getItem('notif')));
 
   const [friend, setFriend] = useState(null);
   const [needrl, setNeedrl] = useState(false);
@@ -28,23 +29,91 @@ export default function Messenger({ setMessenger }) {
   const id = useSelector(selectConnectedUser).id
   const user = useSelector(selectConnectedUser)
   const scrollRef = useRef();
+  let [haveCurrent,setHaveCurrent]=useState(null) 
   const[emojiActive,setemojiActive]=useState(false)
   let [conversationFriend, setConversationFriend] = useState(null);
   const [fileuploaded,setfileuploaded]=useState(false)
+ 
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const ref = useRef();
- 
+  let [dataId,setDataId]=useState(null)
+  useEffect(async() => {
+  await axios.get("http://localhost:3000/api/conversations/getnotif/" + id)
+  .then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
+  },[])
 
+ 
   useEffect(() => {
+  
     socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) => {
+   
+    socket.current.on("getCurrent",(data)=>{
+      console.log(data)
+      console.log("ok")
+      console.log(data)
+      setHaveCurrent(data.iscurrent)});
+    socket.current.on("getMessage",  (data)  => {
+      setDataId(data.conversationId)
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
-        image:data.image
+        image:data.image,
+        seen:data.seen,
+        conversationId:data.conversationId
       });
-    });}, []);
+       });
+      
+      
+
+       
+
+     
+    }, []);
+    useEffect(()=>{
+      
+   socket.current.on("getRequestCurrent",  (data)  => {
+    if (currentChat){
+    if(data.conversationId==currentChat._id){
+      socket.current.emit("sendcurrent", {
+        socket:data.socket,
+        iscurrent:true,
+        })
+    }  else{
+      socket.current.emit("sendcurrent", {
+        socket:data.socket,
+        iscurrent:false,
+        })
+    }}else{
+      socket.current.emit("sendcurrent", {
+        socket:data.socket,
+        iscurrent:false,
+        })
+
+    }     
+  });
+
+ 
+    })
+
+     useEffect(async() => {
+      
+        
+      dataId && currentChat&&  currentChat._id!=dataId &&
+      await axios.get("http://localhost:3000/api/conversations/getnotif/" + id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
+      setnotiftab(res.data)});
+ 
+    dataId && !currentChat &&
+    await axios.get("http://localhost:3000/api/conversations/getnotif/" + id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
+    setnotiftab(res.data)
+  } );   
+        
+   }, [ arrivalMessage, currentChat]);
+  
+
+      
+
+
 
  //---getConversations---//
 const [conversations, errr, rload] = useApi('conversations/' + id, null, 'GET', false)  
@@ -93,11 +162,17 @@ const onChangeFile = (e) => {  setfileuploaded(true)
 
   //---getMessages---//
   
+  
+  useEffect(async() => {
+    
+   arrivalMessage &&
+     currentChat?.members.includes(arrivalMessage.sender) &&
+    
+  
+    
+     setMessages((prev) => [...prev, arrivalMessage]);  
 
-  useEffect(() => {
-    arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage.sender) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
+ 
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
@@ -112,8 +187,14 @@ const onChangeFile = (e) => {  setfileuploaded(true)
   const handleKeyPress = (e) => {if (e.key === 'Enter') { handleSubmit(e);}}
 
   const handleSubmit = async (e) => 
-  { const message = {sender: id,text: newMessage, conversationId: currentChat._id,};
-    const receiverId =await  currentChat.members.find((member) => member !== id);
+  {const receiverId =await  currentChat.members.find((member) => member !== id);
+    socket.current.emit("sendrequestcurrent", {senderId: id,receiverId: receiverId,conversationId: currentChat._id});
+    
+    if(haveCurrent!=null)
+    {
+      const message = {sender: id,text: newMessage, conversationId: currentChat._id,seen:haveCurrent};
+     
+      
     if (fileuploaded)
     {const data = new FormData() 
 
@@ -128,15 +209,29 @@ const onChangeFile = (e) => {  setfileuploaded(true)
                     setUploadImage({ ...uploadImage, image: ""})
                     setfileuploaded(false)
                     setMessages(prev => [...prev, res.data]);
-                    socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: res.data.text,image:res.data.image,})
-                  })
+                    setHaveCurrent(null);
+                    socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: res.data.text,image:res.data.image,seen:haveCurrent,conversationId: currentChat._id })
+                   })
              })
     }
     else 
-    {socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: newMessage,image:null,});
-        try {await axios.post("http://localhost:3000/api/messages", message).then(res => {setMessages([...messages, res.data]);setNewMessage("");});}
-        catch (err) {console.log(err);}}
-  };
+    { 
+      socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: newMessage,image:null,seen:haveCurrent,conversationId: currentChat._id});
+      
+  
+      
+      try {await axios.post("http://localhost:3000/api/messages", message).then(res => {setMessages([...messages, res.data]);setNewMessage("");});}
+      catch (err) {console.log(err);}
+      setHaveCurrent(null);
+    }
+   }
+
+         
+    };
+  
+
+
+    
    //----scroll ---- //
   useEffect(() => {scrollRef.current?.scrollIntoView({ behavior: "smooth" });}, [messages]);
 
@@ -153,8 +248,30 @@ const onChangeFile = (e) => {  setfileuploaded(true)
                 </span>
               </div>
               {conversations.map((c) => (
-                <div onClick={() => { rload();  setCurrentChat(c);  }}>
-                  <Conversation id="mydiv" conversation={c} currentUser={user}  />
+
+                <div onClick={async() => {
+                  let j=null;
+                  if(JSON.parse(localStorage.getItem('notif'))!=null){ 
+                  let disnotif=[]
+                
+                  disnotif=JSON.parse(localStorage.getItem('notif'))
+               
+                  let testnotif=false;
+                  for(let i in disnotif)
+                  { if (disnotif[i].conversationId==c._id )
+                    {testnotif=true ; 
+                      j=i;
+                    }
+                  }
+
+                  
+                  if(testnotif==true){ 
+                 await queryApi('conversations/markasseen/', c, 'put', false)
+                 disnotif.splice(j,1)
+                 localStorage.setItem("notif",JSON.stringify (disnotif))
+                  };} rload();  setCurrentChat(c);   }
+                  }>
+                  <Conversation id="mydiv" notiftab={notiftab} conversation={c} currentUser={user}    />
                 </div>
               ))}
             </div>

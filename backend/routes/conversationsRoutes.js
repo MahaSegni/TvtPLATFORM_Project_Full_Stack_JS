@@ -8,7 +8,9 @@ router.post("/", async (req, res) => {
   let u=await UserModle.findById(req.body.receiverId)
   const newConversation = new Conversation({
     members: [req.body.senderId, req.body.receiverId],
-    name:"conversation"
+    name:"conversation",
+    nbUnseen:0,
+    receiverNotif:null
   });
 
   try {
@@ -63,5 +65,40 @@ router.post("/delete", async (req, res) => {
  
 
 });
+router.get("/get/:Id", async (req, res) => {
+  try {
+    
+    const conversation = await Conversation.findById(req.params.Id);
+    res.send(conversation);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+router.put("/markasseen", async (req, res) => {
+  let c=await Conversation.findById(req.body._id)
+  c.nbUnseen=0
+  c.receiverNotif=null
+  await c.save()
+
+  res.send("ok")
+
+
+});
+router.get("/getnotif/:idUser",async(req,res)=>
+{ let tabnotif=[]
+  let conversations=await Conversation.find();
+  for (let i in conversations){
+    if (conversations[i].receiverNotif==req.params.idUser)
+    {let notif={conversationId:conversations[i]._id,nbUnseen:conversations[i].nbUnseen}
+     tabnotif.push(notif)
+    }
+  }
+  if(tabnotif.length>0){
+   
+  res.send(tabnotif)}else
+  res.send(null)
+})
+
+
 
 module.exports = router;

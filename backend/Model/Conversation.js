@@ -11,6 +11,13 @@ var Conversation = new Schema({
     theme : {
         type:String
     },
+    nbUnseen : {
+        type:Number,
+    },
+    receiverNotif:{
+        type:String,
+        
+    },
   
     members: {
         type: Array,

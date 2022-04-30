@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Message = require("../Model/Message");
+const Conversation = require("../Model/Conversation");
 const multer = require('multer')
 
 
@@ -29,7 +30,7 @@ router.post("/upload/:id", upload.single("image"),async (req, res, next) => {
     { new: true },
     (err, docs) => {
       if (!err){
-      console.log(docs)
+     
         return res.send(docs);}
       else 
         return res.status(400).send("No update here : ");
@@ -40,12 +41,24 @@ router.post("/upload/:id", upload.single("image"),async (req, res, next) => {
 router.post("/", async (req, res) => {
   const newMessage = new Message(req.body);
 
+
   try {
     const savedMessage = await newMessage.save();
+    if (newMessage.seen==false)
+  {
+    const conver=await Conversation.findById(newMessage.conversationId);
+    conver.nbUnseen++;
+    for(let i in conver.members)
+    {if(conver.members[i]!=newMessage.sender)
+     { conver.receiverNotif=conver.members[i]}
+    }
+    conver.save()
+  }
     res.status(200).json(savedMessage);
   } catch (err) {
     res.status(500).json(err);
   }
+  
 });
 
 //get

@@ -1,12 +1,30 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "../../assets/css/conversation.css";
+import { useApi } from "../../utils/useApi";
 
-export default function Conversation({ conversation, currentUser}) {
+export default function Conversation({ conversation, currentUser, notiftab}) {
+ let [display,setDisplay]=useState(false)
+ const [uns,setUns]=useState();
+
   const [user, setUser] = useState(null);
   
+  useEffect (()  =>{
+    if(JSON.parse(localStorage.getItem('notif'))!=null)
+    {let notif=JSON.parse(localStorage.getItem('notif'));
+    for (let i in notif)
+     {if(notif[i].conversationId==conversation._id)
+      {setUns(notif[i].nbUnseen)
+       
+      }
+ 
+     }
+    }
+  },[notiftab])
+    
+
   useEffect(() => {
-   
+  
     const friendId = conversation.members.find((m) => m !== currentUser.id );
     
 
@@ -25,6 +43,7 @@ export default function Conversation({ conversation, currentUser}) {
         console.log(err);
       }
     };
+
     getUser();
   }, [currentUser, conversation]);
 
@@ -42,10 +61,19 @@ export default function Conversation({ conversation, currentUser}) {
 />
 }
     
-        { user.state>0 &&
+        {  user.state>0 &&
             <div className="chatOnlineBadge"></div>}</div>
-      <span  className="conversationName" >{conversation.name}</span>
-      <div class="divname" style={{fontSize:12,}}>&nbsp;{user.name}&nbsp;{user.lastName}</div>
-    </div> }</>
+      <span  className="conversationName" ><>{conversation.name}  
+        </></span>
+      <div class="divname" style={{fontSize:12,}}>&nbsp;{user.name}&nbsp;{user.lastName} </div>
+
+      { uns>0 &&  <>  
+     &nbsp;<div  id="ex2" >   <span class="fa-stack has-badge" data-count={uns}>
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+  </span></div></>}
+    </div> 
+    
+    }</>
   );
 }
