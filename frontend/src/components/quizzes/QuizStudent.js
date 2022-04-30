@@ -12,6 +12,7 @@ import Timer from "./Timer";
 import { each } from "jquery";
 import { queryApi } from "../../utils/queryApi";
 import { useHistory } from 'react-router-dom';
+var timestart=new Date(new Date().getTime());
 
 const QuizStudent = () => {
     let { id } = useParams();
@@ -20,18 +21,18 @@ const QuizStudent = () => {
     const [Touched, setTouched] = useState([])
     const [disabledSubmit, setdisabledSubmit] = useState(false);
     const [score, setScore] = useState()
+    const [totalClicksofmap,settotalClicksofmap]=useState(0)
     const [viewMode, setViewMode] = useState(1)
     const history = useHistory()
 
     var connectedUser = useSelector(selectConnectedUser)
     const [quiz, errquiz, reloadquiz] = useApi('quiz/find/' + id, null, 'GET', false, connectedUser.token);
-
     if(connectedUser.type=="disconnected"){
         history.push("/signin")
-  
       }
 
     async function setChrono() {
+        if(viewMode!=2){
         var interval_id = window.setInterval(() => { }, 99999);
         for (var i = 0; i < interval_id; i++)
             window.clearInterval(i);
@@ -50,12 +51,11 @@ const QuizStudent = () => {
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
+                  if(document.getElementById("heure")!=null){
                 document.getElementById("heure").innerHTML = hours + " H"
                 document.getElementById("minute").innerHTML = minutes + " M"
                 document.getElementById("seconde").innerHTML = seconds + " s"
-
-
+                  }
                 if (distance < 0) {
                     clearInterval(x);
                     document.getElementById("minute").parentNode.removeChild(document.getElementById("minute"));
@@ -66,6 +66,7 @@ const QuizStudent = () => {
                 }
             }, 1000);
         }
+    }
     }
     useEffect(async () =>  {
         if (quiz) {
@@ -94,8 +95,12 @@ const QuizStudent = () => {
     }, [quiz]);
 
     async function updateTouched(id) {
+        settotalClicksofmap(totalClicksofmap + 1)
+    
         if (Touched.indexOf(id) == -1)
             setTouched([...Touched, id])
+
+
     }
     async function addToResponse(idquestion, idreponse, type) {
         if (staticRep[idquestion] && type == "CheckBox") {
@@ -127,7 +132,6 @@ const QuizStudent = () => {
             }
             else if (correctArray.length != staticRep[q._id].length) {
                 test = false;
-                console.log("question m1 " + q.texte);
 
             } else {
 
@@ -136,13 +140,11 @@ const QuizStudent = () => {
                     let index = staticRep[q._id].indexOf(correctArray[i]._id);
                     if (index == -1) {
                         test = false;
-                        console.log("question m2 " + q.texte);
 
                     }
 
 
                 }
-                console.log(test);
 
 
             }
@@ -154,18 +156,31 @@ const QuizStudent = () => {
         })
 
 
-        //Add Score
+        //Add Score + TIME
+        const TimeEnd = new Date(new Date().getTime());
+        let dquiz =  TimeEnd-timestart;
+
+        let hquiz = Math.floor((dquiz % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let mquiz = Math.floor((dquiz % (1000 * 60 * 60)) / (1000 * 60));
+        let squiz = Math.floor((dquiz % (1000 * 60)) / 1000);
+
+        
         const [, err] = await queryApi('quiz/addResponseScore', {
 
             idQuiz: quiz._id,
             idUser: connectedUser.id,
-            score: s
+            score: s,
+            time:{
+                  h:hquiz,
+                  m:mquiz,
+                  s:squiz,
+              },
+            totalClicksofmap : totalClicksofmap
         }
             , 'PATCH', false, connectedUser.token);
 
         for (const i in staticRep) {
 
-            console.log(i);
             for (const j in staticRep[i]) {
 
                 const [, err] = await queryApi('quiz/addResponse', {
@@ -224,7 +239,6 @@ const QuizStudent = () => {
                                             (<div class="active" onClick={() => {
                                                 setQuestionIndex(index);
                                                 updateTouched(question._id);
-                                                console.log(Touched)
                                             }}>{index + 1}</div>) :
                                             Touched.indexOf(question._id) == -1 || staticRep[question._id] ?
                                                 (<div onClick={() => {

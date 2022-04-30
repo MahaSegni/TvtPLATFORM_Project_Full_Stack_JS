@@ -140,6 +140,8 @@ module.exports.addScore = async (req, res) => {
   }
   if (!ObjectID.isValid(req.body.idQuiz))
     return res.status(400).send("ID unknown : " + req.body.idQuiz);
+    console.log(req.body);
+
     quizModel.findByIdAndUpdate(
       req.body.idQuiz,
         {
@@ -147,6 +149,8 @@ module.exports.addScore = async (req, res) => {
             Results: {
                idUser:req.body.idUser,
                Note:req.body.score,
+               time:req.body.time,
+               totalClicksofmap:req.body.totalClicksofmap
             },
           },
         },
