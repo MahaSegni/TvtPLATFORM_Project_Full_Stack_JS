@@ -12,6 +12,8 @@ import Timer from "./Timer";
 import { each } from "jquery";
 import { queryApi } from "../../utils/queryApi";
 import { useHistory } from 'react-router-dom';
+import { CodeBlock, nord  } from "react-code-blocks";
+
 var timestart=new Date(new Date().getTime());
 
 const QuizStudent = () => {
@@ -267,7 +269,7 @@ const QuizStudent = () => {
                     </div>
                     <div class="col">
 
-                        <Card>
+                        <Card style={{"min-height":"387px"}}>
                             <Card.Header>
                                 <Card.Title>
                                     <h1 class="pull-left">{quiz.title}</h1><h3 class="pull-right">{QuestionIndex + 1}/{quiz.Questions.length}</h3>
@@ -277,9 +279,18 @@ const QuizStudent = () => {
                             <Card.Body>
 
                                 {quiz.Questions.map((question, index) => (
-                                    index == QuestionIndex ?
-                                        (<div key={index}  >
+                                    //index == QuestionIndex ?
+                                        <div key={index} hidden={(index!=QuestionIndex)} >
                                             <div>{question.texte}</div>
+                                            {question.code&&
+                                             <CodeBlock
+                                             text={question.code}
+                                             language={question.language}
+                                             showLineNumbers={true}
+                                             theme={nord}
+                                             wrapLines
+                                           />
+                                            }
                                             {question.QuestionType == "Radio" &&
                                                 question.Responses.map((reponse, index) => (
 
@@ -320,41 +331,8 @@ const QuizStudent = () => {
                                                     }
                                                 </div>
                                             }
-                                        </div>) : (<div key={index} hidden="true" >
-                                            <div>{question.texte}</div>
-                                            {question.QuestionType == "Radio" &&
-                                                question.Responses.map((reponse, index) => (
-
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name={question.texte} onClick={() => addToResponse(question._id, reponse._id, question.QuestionType)} />
-                                                        <label class="form-check-label" name={question.texte} >
-                                                            {reponse.texte}
-                                                        </label>
-                                                    </div>
-
-
-                                                ))
-
-                                            }
-                                            {question.QuestionType == "CheckBox" &&
-                                                question.Responses.map((reponse, index) => (
-                                                    <div class="form-check" key={index}>
-                                                        <input class="form-check-input" type="checkbox" value={reponse.texte} onClick={() => addToResponse(question._id, reponse._id, question.QuestionType)} />
-                                                        <label class="form-check-label" >
-                                                            {reponse.texte}
-                                                        </label>
-                                                    </div>
-                                                ))}
-                                            {question.QuestionType == "Select" &&
-                                                <div class="list-group">
-                                                    {question.Responses.map((reponse, index) => (
-                                                        <button type="button" class="list-group-item list-group-item-action" onClick={() => addToResponse(question._id, reponse._id, question.QuestionType)}>{reponse.texte}</button>
-
-                                                    ))
-                                                    }
-                                                </div>
-                                            }
-                                        </div>)
+                                        </div> 
+                                           
 
 
                                 ))
@@ -412,6 +390,15 @@ const QuizStudent = () => {
                                     index == QuestionIndex ?
                                         (<div key={index}  >
                                             <div>{question.texte}</div>
+                                            {question.code&&
+                                             <CodeBlock
+                                             text={question.code}
+                                             language={question.language}
+                                             showLineNumbers={true}
+                                             theme={nord}
+                                             wrapLines
+                                           />
+                                            }
                                             {question.QuestionType == "Radio" &&
                                                 question.Responses.map((reponse, index) => (
                                                     <div>

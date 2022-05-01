@@ -30,7 +30,7 @@ const Module = React.lazy(() => import('./components/Module/listModule'));
 const MyModules = React.lazy(() => import('./components/Module/MyModules'));
 const ModuleList = React.lazy(() => import('./components/Module/ModuleList'));
 const QuizStudentListe=React.lazy(()=>import('./components/quizzes/QuizStudentListe'));
-
+const QuizResultsComp=React.lazy(()=>import("./components/quizzes/ShowResultats"));
 const AdminCours=React.lazy(()=>import('./components/cours/AdminCours'))
 
 const SocialMedia = React.lazy(() => import('./components/friends/socialMediaMenu'));
@@ -86,6 +86,9 @@ function App() {
               <Route path='/check/:id' render={props => <VisitorProfile {...props} />}></Route>
               <Route path='/module/:idModule/allcours' render={props => <Coursfront {...props} />}></Route>
               <Route path='/module/:idModule/Quiz' render={props => <QuizComp {...props} />}></Route>
+
+              <Route path='/module/:idModule/QuizResults' render={props => <QuizResultsComp {...props} />}></Route>
+
               <Route path='/studentQuiz/:id' render={props => <QuizStudent {...props} />}></Route>
               <Route path="/evaluations" render={(props) => <Evaluations {...props} />}></Route>
               <Route exact path='/category' render={props => <CategoryModule {...props} />}></Route>

@@ -24,6 +24,8 @@ var Quiz = new Schema({
     type: [
         {
           texte: String,
+          code:String,
+          language:String,
           QuestionType:String,
 
           Responses: {

@@ -118,6 +118,9 @@ module.exports.addQuestion = async (req, res) => {
           $push: {
             Questions: {
               texte:req.body.texte,
+              code:req.body.code,
+              language:req.body.language,
+
               QuestionType: req.body.QuestionType,
               Responses:req.body.Responses,
             },
@@ -205,3 +208,16 @@ module.exports.DeleteQuestion = async (req, res) => {
   
 
 };
+module.exports.findStudent =  async (req, res) => {
+  User= await UserModel.findOne({token :req.headers['authorization'] })
+  if(User==null){
+    return res.send('authorization failed')
+  }
+  if (!ObjectID.isValid(req.params.studentid))
+  return res.status(400).send("ID unknown : " + req.params.idModule);
+  UserModel.findById(req.params.studentid,(err, docs) => {
+    if (!err) res.send(docs);
+    else console.log("Error to get data : " + err);
+  })
+};
+
