@@ -70,7 +70,7 @@ return (
         <div class="row">
         {selectedQuiz&&
         selectedQuiz.Results.map((resultat,index)=>(
-        <UserResult props={[resultat,selectedQuiz.Questions.length]}/>
+        <UserResult props={[resultat,selectedQuiz]}/>
         ))
 
         }

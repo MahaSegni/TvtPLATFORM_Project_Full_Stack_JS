@@ -1,6 +1,10 @@
 const quizModel = require('../Model/Quiz');
 const ObjectID = require("mongoose").Types.ObjectId;
 const UserModel=require('../Model/User')
+const { spawn } = require('child_process');
+const {PythonShell} =require('python-shell');
+const pd = require("node-pandas")
+
 module.exports.createQuiz = async (req, res) => {
 
     if (!ObjectID.isValid(req.params.idModule))
@@ -219,5 +223,49 @@ module.exports.findStudent =  async (req, res) => {
     if (!err) res.send(docs);
     else console.log("Error to get data : " + err);
   })
+};
+module.exports.runScriptPython =async(req,res)=>{
+  /*const pyProg = spawn('python', ['public/script.py',req.body.nbclicks,"20","30"]);
+  pyProg.stdout.on('data', function(data) {
+
+    console.log(data.toString());
+    res.send(data);
+
+});*/
+
+
+let options = {
+  mode: 'text',
+  pythonPath: 'python' ,
+  pythonOptions: ['-u'], // get print results in real-time
+  scriptPath: 'public',
+  args: [req.body.click,req.body.time_s,req.body.nbr_mod,req.body.Note]
+};
+PythonShell.run('Behavior.py', options, function (err, results) {
+  if (err) throw err;
+  // results is an array consisting of messages collected during execution
+  console.log('results: %j', results);
+  res.send(results[0])
+});
+}
+/*idquiz:props[1]._id,
+userId:Student._id,
+behavior:r*/
+
+module.exports.updateBehavior = async (req, res) => {
+  User= await UserModel.findOne({token :req.headers['authorization'] })
+  if(User==null){
+    return res.send('authorization failed')
+  }
+  if (!ObjectID.isValid(req.body.idquiz))
+    return res.status(400).send("ID unknown : " + req.body.idquiz);
+   qui= await quizModel.findOne({_id:req.body.idquiz})
+   resultat=qui.Results.find(e=>e.idUser==req.body.userId);
+   resultat.Behavior=req.body.behavior;
+   
+   qui.save();
+   return res.send(qui);
+   
+  
 };
 

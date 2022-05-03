@@ -47,6 +47,7 @@ var Quiz = new Schema({
           idUser:String,
           Note:Number,
           totalClicksofmap:Number,
+          Behavior:String,
           time:{
             type:{
               h:Number,
