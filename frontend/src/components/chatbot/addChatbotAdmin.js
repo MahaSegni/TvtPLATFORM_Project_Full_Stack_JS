@@ -61,7 +61,7 @@ export default function AddEvaluation({ props, add, reload }) {
         else if (e.target.value == "module") {
             setShowForm(false)
             setShowModules(true)
-            await axios.get('http://localhost:3000/api/module/get').then(res => { setModules(res.data) })
+            await axios.get(`${process.env.REACT_APP_API_URL}/module/get`).then(res => { setModules(res.data) })
         } 
         onChange(e)
           

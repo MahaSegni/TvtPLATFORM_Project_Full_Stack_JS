@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { chnageConenctedUser, selectConnectedUser, refreshUserToken } from './Redux/slices/sessionSlice';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect,useRef, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import { queryApi } from "./utils/queryApi"
@@ -11,6 +11,11 @@ import '../node_modules/bootstrap/dist/css/bootstrap.css'
 import './assets/css/style.css'
 import Cookies from 'js-cookie'
 import { useLocation } from 'react-router-dom';
+import NotificationAddIcon from '@mui/icons-material/NotificationAdd';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { io } from "socket.io-client";
+import axios from 'axios';
 const Navbar = React.lazy(() => import('./components/navbar'));
 const Chatbot = React.lazy(() => import('./components/chatbot'));
 const Signup = React.lazy(() => import('./components/user/signup'));
@@ -37,13 +42,40 @@ const AdminCours=React.lazy(()=>import('./components/cours/AdminCours'))
 const SocialMedia = React.lazy(() => import('./components/friends/socialMediaMenu'));
 
 function App() {
+ 
+  const socket = useRef();
+  useEffect(() => {
+  
+    socket.current = io("ws://localhost:8900");
+ socket.current.on("getnotif", async (data)  => {
 
+   await axios.get(`${process.env.REACT_APP_API_URL}/user/getGeneralInfo/` + data.senderId).
+  then( res => { 
+    let name=res.data.name+" "+res.data.lastName
+     
+    if(!data.image){
+    toast( "💌" + " "  + name  +" : "+ data.text , {
+      hideProgressBar: true,
+    })}else {
+        
 
+    toast( "💌" + " "  + name  +" : "+ data.text+" sent a file" , {
+      hideProgressBar: true,
+    })
+
+    }
+  
+   });
+   })
+  },[])
+  
   const history = useHistory();
   const dispatch = useDispatch();
   var connectedUser = useSelector(selectConnectedUser);
-
   const [refresh, setRefresh] = useState(false)
+  useEffect(() => { socket.current.emit("addUsernotif", connectedUser.id);
+                    socket.current.on("getUsersnotif", (users) => {});
+                  }, [connectedUser]);
 
 
 
@@ -74,8 +106,11 @@ function App() {
       <head>
       </head>
       <BrowserRouter>
+   
         <Suspense fallback={<h1>Loading...</h1>}>
         <Navbar   />
+        <ToastContainer icon={true}  />
+      
           {connectedUser.type != "disconnected" &&
            connectedUser.type != "admin" &&
             <Chatbot />}

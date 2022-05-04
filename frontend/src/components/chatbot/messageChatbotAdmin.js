@@ -16,7 +16,7 @@ export default function MessageChatbotAdmin({ props,q,setMSetted,mSetted}) {
   useEffect(()=>{
     if (q.visibility[0]!="site"){
       try{
-        axios.get("http://localhost:3000/api/module/getById/" + q.refModule).then(res => {
+        axios.get(`${process.env.REACT_APP_API_URL}/module/getById/` + q.refModule).then(res => {
           setModule(res.data)
           setMSetted(true)
         })}

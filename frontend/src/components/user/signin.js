@@ -38,7 +38,7 @@ export default function Signin(props) {
         let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: "default", pictureType: "internal" }
         dispatch(chnageConenctedUser(userResult))
       }
-      window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+result.name +" "+ result.lastName ,own:false},{text:"Do you want to answer some questions? " ,own:false,responses:[{text:"yes",value:0},{text:"no",value:.0}]}]));
+      window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+result.name +" "+ result.lastName ,own:false},{text:"Do you want to answer some questions? " ,own:false,seen:false,responses:[{text:"yes",value:0},{text:"no",value:.0}]}]));
       await axios.get("http://localhost:3000/api/conversations/getnotif/" + result._id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
       
    
@@ -71,8 +71,7 @@ export default function Signin(props) {
         }
         window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+resultGoogleLogin.name +" "+ resultGoogleLogin.lastName ,own:false},{text:"Do you want to answer some questions? " ,own:false,responses:[{text:"yes",value:0},{text:"no",value:.0}]}]));
         await axios.get("http://localhost:3000/api/conversations/getnotif/" + resultGoogleLogin._id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
-       
-        
+      
         history.push('/Home')
         Cookies.set('connected', 'true', { expires: 1 })
       }

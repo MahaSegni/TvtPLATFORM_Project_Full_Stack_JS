@@ -39,7 +39,8 @@ export default function Messenger({setMessenger }) {
   const ref = useRef();
   let [dataId,setDataId]=useState(null)
   useEffect(async() => {
-  await axios.get("http://localhost:3000/api/conversations/getnotif/" + id)
+  await axios.get(
+    `${process.env.REACT_APP_API_URL}/conversations/getnotif/`+id)
   .then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
   },[])
 
@@ -93,14 +94,15 @@ export default function Messenger({setMessenger }) {
       
         
       dataId && currentChat&&  currentChat._id!=dataId &&
-      await axios.get("http://localhost:3000/api/conversations/getnotif/" + id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
+      await axios.get
+      (`${process.env.REACT_APP_API_URL}/conversations/getnotif/`+id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
     
 
 
     });
  
     dataId && !currentChat &&
-    await axios.get("http://localhost:3000/api/conversations/getnotif/" + id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
+    await axios.get(`${process.env.REACT_APP_API_URL}/conversations/getnotif/`+id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
 
   } );   
         
@@ -145,7 +147,8 @@ const onChangeFile = (e) => {  setfileuploaded(true)
 
   useEffect(() => {if (currentChat){const friendId = currentChat.members.find((m) => m !== user.id );
                                     const getUser = async () => {try {
-                                                                      const res = await axios.get("http://localhost:3000/api/user/getGeneralInfo/" + friendId)
+                                                                      const res = await axios.get(
+                                                                        `${process.env.REACT_APP_API_URL}/user/getGeneralInfo/`+friendId)
                                                                       .then( res => { setFriend(res.data) });
                                                                       } catch (err) {console.log(err);}
                                                                 };
@@ -172,7 +175,7 @@ const onChangeFile = (e) => {  setfileuploaded(true)
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
-    const getMessages = async () => {try {const res = await axios.get("http://localhost:3000/api/messages/" + currentChat?._id);
+    const getMessages = async () => {try {const res = await axios.get(`${process.env.REACT_APP_API_URL}/messages/` + currentChat?._id);
                                           setMessages(res.data);
                                          } catch (err) {console.log(err);}
                                     };
@@ -195,11 +198,11 @@ const onChangeFile = (e) => {  setfileuploaded(true)
     {const data = new FormData() 
 
        data.append('image', uploadImage["image"])
-      axios.post("http://localhost:3000/api/messages", message).then(
+      axios.post( `${process.env.REACT_APP_API_URL}/messages` ,message).then(
         res=>{
           ref.current.value = "";
 
-        axios.post("http://localhost:3000/api/messages/upload/"+res.data._id,data,
+        axios.post(`${process.env.REACT_APP_API_URL}/messages/upload/` +res.data._id,data,
         {headers: {'Content-Type': 'form-data'}
       }).then(res=>{setNewMessage("");
                     setUploadImage({ ...uploadImage, image: ""})
@@ -215,7 +218,7 @@ const onChangeFile = (e) => {  setfileuploaded(true)
    
   
       
-      try {await axios.post("http://localhost:3000/api/messages", message).then(res => {setMessages([...messages, res.data]);setNewMessage("");});
+      try {await axios.post(`${process.env.REACT_APP_API_URL}/messages`,message).then(res => {setMessages([...messages, res.data]);setNewMessage("");});
       socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: newMessage,image:null,seen:haveCurrent,conversationId: currentChat._id});
       }
       catch (err) {console.log(err);}

@@ -18,6 +18,21 @@ const removeUser = (socketId) => {
 const getUser = (userId) => {
   return users.find((user) => user.userId === userId);
 };
+let usersnotif = [];
+
+const addUsernotif = (userId, socketId) => {
+  !usersnotif.some((user) => user.userId === userId) &&
+    usersnotif.push({ userId, socketId });
+};
+
+const removeUsernotif = (socketId) => {
+  usersnotif = usersnotif.filter((user) => user.socketId !== socketId );
+};
+
+const getUsernotif = (userId) => {
+  return usersnotif.find((user) => user.userId === userId);
+};
+
 
 io.on("connection", (socket) => {
 
@@ -30,7 +45,13 @@ io.on("connection", (socket) => {
 
 
   });
-  
+  socket.on("addUsernotif", (userId) => {
+
+    addUsernotif(userId, socket.id);
+    io.emit("getUsersnotif", usersnotif);
+
+
+  });
   
 
   //send and get message
@@ -45,8 +66,23 @@ io.on("connection", (socket) => {
       seen,
       conversationId,
       sender,
-    });}else 
-    {console.log("user is disconnected")}
+    });
+    const usernotif = getUsernotif(receiverId);
+      io.to(usernotif.socketId).emit("getnotif", {
+        senderId,
+        text,
+        image,
+      })
+    
+    }else 
+    {console.log("user is disconnected")
+    const usernotif = getUsernotif(receiverId);
+    if (usernotif)
+   { io.to(usernotif.socketId).emit("getnotif", {
+      senderId,
+      text,
+      image,
+    })}}
   });
 
   socket.on("sendcurrent", ({  sender,iscurrent  }) => {
@@ -84,7 +120,10 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("a user disconnected!");
     removeUser(socket.id);
+    removeUsernotif(socket.id);
     io.emit("getUsers", users);
+    
+    io.emit("getUsersnotif", usersnotif);
     
   });
 });

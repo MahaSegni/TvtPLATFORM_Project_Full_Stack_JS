@@ -48,7 +48,7 @@ export default function ChatOnline({RL,conversations, onlineUsers, currentId, se
     
        
       const res = await axios.get(
-        `http://localhost:3000/api/conversations/find/${currentId}/${user._id}`
+        `${process.env.REACT_APP_API_URL}/conversations/find/${currentId}/${user._id}`
       ); 
       if(res.data!=null)
       {setCurrentChat(res.data);}else{

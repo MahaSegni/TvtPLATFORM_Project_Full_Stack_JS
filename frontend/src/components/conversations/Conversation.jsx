@@ -19,7 +19,8 @@ export default function Conversation({ conversation, currentUser}) {
 
     const getUser = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/user/getGeneralInfo/" + friendId).
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/user/getGeneralInfo/` + friendId).
         then( res => { 
           
           setUser(res.data);
