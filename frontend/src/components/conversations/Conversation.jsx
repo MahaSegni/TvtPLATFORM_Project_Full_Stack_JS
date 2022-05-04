@@ -3,25 +3,12 @@ import { useEffect, useState } from "react";
 import "../../assets/css/conversation.css";
 import { useApi } from "../../utils/useApi";
 
-export default function Conversation({ conversation, currentUser, notiftab}) {
- let [display,setDisplay]=useState(false)
- const [uns,setUns]=useState();
+export default function Conversation({ conversation, currentUser}) {
+
+
 
   const [user, setUser] = useState(null);
-  
-  useEffect (()  =>{
-    if(JSON.parse(localStorage.getItem('notif'))!=null)
-    {let notif=JSON.parse(localStorage.getItem('notif'));
-    for (let i in notif)
-     {if(notif[i].conversationId==conversation._id)
-      {setUns(notif[i].nbUnseen)
-       
-      }
  
-     }
-    }
-  },[notiftab])
-    
 
   useEffect(() => {
   
@@ -67,11 +54,12 @@ export default function Conversation({ conversation, currentUser, notiftab}) {
         </></span>
       <div class="divname" style={{fontSize:12,}}>&nbsp;{user.name}&nbsp;{user.lastName} </div>
 
-      { uns>0 &&  <>  
-     &nbsp;<div  id="ex2" >   <span class="fa-stack has-badge" data-count={uns}>
+    {JSON.parse(localStorage.getItem('notif'))&&  <>{JSON.parse(localStorage.getItem('notif')).find((m)=> m.conversationId==conversation._id) &&
+     <>{ JSON.parse(localStorage.getItem('notif')).find((m)=> m.conversationId==conversation._id).nbUnseen>0 &&  <>  
+     &nbsp;<div  id="notif" >   <span class="fa-stack has-badge" data-count={JSON.parse(localStorage.getItem('notif')).find((m)=> m.conversationId==conversation._id).nbUnseen}>
     <i class="fa fa-circle fa-stack-2x"></i>
     <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
-  </span></div></>}
+  </span></div></>}</>}</>}
     </div> 
     
     }</>

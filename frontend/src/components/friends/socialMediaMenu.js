@@ -12,7 +12,9 @@ import { useHistory } from "react-router-dom";
 import Messenger from "../conversations/Messenger";
 
 
-const SocialMediaMenu = (props) => {
+export default function SocialMediaMenu ({})  {
+   
+
     const history = useHistory();
     const [messenger, setMessenger] = useState(true);
     const [friendList, setFriendList] = useState(false);
@@ -103,4 +105,3 @@ const SocialMediaMenu = (props) => {
     )
 }
 
-export default SocialMediaMenu;

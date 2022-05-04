@@ -1558,7 +1558,7 @@ input[type=number]:focus,
   }
   
   
-  #ex2 .fa-stack[data-count]:after {
+  #totalnotif .fa-stack[data-count]:after {
     position: absolute;
     right: 0%;
     top: 1%;

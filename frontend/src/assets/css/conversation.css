@@ -84,7 +84,7 @@
 }
 
 
-#ex2 .fa-stack[data-count]:after {
+#notif .fa-stack[data-count]:after {
   position: absolute;
   right: 0%;
   top: 1%;

@@ -1,32 +1,34 @@
 import { Link } from "react-router-dom";
 import { queryApi } from "../utils/queryApi"
 import { useSelector } from 'react-redux';
-import { chnageConenctedUser, selectConnectedUser,refreshUserToken } from '../Redux/slices/sessionSlice';
+import { chnageConenctedUser, selectConnectedUser, refreshUserToken } from '../Redux/slices/sessionSlice';
 import { useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import Cookies from 'js-cookie'
 import { useEffect, useState } from "react";
-export default function Navbar() {
-  let CommunityNotif=0 
-  for(let i in JSON.parse(localStorage.getItem('notif'))){
-  CommunityNotif=CommunityNotif+JSON.parse(localStorage.getItem('notif'))[i].nbUnseen
-  }
- 
-
+export default function Navbar({}) {
   
   const autoSignOut = async () => {
-    const [res, err] = await queryApi('user/autoSignOut/'+ connectedUser.id, null,'GET',false ,process.env.REACT_APP_SECRET );
+    const [res, err] = await queryApi('user/autoSignOut/' + connectedUser.id, null, 'GET', false, process.env.REACT_APP_SECRET);
     localStorage.removeItem('chatbotsession');
+    localStorage.removeItem('notif');
+
     history.push('/signin')
     dispatch(chnageConenctedUser({ type: "disconnected" }))
   }
+  useEffect(()=>{
+    if(connectedUser.type != "disconnected"){
+  
+    }
+   
+  },[])
 
 
   useEffect(() => {
-    if (connectedUser.type != "disconnected" && !Cookies.get('connected')) { 
-        autoSignOut()
+    if (connectedUser.type != "disconnected" && !Cookies.get('connected')) {
+      autoSignOut()
     }
-  },[])
+  }, [])
 
   const history = useHistory()
   const dispatch = useDispatch();
@@ -60,18 +62,22 @@ export default function Navbar() {
             <li><Link to={'/AdminCours'}>Courses</Link></li>
             <li><Link to={'/evaluations'}>Evaluations</Link></li>
             <li><Link to={'/chatbot'}>Chatbot</Link></li>
-            <li><label style={{display:"inline-flex"}}><Link to={'/SocialMedia'}>Community</Link>
-            { CommunityNotif>0 &&  <>  
-    <label  id="ex2" >   <span class="fa-stack has-badge" data-count="5">
-   <i class="fa fa-circle fa-stack-2x"></i>
-   <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
- </span></label></>}</label></li>
+
+            <li><label style={{ display: "inline-flex" }}><Link to={'/SocialMedia'}>Community</Link>
+            {JSON.parse(localStorage.getItem('notif')) && 
+              <>{JSON.parse(localStorage.getItem('notif')).length> 0 && <>
+                <label id="totalnotif" >   <span class="fa-stack has-badge" data-count='!'>
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+                </span></label></>}</>}</label></li>
             <li className="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>
                 <li><a onClick={async () => {
-                  const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false,connectedUser.token);
+                  const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false, connectedUser.token);
                   localStorage.removeItem('chatbotsession');
+                  localStorage.removeItem('notif');
+  
                   history.push('/signin')
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                   Cookies.remove('connected')
@@ -93,22 +99,23 @@ export default function Navbar() {
             <li><Link to={'/Home'}>Home</Link></li>
             <li><Link to={'/'}>About Us</Link></li>
             <li><Link to={'/module'}>Modules</Link></li>
-            <li><label style={{display:"inline-flex"}}><Link to={'/SocialMedia'}>Community</Link>
-            { CommunityNotif>0 &&  <>  
-    <label  id="ex2" >   <span class="fa-stack has-badge" data-count="5">
-   <i class="fa fa-circle fa-stack-2x"></i>
-   <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
- </span></label></>}</label>
-            
-            </li>
+            <li><label style={{ display: "inline-flex" }}><Link to={'/SocialMedia'}>Community</Link>
+            {JSON.parse(localStorage.getItem('notif')) && 
+              <>{JSON.parse(localStorage.getItem('notif')).length> 0 && <>
+                <label id="totalnotif" >   <span class="fa-stack has-badge" data-count='!'>
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+                </span></label></>}</>}</label></li>
             <li className="dropdown"><a>More</a>
               <ul>
                 <li><Link to={'/profile'}>Profile</Link></li>
                 <li><Link to={'/myModules'}>My Modules</Link></li>
                 <li><Link to={'/ModuleList'}>Module List</Link></li>
-                <li><Link onClick={async () => { 
-                  const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false,connectedUser.token);
+                <li><Link onClick={async () => {
+                  const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false, connectedUser.token);
                   localStorage.removeItem('chatbotsession');
+                  localStorage.removeItem('notif');
+                  localStorage.removeItem('totalnotif');
                   history.push('/signin')
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                   Cookies.remove('connected')

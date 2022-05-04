@@ -13,10 +13,11 @@ import { Dropdown } from 'react-bootstrap';
 import $, { data } from 'jquery'
 import { queryApi } from "../../utils/queryApi";
 import Picker from 'emoji-picker-react';
-export default function Messenger({ setMessenger }) {
-
+export default function Messenger({setMessenger }) {
+  
+ 
   const [uploadImage, setUploadImage] = useState({image:""})
-  const [notiftab,setnotiftab]=useState(JSON.parse(localStorage.getItem('notif')));
+ 
 
   const [friend, setFriend] = useState(null);
   const [needrl, setNeedrl] = useState(false);
@@ -42,15 +43,13 @@ export default function Messenger({ setMessenger }) {
   .then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
   },[])
 
- 
+  
   useEffect(() => {
   
     socket.current = io("ws://localhost:8900");
    
     socket.current.on("getCurrent",(data)=>{
-      console.log(data)
-      console.log("ok")
-      console.log(data)
+   
       setHaveCurrent(data.iscurrent)});
     socket.current.on("getMessage",  (data)  => {
       setDataId(data.conversationId)
@@ -62,13 +61,7 @@ export default function Messenger({ setMessenger }) {
         seen:data.seen,
         conversationId:data.conversationId
       });
-       });
-      
-      
-
-       
-
-     
+       }); 
     }, []);
     useEffect(()=>{
       
@@ -76,17 +69,17 @@ export default function Messenger({ setMessenger }) {
     if (currentChat){
     if(data.conversationId==currentChat._id){
       socket.current.emit("sendcurrent", {
-        socket:data.socket,
+        sender:data.sender,
         iscurrent:true,
         })
     }  else{
       socket.current.emit("sendcurrent", {
-        socket:data.socket,
+        sender:data.sender,
         iscurrent:false,
         })
     }}else{
       socket.current.emit("sendcurrent", {
-        socket:data.socket,
+        sender:data.sender,
         iscurrent:false,
         })
 
@@ -101,11 +94,14 @@ export default function Messenger({ setMessenger }) {
         
       dataId && currentChat&&  currentChat._id!=dataId &&
       await axios.get("http://localhost:3000/api/conversations/getnotif/" + id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
-      setnotiftab(res.data)});
+    
+
+
+    });
  
     dataId && !currentChat &&
     await axios.get("http://localhost:3000/api/conversations/getnotif/" + id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
-    setnotiftab(res.data)
+
   } );   
         
    }, [ arrivalMessage, currentChat]);
@@ -216,11 +212,12 @@ const onChangeFile = (e) => {  setfileuploaded(true)
     }
     else 
     { 
-      socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: newMessage,image:null,seen:haveCurrent,conversationId: currentChat._id});
-      
+   
   
       
-      try {await axios.post("http://localhost:3000/api/messages", message).then(res => {setMessages([...messages, res.data]);setNewMessage("");});}
+      try {await axios.post("http://localhost:3000/api/messages", message).then(res => {setMessages([...messages, res.data]);setNewMessage("");});
+      socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: newMessage,image:null,seen:haveCurrent,conversationId: currentChat._id});
+      }
       catch (err) {console.log(err);}
       setHaveCurrent(null);
     }
@@ -271,7 +268,7 @@ const onChangeFile = (e) => {  setfileuploaded(true)
                  localStorage.setItem("notif",JSON.stringify (disnotif))
                   };} rload();  setCurrentChat(c);   }
                   }>
-                  <Conversation id="mydiv" notiftab={notiftab} conversation={c} currentUser={user}    />
+                  <Conversation id="mydiv"   conversation={c} currentUser={user}    />
                 </div>
               ))}
             </div>

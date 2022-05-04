@@ -38,11 +38,13 @@ const SocialMedia = React.lazy(() => import('./components/friends/socialMediaMen
 
 function App() {
 
+
   const history = useHistory();
   const dispatch = useDispatch();
   var connectedUser = useSelector(selectConnectedUser);
 
   const [refresh, setRefresh] = useState(false)
+
 
 
   const refreshUser = async () => {
@@ -73,11 +75,13 @@ function App() {
       </head>
       <BrowserRouter>
         <Suspense fallback={<h1>Loading...</h1>}>
-          <Navbar />
-         {connectedUser.type != "disconnected" &&
-          connectedUser.type != "admin" &&
-           <Chatbot />}
+        <Navbar   />
+          {connectedUser.type != "disconnected" &&
+           connectedUser.type != "admin" &&
+            <Chatbot />}
           {refresh == true &&
+          
+        
             <Switch>
               <Route exact path='/signup' render={props => <Signup {...props} />}></Route>
               <Route path='/signin' render={props => <Signin {...props} />}></Route>
@@ -95,12 +99,13 @@ function App() {
               <Route exact path='/module' render={props => <Module {...props} />}></Route>
               <Route exact path='/myModules' render={props => <MyModules {...props} />}></Route>
               <Route exact path='/ModuleList' render={props => <ModuleList {...props} />}></Route>
-              <Route path='/SocialMedia' render={props => <SocialMedia {...props} />}></Route>
+              <Route path='/SocialMedia' render={props => <SocialMedia    {...props} />}></Route>
               <Route path='/studentQuizAll/:idModule' render={props => <QuizStudentListe {...props} />}></Route>
               <Route path='/AdminCours' render={props=><AdminCours{...props}/>}></Route>
               <Route path='/chatbot' render={props=><ChatbotAdmin{...props}/>}></Route>
               <Route path='/Home' render={props=><Home{...props}/>}></Route>
             </Switch>
+          
           }
         </Suspense>
       </BrowserRouter>

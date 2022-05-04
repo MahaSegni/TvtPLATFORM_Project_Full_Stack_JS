@@ -98,7 +98,18 @@ router.get("/getnotif/:idUser",async(req,res)=>
   res.send(tabnotif)}else
   res.send(null)
 })
+/*router.get("/gettotalnotif/:idUser",async(req,res)=>
+{ let s=0
+  let conversations=await Conversation.find();
+  for (let i in conversations){
+    if (conversations[i].receiverNotif==req.params.idUser)
+    { s=s+conversations[i].nbUnseen 
+    
+    }
+  }
 
+  res.send(String(s))
+})*/
 
 
 module.exports = router;
