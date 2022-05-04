@@ -16,9 +16,9 @@ import sys
 
 
 df1 = pd.DataFrame(np.random.uniform(60 , 10, 3000), columns=['totalClicksofmap']).astype(int)
-df2 = pd.DataFrame(np.random.uniform(1900 , 2, 3000), columns=['time_s']).astype(int)
+df2 = pd.DataFrame(np.random.uniform(1400 , 2, 3000), columns=['time_s']).astype(int)
 df3 = pd.DataFrame(np.random.uniform(3 , 1, 3000), columns=['refmodules_length']).astype(int)
-df4 = pd.DataFrame(np.random.uniform(16 , 2, 3000), columns=['Note']).astype(int)
+df4 = pd.DataFrame(np.random.uniform(20 , 1, 3000), columns=['Note']).astype(int)
 df=pd.concat([df1, df2,df3,df4], axis=1)
 
 
@@ -181,18 +181,18 @@ if  ((time_rate(time,min_time,max_time)<-30)and
     (note_rate(Note,min_note,max_note)>20)):
     print("This student is very much engaged in this Quiz")
 elif((mod_rate(nbr_mod,min_mod_num,max_mod_num)<15)):
-    print("Low engagement Rate!!! you should suggest more modules to this Student to make him more Interactive")
+    print("Low engagement Rate you should suggest more modules to this Student to make him more Interactive")
 elif((time_rate(time,min_time,max_time)<-30)and
     (click_rate(click,min_total_click,max_total_click)<20)
     and(mod_rate(nbr_mod,min_mod_num,max_mod_num)>20)and
     (note_rate(Note,min_note,max_note)<20)):
-    print("This Student is Frustrated ..  He should review the courses once More!")
+    print("This Student is Frustrated  He should review the courses once More!")
 elif((time_rate(time,min_time,max_time)>30)and
     (click_rate(click,min_total_click,max_total_click)<20)
     and(note_rate(Note,min_note,max_note)>30)):
     print("This Student is Probably Cheating!")
 else:
-    print("Normal behavior")
+    print("Normal Bahevior")
 
 
 # In[ ]:
