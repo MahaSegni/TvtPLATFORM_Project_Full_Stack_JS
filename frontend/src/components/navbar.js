@@ -10,18 +10,12 @@ export default function Navbar({}) {
   
   const autoSignOut = async () => {
     const [res, err] = await queryApi('user/autoSignOut/' + connectedUser.id, null, 'GET', false, process.env.REACT_APP_SECRET);
-    localStorage.removeItem('chatbotsession');
-    localStorage.removeItem('notif');
-
     history.push('/signin')
     dispatch(chnageConenctedUser({ type: "disconnected" }))
+    localStorage.removeItem('chatbotsession');
+    localStorage.removeItem('notif');
   }
-  useEffect(()=>{
-    if(connectedUser.type != "disconnected"){
-  
-    }
-   
-  },[])
+
 
 
   useEffect(() => {
@@ -75,12 +69,11 @@ export default function Navbar({}) {
                 <li><Link to={'/profile'}>Profile</Link></li>
                 <li><a onClick={async () => {
                   const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false, connectedUser.token);
-                  localStorage.removeItem('chatbotsession');
-                  localStorage.removeItem('notif');
-  
                   history.push('/signin')
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                   Cookies.remove('connected')
+                  localStorage.removeItem('chatbotsession');
+                  localStorage.removeItem('notif');
                 }}>Sign Out</a></li>
               </ul>
             </li>

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Conversation = require("../Model/Conversation");
+const Message = require("../Model/Message");
 const UserModle = require('../Model/User');
 //new conv
 
@@ -59,7 +60,13 @@ router.put("/update", async (req, res) => {
 });
 
 router.post("/delete", async (req, res) => {
+  let m=[]
   c=await Conversation.findById(req.body._id)
+  m=await Message.find({conversationId: c._id});
+
+  for (let i in m){
+    await m[i].remove();
+  }
   await c.remove()
   res.send("ok")
  

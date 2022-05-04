@@ -2,7 +2,7 @@ const EvaluationModel = require('../Model/Evaluation');
 const ModuleModel = require('../Model/Module');
 const QuestionModel = require('../Model/Evaluationquestion');
 const UserModel = require('../Model/User');
-
+const cloudinary=require("../utils/cloudinary");
 
 module.exports.getOwner = async (req, res) => {
   let owner=null;
@@ -56,11 +56,11 @@ module.exports.getEvaluationById = (req, res) => {
   });
 };
 module.exports.evaluationupload = async (req, res, next) => {
-  
+  result=await cloudinary.uploader.upload(req.file.path);
   let id = req.params.id;
   EvaluationModel.findByIdAndUpdate(
     id,
-    { image: req.file.filename },
+    { image: result.secure_url },
     { new: true },
     (err, docs) => {
       if (!err)

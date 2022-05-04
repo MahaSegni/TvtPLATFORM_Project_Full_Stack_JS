@@ -22,9 +22,20 @@ export default function Evaluation({ props, id, update, ev, deleteEvaluation, up
       <tr id="mydiv">
         <td>
           {evaluation.image != null &&
-            <img src={require('../../assets/uploads/evaluation/' + evaluation.image)} alt="" />}
+
+<>
+{evaluation.image.startsWith("https") &&  <img src={evaluation.image} alt="" />}
+{!evaluation.image.startsWith("https") &&   <img src={require('../../assets/uploads/evaluation/' + evaluation.image)} alt="" />}
+</>
+           
+            
+            }
           {evaluation.image == null &&
-            <img src={require('../../assets/img/evaluation1.jpg')} alt="" />}
+        
+  
+            <img src={require('../../assets/img/evaluation1.jpg')} alt="" />
+           
+           }
 
           <a class="user-link">{Capitalize(evaluation.title)}</a>
           <span class="user-subhead text-capitalize" style={{ color: "rgb(5, 68, 104)" }}>Module: {evaluation.nomModule}</span>

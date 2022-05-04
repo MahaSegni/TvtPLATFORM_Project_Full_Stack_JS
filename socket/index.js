@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
       senderId,
       conversationId,
       sender,
-    });}}else{console.log("ok")
+    });}}else{
       do {sender=getUser(senderId);
         try {
         io.to(sender.socketId).emit("getCurrent", {

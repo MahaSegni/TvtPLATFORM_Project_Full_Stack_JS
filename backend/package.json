@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^1.29.1",
     "@nuzz78/react-file-viewer": "^1.3.4",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.1",

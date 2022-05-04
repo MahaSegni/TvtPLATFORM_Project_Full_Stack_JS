@@ -56,14 +56,10 @@ function App() {
     if(!data.image){
     toast( "💌" + " "  + name  +" : "+ data.text , {
       hideProgressBar: true,
-    })}else {
-        
-
-    toast( "💌" + " "  + name  +" : "+ data.text+" sent a file" , {
+    })}else 
+    {toast( "💌" + " "  + name  +" : "+ data.text+" sent a file" , {
       hideProgressBar: true,
-    })
-
-    }
+    })}
   
    });
    })

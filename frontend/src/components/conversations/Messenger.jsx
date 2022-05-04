@@ -350,7 +350,8 @@ const onChangeFile = (e) => {  setfileuploaded(true)
                   <div className="chatBoxTop" style={{ marginTop: "15%" }}>
                     {messages.map((m,indexm) => (
                       <div ref={scrollRef}>
-                        <Message index={indexm} message={m} own={m.sender === id} user={user} friend={friend} />
+
+                        <Message index={indexm} cchat={currentChat} messages={setMessages}  rl={rload}message={m} own={m.sender === id} user={user} friend={friend} />
                       </div>
                     ))}
                   </div>
