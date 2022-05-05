@@ -6,6 +6,7 @@ import { queryApi } from "../../utils/queryApi"
 import { chnageConenctedUser } from '../../Redux/slices/sessionSlice';
 import { useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
+import Cookies from 'js-cookie'
 
 export default function UserSettings({ closeModal }) {
     const history = useHistory()
@@ -113,8 +114,10 @@ export default function UserSettings({ closeModal }) {
             setErrorDeleteDisplay(result)
         }
         else if (result == "success") {
-            history.push('/signin')
             dispatch(chnageConenctedUser({ type: "disconnected" }))
+            Cookies.remove('connected')
+            history.push('/signin')
+            localStorage.removeItem('chatbotsession');
 
         }
     }

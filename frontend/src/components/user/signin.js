@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { queryApi } from "../../utils/queryApi"
@@ -8,7 +8,12 @@ import GoogleLogin from "react-google-login";
 import Cookies from 'js-cookie'
 export default function Signin(props) {
   
-
+  useEffect(() => {
+    if (Cookies.get('connected')) {
+      history.push('/profile')
+    }
+  }, [])
+  
   const dispatch = useDispatch();
   const history = useHistory();
   const [errorDisplay, setErrorDisplay] = useState("");

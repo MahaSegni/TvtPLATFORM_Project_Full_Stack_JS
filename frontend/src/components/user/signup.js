@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import { queryApi } from "../../utils/queryApi"
 import { useHistory } from "react-router-dom";
-
+import Cookies from 'js-cookie'
 export default function Signup(props) {
-
+    useEffect(() => {
+        if (Cookies.get('connected')) {
+          history.push('/profile')
+        }
+      }, [])
     const history = useHistory();
     const [errorDisplay, setErrorDisplay] = useState("");
     const [formErrors, setFormErrors] = useState({})

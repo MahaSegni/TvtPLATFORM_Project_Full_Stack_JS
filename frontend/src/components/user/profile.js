@@ -386,7 +386,7 @@ export default function Profile(props) {
                                             <div className="card-body card-body-user">
                                                 <div className="row">
                                                     <div style={{ textAlign : "center" }}>
-                                                        <FontAwesomeIcon icon={faSpinner} className="fa-5x"></FontAwesomeIcon>
+                                                        <FontAwesomeIcon icon={faSpinner} className="fa-5x fa-pulse"></FontAwesomeIcon>
                                                     </div>
                                                     <div style={{ textAlign : "center" }} className='my-3'>
                                                         <h4>Loading, this may take up to 20 seconds</h4>
