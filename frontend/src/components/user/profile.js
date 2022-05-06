@@ -24,13 +24,12 @@ export default function Profile(props) {
     const history = useHistory();
     const dispatch = useDispatch();
 
-
+    var connectedUser = useSelector(selectConnectedUser);
     useEffect(() => {
         if (connectedUser.type == "disconnected") {
             history.push('/signin')
         }
-    }, [])
-    var connectedUser = useSelector(selectConnectedUser);
+    },[])
     const [openModal, setOpenModal] = useState(false);
     const [openPasswordModal, setOpenPasswordModal] = useState(false);
 

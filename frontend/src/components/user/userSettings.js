@@ -116,9 +116,8 @@ export default function UserSettings({ closeModal }) {
         else if (result == "success") {
             dispatch(chnageConenctedUser({ type: "disconnected" }))
             Cookies.remove('connected')
-            history.push('/signin')
             localStorage.removeItem('chatbotsession');
-
+            history.push('/signin')
         }
     }
 

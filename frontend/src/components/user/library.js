@@ -26,7 +26,7 @@ export default function Library() {
                             <hr/>
                             {ownModules.map((module, index) => (
                                 <div className="card card-user col-md-3 mx-5 mb-5" style={{ width: "18rem;" }}>
-                                    <img src={require('../../assets/uploads/module/' + module.image)} alt="" style={{ width: '100%', height: '13vw', objectFit: 'cover' }}></img>
+                                    <img src={module.image} alt="" style={{ width: '100%', height: '13vw', objectFit: 'cover' }}></img>
                                     <div className="card-body card-body-user">
                                         <h5 className="card-title" style={{ textAlign: "center" }}>{module.label}</h5>
                                         <button className="btn btn-template-user my-2" onClick={()=>{
@@ -44,7 +44,7 @@ export default function Library() {
                             <hr/>
                             {subscribedModules.map((module, index) => (
                                 <div className="card card-user col-md-3 mx-5 mb-5" style={{ width: "18rem;" }}>
-                                    <img src={require('../../assets/uploads/module/' + module.image)} alt="" style={{ width: '100%', height: '13vw', objectFit: 'cover' }}></img>
+                                    <img src={module.image} alt="" style={{ width: '100%', height: '13vw', objectFit: 'cover' }}></img>
                                     <div className="card-body card-body-user">
                                         <h5 className="card-title" style={{ textAlign: "center" }}>{module.label}</h5>  
                                         <button className="btn btn-template-user my-2" onClick={()=>{

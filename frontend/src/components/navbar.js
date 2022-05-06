@@ -11,9 +11,10 @@ export default function Navbar() {
   
   const autoSignOut = async () => {
     const [res, err] = await queryApi('user/autoSignOut/'+ connectedUser.id, null,'GET',false ,process.env.REACT_APP_SECRET );
-    history.push('/signin')
+    
     dispatch(chnageConenctedUser({ type: "disconnected" }))
     localStorage.removeItem('chatbotsession');
+    history.push('/signin')
   }
 
 
@@ -59,10 +60,13 @@ export default function Navbar() {
                 <li><Link to={'/profile'}>Profile</Link></li>
                 <li><a onClick={async () => {
                   const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false,connectedUser.token);                 
+                  
+                  
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                   Cookies.remove('connected')
-                  history.push('/signin')
                   localStorage.removeItem('chatbotsession');
+                  history.push('/signin')
+
                 }}>Sign Out</a></li>
               </ul>
             </li>
@@ -86,12 +90,12 @@ export default function Navbar() {
                 <li><Link to={'/profile'}>Profile</Link></li>
                 <li><Link to={'/myModules'}>My Modules</Link></li>
                 <li><Link to={'/ModuleList'}>Module List</Link></li>
-                <li><Link onClick={async () => { 
+                <li><Link onClick={async () => {                   
                   const [res, err] = await queryApi('user/signout/' + connectedUser.id, null, "GET", false,connectedUser.token);
                   dispatch(chnageConenctedUser({ type: "disconnected" }))
                   Cookies.remove('connected')
-                  history.push('/signin')
                   localStorage.removeItem('chatbotsession');
+                  history.push('/signin')
                 }}>Sign Out</Link></li>
               </ul>
             </li>

@@ -5,17 +5,21 @@ import { queryApi } from "../../utils/queryApi"
 import { chnageConenctedUser } from '../../Redux/slices/sessionSlice';
 import { Link } from "react-router-dom";
 import GoogleLogin from "react-google-login";
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
+import { useSelector } from 'react-redux';
 export default function Signin(props) {
   
-  useEffect(() => {
-    if (Cookies.get('connected')) {
-      history.push('/profile')
-    }
-  }, [])
+  const history = useHistory();
+  
+  var connectedUser = useSelector(selectConnectedUser);
+    useEffect(() => {
+        if (connectedUser.type != "disconnected") {
+            history.push('/profile')
+        }
+    }, [])
   
   const dispatch = useDispatch();
-  const history = useHistory();
   const [errorDisplay, setErrorDisplay] = useState("");
   const [formData, setFormData] = useState({
     email: "",
