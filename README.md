@@ -2,7 +2,7 @@
 
 #  <img src="https://img.icons8.com/bubbles/50/000000/commercial.png"/> About TVT PLATFORM 
 
-Our platform provides courses to users from different domains and levels, it helps the former to create their own modules and share resources (courses <img  height="30" src="https://img.icons8.com/offices/30/000000/courses.png"/> , videos <img  height="30" src="https://img.icons8.com/color/48/000000/video.png"/> , quizzes <img  height="30"  src="https://img.icons8.com/color/48/000000/question-group.png"/> ) with learners.
+Our platform provides courses to users from different domains and levels and helps the former to create their own modules and share resources (courses <img  height="30" src="https://img.icons8.com/offices/30/000000/courses.png"/> , videos <img  height="30" src="https://img.icons8.com/color/48/000000/video.png"/> , quizzes <img  height="30"  src="https://img.icons8.com/color/48/000000/question-group.png"/> ) with learners.
 
 The platform provides to users a social media part where they can add friends and chat <img  height="40"  src="https://img.icons8.com/cute-clipart/64/000000/chat.png"/>  with them. It also contains a chatbot  <img height="40"  src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-chatbot-live-streaming-flaticons-lineal-color-flat-icons.png"/> that takes into consideration your opinion about the whole website and the modules you are subscribed to. 
 
