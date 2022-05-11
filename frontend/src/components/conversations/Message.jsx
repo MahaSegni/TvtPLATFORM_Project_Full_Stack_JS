@@ -3,11 +3,29 @@ import { format } from "timeago.js";
 
 import RcViewer from 'rc-viewer'
 import { useEffect, useState } from "react";
+import { queryApi } from "../../utils/queryApi";
+import axios from "axios";
 
 
-export default function Message({ index, message, own, user, friend }) {
+export default function Message({ rl,index, message,cchat,messages, own, user, friend }) {
   const [isImage, setIsImage] = useState(true);
   const [isReadFile, setIsReadFile] = useState(false);
+
+  
+ async function deleteMessage(id){
+   
+   await axios.get(`${process.env.REACT_APP_API_URL}/messages/delete/`+id).then(async res => {
+   await axios.get(`${process.env.REACT_APP_API_URL}/messages/` +cchat._id).then(resu=>{
+    messages(resu.data);
+   })
+                                         
+})
+
+  
+                                      
+
+ }
+
   /*  <PDFViewer
     document={{
       url: 'https://arxiv.org/pdf/quant-ph/0410100.pdf',
@@ -41,10 +59,11 @@ export default function Message({ index, message, own, user, friend }) {
     <>
 
 
-
+      
       <div className={own ? "message own" : "message"}>
+        
         <div className="messageTop">
-
+       {own== true&& <a className="messageText "style={{backgroundColor:"transparent",marginRight:"10px"}} onClick={()=>{deleteMessage(message._id)}}> <i  style={{color:"red",width:"2px",height:"2px"}}class="far fa-trash-alt"></i></a>}
 
           { own == true && <>
             <p className="messageText ">{message.text && message.text} <br />   {message.image &&
@@ -53,7 +72,7 @@ export default function Message({ index, message, own, user, friend }) {
                   <label>
                     <label  > {isReadFile && <a data-toggle="modal" data-target={`#exampleModal${index}`} style={{ color: "rgb(5, 68, 104)" }}> <i class="far fa-eye fa-sm"></i></a>}
                       <a style={{ marginLeft: "2%" }}
-                        href={'../../../public/chat/' + message.image}
+                        href={message.image}
                         download><i class="fa fa-download fa-sm"></i></a> </label>
 
                     <i class='fa fa-file-text fa-4x ' style={{ margin: 0, marginLeft: 10, color: "#c7c000" }} ></i>
@@ -63,7 +82,7 @@ export default function Message({ index, message, own, user, friend }) {
                 }
                 {isImage && <RcViewer>
 
-                  <img src={'http://localhost:3001/chat/' + message.image}  className="messageimg "></img>
+                  <img src={ message.image}  className="messageimg "></img>
 
                 </RcViewer>}</>
             }</p>
@@ -82,7 +101,7 @@ export default function Message({ index, message, own, user, friend }) {
                 <>
                   {isImage && <RcViewer>
 
-                    <img src={'http://localhost:3001/chat/' + message.image}  className="messageimg " ></img>
+                    <img src={message.image}  className="messageimg " ></img>
 
                   </RcViewer>}
                   {isImage == false &&
@@ -95,14 +114,14 @@ export default function Message({ index, message, own, user, friend }) {
                            <label >
                         <a data-toggle="modal" data-target={`#exampleModal${index}`} style={{ color: "rgb(5, 68, 104)" }}> <i class="far fa-eye fa-sm"></i></a>
                         <a 
-                        href={'../../../public/chat/' + message.image}
+                        href={message.image}
                         download><i class="fa fa-download fa-sm " style={{ marginLeft: "2%" ,marginRight:"2%" }}></i></a> 
                          </label>}
                          {!isReadFile && 
                            <label >
                         <a> <i class="far fa-eye fa-sm"style={{color:"white"}} ></i></a>
                         <a 
-                        href={'../../../public/chat/' + message.image}
+                        href={ message.image}
                         download><i class="fa fa-download fa-sm " style={{ marginLeft: "2%" ,marginRight:"2%" }}></i></a> 
                          </label>}
                     
@@ -136,7 +155,7 @@ export default function Message({ index, message, own, user, friend }) {
                 </button>
               </div>
               <div class="modal-body">
-                {<embed src={'http://localhost:3001/chat/' + message.image} style={{ width: "100%", height: "550px" }} download={message.image} />}
+                {<embed src={message.image} style={{ width: "100%", height: "550px" }} download={message.image} />}
               </div>
 
             </div>

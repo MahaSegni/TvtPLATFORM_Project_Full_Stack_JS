@@ -4,6 +4,7 @@ const multer = require('multer')
 
 var newpath="../frontend/src/assets/uploads/evaluation";
 
+
 const storage = multer.diskStorage({
     destination: function(req,file,cb) {
         cb(null,newpath);
@@ -12,8 +13,8 @@ const storage = multer.diskStorage({
         cb(null, (Math.random() + 1).toString(36).substring(7)+file.originalname)
     } 
 })
-const upload = multer({storage:storage})
 
+const upload=require("../utils/custommulter");
 
 router.get("/get/:idUser/:idModule",evaluationController.getEvaluation);
 router.get("/getToken/:idUser",evaluationController.getToken);

@@ -2,6 +2,7 @@ const CoursModel = require('../Model/Cours');
 const ObjectID = require("mongoose").Types.ObjectId;
 const ModuleModel = require('../Model/Module');
 const UserModle = require("../Model/User");
+const cloudinary=require("../utils/cloudinary");
 module.exports.createModule = async (req, res) => {
   const {label} = req.body
 
@@ -53,9 +54,9 @@ const cour = await newCour.save();
       },
       { new: true },
       (err, docs) => {
-        if (!err) res.send(docs);
+        if (!err) res.send(cour);
         else 
-        return res.status(500).send(err);
+        return res.status(500).send(cour);
       });
 
 }
@@ -257,9 +258,66 @@ module.exports.UpdateComment = async (req, res) => {
   });
 };
 module.exports.uploadImage = async (req, res) => {
-  
+  /*
   if(req.file){
     return res.send({filename: req.file.filename})
+  }*/
+  try{
+    const result=await cloudinary.uploader.upload(req.file.path);
+    console.log(result);
+
+    return res.send({filename:result.secure_url});
+  }catch(err){
+    return res.send(err);
   }
+  
+  
+};
+module.exports.uploadFile = async (req, res) => {
+  //originalname:
+  //mimetype
+  //filename
+  if (!ObjectID.isValid(req.params.id))
+  return res.status(400).send("ID unknown : " + req.params.id);
+  try{
+    var result;
+console.log(req.file)
+  if(req.file.mimetype.startsWith("image")){
+    result = await cloudinary.uploader.upload(req.file.path);
+  }else if (req.file.mimetype.startsWith("video")){
+    result = await cloudinary.uploader.upload(req.file.path,{resource_type: "video"});
+
+  }
+  else{
+    //raw_convert: "aspose" 
+        result = await cloudinary.uploader.upload(req.file.path, { resource_type: "raw" });
+
+      
+  
+  }
+  console.log(result)
+   c=await CoursModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          files: {
+          originalname:req.file.originalname,
+          typeFile: result.format,
+          resource_type: result.resource_type,
+          filenamelocation: result.secure_url
+          },
+        },
+      },
+      { new: true },
+    )
+    res.send(c)
+  }
+    catch(err){
+      console.log(err);
+      
+      return res.send(err);
+    }
+  
+
 };
 

@@ -22,41 +22,12 @@ import UpdateModule from "./UpdateModule";
 import { useApi } from "../../utils/useApi";
 import DetailModule from "./DetailModule";
 import "../../assets/css/cardmodule.css"
+import "../../assets/css/modulerecom.css"
 import RowDetailsFront from "./RowDetailFront";
 import $ from "jquery"
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tabpanel-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
+import ListRecom from "./ListRecom";
+import { fontSize } from "@mui/system";
+import { queryApi } from "../../utils/queryApi";
 
 export default function ListModule() {
 
@@ -66,38 +37,39 @@ export default function ListModule() {
   let idu = "";
   const [addUser, setAddUser] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [changecat, setchangecat] = useState(false);
   const [show, setshow] = useState(false);
   const [modelshow, setmodelshow] = useState(false);
   let [id, setid] = useState("");
   const [category, setCategoory] = useState([]);
+  const [categoryrecom, setCategooryrecom] = useState([
+    { name: "Architecture", value: "Architecture" },
+    { name: "Business Management", value: "Business+%26+Management" },
+    { name: "Computer Science", value: "Computer+Science" },
+  ]);
   const [formShowDetail, setFormShowDetail] = useState({});
   const [selectedId, SetselectedId] = useState(-1);
   const [categoryid, setcategoryid] = useState('');
+  const [categoryidrecom, setcategoryidrecom] = useState('');
   var connectedUser = useSelector(selectConnectedUser)
   const history = useHistory();
+
+  
   /*const [token, errtoken, reloadToken] = useApi('module/getToken/' + connectedUser.id, null, 'GET', false, connectedUser.token);
   if (token == "authorization failed") {
     history.push('/signin')
   }
 */
   const [valuee, setValuee] = React.useState(0);
-  const [modulesbycat, err, reload] = useApi('category/getmodulesfromcategory/' + categoryid, null, 'GET', false);
-
-
   const categoryhandleChange = (event, newValue) => {
     setValuee(newValue);
   };
-  const join = (id__) => {
-    axios.put(`http://localhost:3000/api/module/adduser/${id__}/${connectedUser.id}`)
-      .then(res => {
-        history.push("/ModuleList");
-      })
-      .then(
-        (data) => {
-          setAddUser(true);
-        })
-  }
+  const join = async (id__) => {
+    await queryApi('module/adduser/' + id__ + '/' + connectedUser.id, null, 'PUT', false);
+    setAddUser(true);
+    history.push("/ModuleList");
 
+  }
 
   function handleClick() {
     history.push("/signin");
@@ -111,12 +83,11 @@ export default function ListModule() {
     setValue(newValue);
   };
 
-  const showdetails = (id__) => {
+  const showdetails = async (id__) => {
     setshow(true);
-    axios.get(`http://localhost:3000/api/module/getById/${id__}`)
-      .then(res => {
-        setFormShowDetail(res);
-      })
+    const [mo, err] = await queryApi('module/getById/' + id__, null, 'GET', false);
+    setFormShowDetail(mo);
+
   }
   const handleChangee = (event) => {
     setmodelshow(false)
@@ -125,14 +96,19 @@ export default function ListModule() {
       setmodelshow(true)
     }
   };
+  const handleChangeeRecom = (event) => {
+    //setmodelshow(false)
+    setcategoryidrecom(event.target.value);
+    setchangecat(true);
+  };
   /* find all modules */
   useEffect(async () => {
-    await axios.get('http://localhost:3000/api/module/get').then(res => {
-      setModules(res.data)
-    })
-    await axios.get('http://localhost:3000/api/category/get').then(resu => {
-      setCategoory(resu.data)
-    })
+    const [ca, err1] = await queryApi('module/get', null, 'GET', false);
+    setModules(ca);
+
+    const [cat, err2] = await queryApi('category/get', null, 'GET', false);
+    setCategoory(cat);
+   
   }, [])
   $(document).ready(function () {
     $("#search").on("keyup", function () {
@@ -142,18 +118,7 @@ export default function ListModule() {
       });
     });
   });
-  // affichage category 
-  /*
-                  <ul className="pl-0">
-                    {category.map((category)=>(
-                      <ul style={{cursor: 'pointer', listStyleType : 'none'}} 
-                      key={category} onClick={()=> setCategoory(category)}>
-                          {category.label}
-                      </ul>
-                    )
-                      )}
-                  </ul>
-                  */
+
 
   return connectedUser.type == "user" ? (
     <div >
@@ -164,7 +129,6 @@ export default function ListModule() {
             <p style={{ color: "black" }}>Find the right online course to elevate your career to next level </p>
           </div>
         </div>
-
 
         <section id="courses" class="courses">
           <div class="mx-5 row  ">
@@ -190,19 +154,19 @@ export default function ListModule() {
             </div>
             }
             {add == false &&
-            <div className="col-12 col-lg-7 ms-5 pt-2 ">
-              <div class="panel panel-default">
-                <div class="panel-body p-t-0">
-                  <div class="input-group">
-                    <input type="text" id="search" name="example-input1-group2" class="form-control" placeholder="Search" />
-                    <span class="input-group-btn">
-                      <button type="button" class="btn btn-effect-ripple btn-template"><i class="fa fa-search" ></i></button>
-                    </span>
+              <div className="col-12 col-lg-7 ms-5 pt-2 ">
+                <div class="panel panel-default">
+                  <div class="panel-body p-t-0">
+                    <div class="input-group">
+                      <input type="text" id="search" name="example-input1-group2" class="form-control" placeholder="Search" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-effect-ripple btn-template"><i class="fa fa-search" ></i></button>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-}
+            }
 
           </div>
 
@@ -214,16 +178,16 @@ export default function ListModule() {
 
               {categoryid == "" && <>
                 {add == false && <>
-                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents }) => {
-                  
-                    if (refStudents.filter(r=>r==connectedUser.id).length==0 && connectedUser.id != idowner) {
+                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents, rating }) => {
+
+                    if (refStudents.filter(r => r == connectedUser.id).length == 0 && connectedUser.id != idowner) {
                       return (
                         <>
                           {<>
                             <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                               <div class="course-item" id="mydiv">
 
-                                <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} />
+                                <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} rating={rating} />
 
                                 <div class="my-2">
                                   <button type="button" class="btn btn-template ms-5" onClick={() => join(_id)}>Register now</button>
@@ -258,7 +222,6 @@ export default function ListModule() {
 
               {categoryid != "" &&
                 <>
-
                   <ModuleByCat cat={categoryid} ></ModuleByCat>
                 </>
               }
@@ -267,7 +230,38 @@ export default function ListModule() {
           </div>
         </section>
       </main>
+      {add == false && <div class="container">
+        <div > <label style={{ color: "black", fontSize: "20px" }}>Recommendation</label> </div>
+        <hr />
+        
+        <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <Select
+
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={categoryidrecom}
+                  autoWidth
+                  label="Category"
+                  onChange={handleChangeeRecom}
+                
+                       >
+                          {categoryrecom.map(({ name, value }) => (
+                    <MenuItem value={value}>{name}</MenuItem>
+                  ))}
+                  
+                </Select>
+              </FormControl>
+              <br/>
+
+
+        
+        <div>
+          <br/>
+        {changecat && categoryidrecom && <ListRecom cate={categoryidrecom} />}</div>
+      </div>}
     </div>
+
 
   ) : connectedUser.type == "disconnected" ? (
 
@@ -279,7 +273,6 @@ export default function ListModule() {
             <p>Find the right online course to elevate your career to next level </p>
           </div>
         </div>
-
 
         <section id="courses" class="courses">
           {add == false && <div class=" col-lg-2 col-md-2 ">
@@ -310,22 +303,19 @@ export default function ListModule() {
 
               {categoryid == "" && <>
                 {add == false && <>
-                  {modules.map(({ label, description, date_creation, _id, idowner, statusModule, image, refStudents }) => {
-
+                  {modules.map((e) => {
                     return (
                       <>
                         {<>
                           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
                             <div class="course-item">
 
-                              <RowDetailsFront label={label} image={image} idowner={idowner} refStudents={refStudents} id={_id} />
+                              <RowDetailsFront label={e.label} image={e.image} idowner={e.idowner} refStudents={e.refStudents} id={e._id} rating={e.rating} />
                               <div class="my-2">
                                 <button type="button" class="btn btn-template ms-5" onClick={handleClick}>Register now</button>
-
-
                                 <button type="button" class="btn btn-template mx-3" onClick={() => {
                                   setAdd(true)
-                                  SetselectedId(_id)
+                                  SetselectedId(e._id)
                                 }}>Show more</button>
                               </div>
                             </div>

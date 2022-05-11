@@ -13,7 +13,6 @@ import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import "../../assets/css/cardmodule.css"
 export default function UpdateModule({ props, update, idu, reload, tabindex }) {
   let id = idu;
-
   console.log(idu)
   var fileName = "";
   let myCurrentDate = new Date();
@@ -22,112 +21,104 @@ export default function UpdateModule({ props, update, idu, reload, tabindex }) {
   const [ckedtiorValide, setckedtiorValide] = useState(false);
   const [ckedtiormessage, setckedtiormessage] = useState("");
   var connectedUser = useSelector(selectConnectedUser)
-  
   const [module, setModule] = useState({
     label: ""
   });
 
 
   useEffect(async () => {
-    await axios.get('http://localhost:3000/api/module/getById/' + id).then(res => {
-      setModule(res.data)
-    })
+    const [ca, err1] = await queryApi('module/getById/' + id, null, 'GET', false);
+    setModule(ca);
   }, [])
 
-  
-
   const onChange = (e) => {
-    console.log(e.target.value)
+    //console.log(e.target.value)
     setModule({ ...module, [e.target.name]: e.target.value })
   }
   const [uploadImage, setUploadImage] = useState({
     image: ""
-})
-const onChangeFile = (e) => {
+  })
+  const onChangeFile = (e) => {
     setUploadImage({ ...uploadImage, image: e.target.files[0] })
-    //updateImage()
-}
+  }
 
   const refresh = async (e) => {
-
     window.location.reload(true);
   }
 
   const onSubmit = async (e) => {
     e.preventDefault();
     module.description = ckedtiorValue;
-    let result=await updateModule()
+    let result = await updateModule()
     window.location.reload(true);
   }
   const updateModule = async () => {
     const [result, err] = await queryApi('module/update', module, "PUT", false);
- if (uploadImage.image != "") {
-       const [imageResult, err] = await queryApi('module/uploadPicture/' + result._id, uploadImage, "PUT", true, connectedUser.token)
-       
+    if (uploadImage.image != "") {
+      const [imageResult, err] = await queryApi('module/uploadPicture/' + result._id, uploadImage, "PUT", true, connectedUser.token)
     }
-    
     return result
-}
+  }
 
   const { label } = module;
 
-  ;
+
   return (
     <>
-    {module &&
-    <div>
-      <a class="btn btn-template" onClick={refresh} ><i class="fas fa-arrow-left"></i></a>
-      <Wrapper>
+      {module &&
+        <div>
+          <a class="btn btn-template" onClick={refresh} ><i class="fas fa-arrow-left"></i></a>
+          <Wrapper>
 
-        <Form class="w-50 mx-auto" onSubmit={onSubmit} style={{ border: "2px solid #5FCF80", padding: 40, borderRadius: 30, width: "84%", marginBottom: 15, boxShadow: "2px 2px 2px #5FCF80" }}>
-          <h4 class="logo  " style={{ textAlign: "center", color: "#5fcf80" }}>update Module</h4>
+            <Form class="w-50 mx-auto" onSubmit={onSubmit} style={{ border: "2px solid #5FCF80", padding: 40, borderRadius: 30, width: "84%", marginBottom: 15, boxShadow: "2px 2px 2px #5FCF80" }}>
+              <h4 class="logo  " style={{ textAlign: "center", color: "#5fcf80" }}>update Module</h4>
 
-          <div class="form-group">
-            <input style={{ marginTop: 30 }} class="form-control" placeholder="Label"
-              type='text'
-              name="label"
-              value={module.label}
-              onChange={(e) => onChange(e)} />
-          </div>
-          <div class="form-group my-3">
-            <CKEditor
-              editor={ClassicEditor}
-              data={module.description}
+              <div class="form-group">
+                <input style={{ marginTop: 30 }} class="form-control" placeholder="Label"
+                  type='text'
+                  name="label"
+                  value={module.label}
+                  onChange={(e) => onChange(e)} />
+              </div>
+              <div class="form-group my-3">
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={module.description}
 
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                setckedtiorValue(data);
-                if (data.length == 0) {
-                  setckedtiormessage("texte is required");
-                  setckedtiorValide(false);
-                } else {
-                  setckedtiormessage("");
-                  setckedtiorValide(true);
-                }
-                console.log(ckedtiorValide)
-              }
-              }
-            />
-          </div>
-          <FormGroup>
-        <label for="file" class="label-file">Choose image</label>
-                  <input id="file" class="input-file" 
-                          type='file'
-                          name="image"
-                          onChange={(e)=>onChangeFile(e)}
-                  />
-        </FormGroup>
-          <div className="mt-3 text-center" >
-            <button type="submit" className="btn btn-md btn-template" style={{ marginRight: "2%" }} disabled={!ckedtiorValide}>Save</button>
-            <button className="btn btn-md btn-update" id="cancelBtn" type="reset" onClick={refresh}  >Cancel</button>
-          </div>
-        </Form>
-      </Wrapper>
-      </div>
-}
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                    setckedtiorValue(data);
+                    if (data.length == 0) {
+                      setckedtiormessage("texte is required");
+                      setckedtiorValide(false);
+                    } else {
+                      setckedtiormessage("");
+                      setckedtiorValide(true);
+                    }
+                    console.log(ckedtiorValide)
+                  }
+                  }
+                />
+              </div>
+              <FormGroup>
+                <label for="file" class="label-file">Choose image</label>
+                <input id="file" class="input-file"
+                  type='file'
+                  name="image"
+                  onChange={(e) => onChangeFile(e)}
+                />
+              </FormGroup>
+              <div className="mt-3 text-center" >
+                <button type="submit" className="btn btn-md btn-template" style={{ marginRight: "2%" }} disabled={!ckedtiorValide}>Save</button>
+                <button className="btn btn-md btn-update" id="cancelBtn" type="reset" onClick={refresh}  >Cancel</button>
+              </div>
+            </Form>
+          </Wrapper>
+        </div>
+      }
     </>
 
-);
+  );
 }
 
 const FormButton = styled.button`

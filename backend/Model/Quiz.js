@@ -24,6 +24,8 @@ var Quiz = new Schema({
     type: [
         {
           texte: String,
+          code:String,
+          language:String,
           QuestionType:String,
 
           Responses: {
@@ -44,6 +46,16 @@ var Quiz = new Schema({
         {
           idUser:String,
           Note:Number,
+          totalClicksofmap:Number,
+          Behavior:String,
+          time:{
+            type:{
+              h:Number,
+              m:Number,
+              s:Number,
+              
+            },
+          }
         }
     ]
 }

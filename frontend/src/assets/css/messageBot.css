@@ -1,0 +1,106 @@
+.messageBot {
+
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: break-word;
+  
+  }
+  
+  .messageBotTop{
+      display: flex;
+  }
+  
+  .messageBotImg {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+  }
+  
+  .messageBotImgNotOwner {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+  
+  .messageBotText{
+      padding: 10px;
+      border-radius: 20px;
+      background-color: #5fcf80;
+      opacity: 0.8;
+      color: white;
+      max-width: 300px;
+  }
+
+  .messageBotTextResponse{
+    padding: 10px;
+    border-radius: 20px;
+    background-color: transparent;
+    opacity: 0.8;
+    color: black;
+    border:black 1px solid;
+    max-width: 300px;
+}
+
+.messageBotTextResponse:hover{
+    padding: 10px;
+      border-radius: 20px;
+      background-color: #5fcf80;
+      opacity: 0.8;
+      color: white;
+      max-width: 300px;
+      border:none;
+      cursor: pointer;
+}
+
+.messageBotTextRsp{
+  padding: 8px;
+  border-radius: 20px;
+  background-color: transparent;
+  opacity: 0.8;
+  color: black;
+  border:black 1px solid;
+  max-width: 300px;
+  margin: 0px 0px 8px !important;
+}
+
+.messageBotTextRsp:hover{
+    padding: 8px;
+    border-radius: 20px;
+    background-color: #5fcf80;
+    opacity: 0.8;
+    color: white;
+    max-width: 300px;
+    border:#5fcf80 1px solid;
+    cursor: pointer;
+    margin:0px 0px 8px !important;
+}
+
+  .messageBotBottom{
+      font-size: 12px;
+      margin-bottom:2% !important;
+  }
+  
+  .messageBot.own{
+      align-items: flex-end;
+  }
+  
+  .messageBot.own .messageBotText{
+      background-color: rgb(245, 241, 241);
+      z-index: 0 !important;
+      color: black;
+      
+  }
+  
+  
+  .messageBotimg {
+    border-radius: 10px;
+    transition: 5s;
+    height: 100px;
+    width: 100px;
+  }
+  
+  

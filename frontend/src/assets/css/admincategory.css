@@ -16,14 +16,6 @@
     display: none;
 }
 
-input{
-	outline:none;
-}
-
-body{
-
-    margin-top:20px;
-}
 
 .cardCategory {
     background-color: #fff;
@@ -62,56 +54,6 @@ body{
 
 .rounded-circle {
     border-radius: 50% !important;
-}
-
-.avatar.avatar-sm {
-    font-size: 12px;
-    height: 30px;
-    width: 30px;
-}
-.avatar {
-    background: #6777ef;
-    border-radius: 50%;
-    color: #e3eaef;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: 300;
-    margin: 0;
-    position: relative;
-    vertical-align: middle;
-    line-height: 1.28;
-    height: 45px;
-    width: 45px;
-}
-
-
-.badge {
-    vertical-align: middle;
-    padding: 7px 12px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    border-radius: 30px;
-    font-size: 12px;
-}
-
-.progress-bar {
-    display: -ms-flexbox;
-    display: -webkit-box;
-    display: flex;
-    -ms-flex-direction: column;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    flex-direction: column;
-    -ms-flex-pack: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-    overflow: hidden;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    background-color: #007bff;
-    -webkit-transition: width .6s ease;
-    transition: width .6s ease;
 }
 
 .bg-success {

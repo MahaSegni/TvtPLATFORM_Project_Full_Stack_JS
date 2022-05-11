@@ -12,6 +12,9 @@ import Timer from "./Timer";
 import { each } from "jquery";
 import { queryApi } from "../../utils/queryApi";
 import { useHistory } from 'react-router-dom';
+import { CodeBlock, nord  } from "react-code-blocks";
+
+var timestart=new Date(new Date().getTime());
 
 const QuizStudent = () => {
     let { id } = useParams();
@@ -20,18 +23,18 @@ const QuizStudent = () => {
     const [Touched, setTouched] = useState([])
     const [disabledSubmit, setdisabledSubmit] = useState(false);
     const [score, setScore] = useState()
+    const [totalClicksofmap,settotalClicksofmap]=useState(0)
     const [viewMode, setViewMode] = useState(1)
     const history = useHistory()
 
     var connectedUser = useSelector(selectConnectedUser)
     const [quiz, errquiz, reloadquiz] = useApi('quiz/find/' + id, null, 'GET', false, connectedUser.token);
-
     if(connectedUser.type=="disconnected"){
         history.push("/signin")
-  
       }
 
     async function setChrono() {
+        if(viewMode!=2){
         var interval_id = window.setInterval(() => { }, 99999);
         for (var i = 0; i < interval_id; i++)
             window.clearInterval(i);
@@ -50,12 +53,11 @@ const QuizStudent = () => {
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
+                  if(document.getElementById("heure")!=null){
                 document.getElementById("heure").innerHTML = hours + " H"
                 document.getElementById("minute").innerHTML = minutes + " M"
                 document.getElementById("seconde").innerHTML = seconds + " s"
-
-
+                  }
                 if (distance < 0) {
                     clearInterval(x);
                     document.getElementById("minute").parentNode.removeChild(document.getElementById("minute"));
@@ -66,6 +68,7 @@ const QuizStudent = () => {
                 }
             }, 1000);
         }
+    }
     }
     useEffect(async () =>  {
         if (quiz) {
@@ -94,8 +97,12 @@ const QuizStudent = () => {
     }, [quiz]);
 
     async function updateTouched(id) {
+        settotalClicksofmap(totalClicksofmap + 1)
+    
         if (Touched.indexOf(id) == -1)
             setTouched([...Touched, id])
+
+
     }
     async function addToResponse(idquestion, idreponse, type) {
         if (staticRep[idquestion] && type == "CheckBox") {
@@ -117,7 +124,7 @@ const QuizStudent = () => {
     }
     async function saveReponse() {
         //calcul score;
-
+        
         let s = quiz.Questions.length
         quiz.Questions.map((q) => {
             let correctArray = q.Responses.filter(r => r.correct == true);
@@ -127,7 +134,6 @@ const QuizStudent = () => {
             }
             else if (correctArray.length != staticRep[q._id].length) {
                 test = false;
-                console.log("question m1 " + q.texte);
 
             } else {
 
@@ -136,13 +142,11 @@ const QuizStudent = () => {
                     let index = staticRep[q._id].indexOf(correctArray[i]._id);
                     if (index == -1) {
                         test = false;
-                        console.log("question m2 " + q.texte);
 
                     }
 
 
                 }
-                console.log(test);
 
 
             }
@@ -154,18 +158,31 @@ const QuizStudent = () => {
         })
 
 
-        //Add Score
+        //Add Score + TIME
+        const TimeEnd = new Date(new Date().getTime());
+        let dquiz =  TimeEnd-timestart;
+
+        let hquiz = Math.floor((dquiz % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let mquiz = Math.floor((dquiz % (1000 * 60 * 60)) / (1000 * 60));
+        let squiz = Math.floor((dquiz % (1000 * 60)) / 1000);
+
+        
         const [, err] = await queryApi('quiz/addResponseScore', {
 
             idQuiz: quiz._id,
             idUser: connectedUser.id,
-            score: s
+            score: s,
+            time:{
+                  h:hquiz,
+                  m:mquiz,
+                  s:squiz,
+              },
+            totalClicksofmap : totalClicksofmap
         }
             , 'PATCH', false, connectedUser.token);
 
         for (const i in staticRep) {
 
-            console.log(i);
             for (const j in staticRep[i]) {
 
                 const [, err] = await queryApi('quiz/addResponse', {
@@ -224,7 +241,6 @@ const QuizStudent = () => {
                                             (<div class="active" onClick={() => {
                                                 setQuestionIndex(index);
                                                 updateTouched(question._id);
-                                                console.log(Touched)
                                             }}>{index + 1}</div>) :
                                             Touched.indexOf(question._id) == -1 || staticRep[question._id] ?
                                                 (<div onClick={() => {
@@ -253,7 +269,7 @@ const QuizStudent = () => {
                     </div>
                     <div class="col">
 
-                        <Card>
+                        <Card style={{"min-height":"387px"}}>
                             <Card.Header>
                                 <Card.Title>
                                     <h1 class="pull-left">{quiz.title}</h1><h3 class="pull-right">{QuestionIndex + 1}/{quiz.Questions.length}</h3>
@@ -263,9 +279,18 @@ const QuizStudent = () => {
                             <Card.Body>
 
                                 {quiz.Questions.map((question, index) => (
-                                    index == QuestionIndex ?
-                                        (<div key={index}  >
+                                    //index == QuestionIndex ?
+                                        <div key={index} hidden={(index!=QuestionIndex)} >
                                             <div>{question.texte}</div>
+                                            {question.code&&
+                                             <CodeBlock
+                                             text={question.code}
+                                             language={question.language}
+                                             showLineNumbers={true}
+                                             theme={nord}
+                                             wrapLines
+                                           />
+                                            }
                                             {question.QuestionType == "Radio" &&
                                                 question.Responses.map((reponse, index) => (
 
@@ -306,41 +331,8 @@ const QuizStudent = () => {
                                                     }
                                                 </div>
                                             }
-                                        </div>) : (<div key={index} hidden="true" >
-                                            <div>{question.texte}</div>
-                                            {question.QuestionType == "Radio" &&
-                                                question.Responses.map((reponse, index) => (
-
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name={question.texte} onClick={() => addToResponse(question._id, reponse._id, question.QuestionType)} />
-                                                        <label class="form-check-label" name={question.texte} >
-                                                            {reponse.texte}
-                                                        </label>
-                                                    </div>
-
-
-                                                ))
-
-                                            }
-                                            {question.QuestionType == "CheckBox" &&
-                                                question.Responses.map((reponse, index) => (
-                                                    <div class="form-check" key={index}>
-                                                        <input class="form-check-input" type="checkbox" value={reponse.texte} onClick={() => addToResponse(question._id, reponse._id, question.QuestionType)} />
-                                                        <label class="form-check-label" >
-                                                            {reponse.texte}
-                                                        </label>
-                                                    </div>
-                                                ))}
-                                            {question.QuestionType == "Select" &&
-                                                <div class="list-group">
-                                                    {question.Responses.map((reponse, index) => (
-                                                        <button type="button" class="list-group-item list-group-item-action" onClick={() => addToResponse(question._id, reponse._id, question.QuestionType)}>{reponse.texte}</button>
-
-                                                    ))
-                                                    }
-                                                </div>
-                                            }
-                                        </div>)
+                                        </div> 
+                                           
 
 
                                 ))
@@ -357,7 +349,8 @@ const QuizStudent = () => {
                                     }}>Next<FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
                                 }
                                 {QuestionIndex == quiz.Questions.length - 1 &&
-                                    <button class="btn pull-right" disabled={!disabledSubmit} onClick={() => saveReponse()}>Submit<FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
+                                    <button class="btn pull-right" disabled={!disabledSubmit} onClick={() => {setdisabledSubmit(false)
+                                        saveReponse()}}>Submit<FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon></button>
                                 }
 
                                 {QuestionIndex > 0 &&
@@ -398,6 +391,15 @@ const QuizStudent = () => {
                                     index == QuestionIndex ?
                                         (<div key={index}  >
                                             <div>{question.texte}</div>
+                                            {question.code&&
+                                             <CodeBlock
+                                             text={question.code}
+                                             language={question.language}
+                                             showLineNumbers={true}
+                                             theme={nord}
+                                             wrapLines
+                                           />
+                                            }
                                             {question.QuestionType == "Radio" &&
                                                 question.Responses.map((reponse, index) => (
                                                     <div>

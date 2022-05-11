@@ -1,16 +1,26 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { queryApi } from "../../utils/queryApi"
 import { chnageConenctedUser } from '../../Redux/slices/sessionSlice';
 import { Link } from "react-router-dom";
 import GoogleLogin from "react-google-login";
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
+import { useSelector } from 'react-redux';
+import axios from "axios";
 export default function Signin(props) {
   
-
-  const dispatch = useDispatch();
   const history = useHistory();
+  
+  var connectedUser = useSelector(selectConnectedUser);
+    useEffect(() => {
+        if (connectedUser.type != "disconnected") {
+            history.push('/profile')
+        }
+    }, [])
+  
+  const dispatch = useDispatch();
   const [errorDisplay, setErrorDisplay] = useState("");
   const [formData, setFormData] = useState({
     email: "",
@@ -35,8 +45,9 @@ export default function Signin(props) {
         let userResult = { id: result._id, email: result.email, type: result.typeUser, name: result.name, lastName: result.lastName, phone: result.phone, birthDate: result.birthDate, image: result.image, token: result.token, connectionType: "default", pictureType: "internal" }
         dispatch(chnageConenctedUser(userResult))
       }
-      window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+result.name +" "+ result.lastName ,own:false}]));
-      history.push('/')
+      window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+result.name +" "+ result.lastName ,own:false},{text:"Do you want to answer some questions? " ,own:false,seen:false,responses:[{text:"yes",value:0},{text:"no",value:.0}]}]));
+      await axios.get("http://localhost:3000/api/conversations/getnotif/" + result._id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
+      history.push('/');
       Cookies.set('connected', 'true', { expires: 1 })
     }
 
@@ -55,15 +66,14 @@ export default function Signin(props) {
       else {
         if (resultGoogleLogin.image.startsWith('https')) {
           let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType: "google", pictureType: "external" }
-          dispatch(chnageConenctedUser(googleUserResult))
-          
+          dispatch(chnageConenctedUser(googleUserResult))          
          }
         else {
           let googleUserResult = { id: resultGoogleLogin._id, email: resultGoogleLogin.email, type: resultGoogleLogin.typeUser, name: resultGoogleLogin.name, lastName: resultGoogleLogin.lastName, phone: resultGoogleLogin.phone, birthDate: resultGoogleLogin.birthDate, image: resultGoogleLogin.image, token: resultGoogleLogin.token, connectionType: "google", pictureType: "internal" }
           dispatch(chnageConenctedUser(googleUserResult))
-          
         }
-        window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+resultGoogleLogin.name +" "+ resultGoogleLogin.lastName ,own:false}]));
+        window.localStorage.setItem("chatbotsession",JSON.stringify([{text:"Hello "+resultGoogleLogin.name +" "+ resultGoogleLogin.lastName ,own:false},{text:"Do you want to answer some questions? " ,own:false,responses:[{text:"yes",value:0},{text:"no",value:.0}]}]));
+        await axios.get("http://localhost:3000/api/conversations/getnotif/" + resultGoogleLogin._id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
         history.push('/')
         Cookies.set('connected', 'true', { expires: 1 })
       }

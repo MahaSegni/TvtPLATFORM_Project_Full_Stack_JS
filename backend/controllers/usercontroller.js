@@ -8,6 +8,8 @@ const FriendModel = require('../Model/Friend');
 const FriendController = require('../controllers/friendController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const puppeteer = require('puppeteer');
+const cloudinary = require("../utils/cloudinary");
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -187,7 +189,7 @@ module.exports.updateUser = async (req, res) => {
                 if (user.typeUser == "googleUser") {
                     user.typeUser = "user"
                 }
-                
+
                 res.status(200).send(user)
             } else {
                 res.status(401).send()
@@ -215,7 +217,7 @@ module.exports.forgetPassword = async (req, res) => {
         } catch (err) {
             res.send(err)
         }
-    }else{
+    } else {
         res.status(401).send()
     }
 }
@@ -377,11 +379,17 @@ module.exports.updateUserCoursePreferences = async (req, res) => {
 
 module.exports.uploadPicture = async (req, res) => {
     try {
-        UserModel.findById(req.params.id, (err, user) => {
+        UserModel.findById(req.params.id, async (err, user) => {
             if ((req.headers['authorization'] == user.token) && (user.state != -1)) {
-                user.image = req.file.filename
-                user.save()
-                res.status(200).send(user.image)
+                const result = await cloudinary.uploader.upload(req.file.path);
+                if (result) {
+                    user.image = result.secure_url
+                    user.save()
+                    res.status(200).send(user.image)
+                }
+                else {
+                    res.status(500).send()
+                }
             } else {
                 res.status(401).send()
             }
@@ -570,7 +578,7 @@ module.exports.refreshUser = async (req, res) => {
             }
             res.send(user)
         })
-    }else {
+    } else {
         res.status(401).send()
     }
 }
@@ -587,10 +595,83 @@ module.exports.autoSignOut = async (req, res) => {
     }
 }
 
+module.exports.courseRecommendations = async (req, res) => {
+    try {
+        UserModel.findById(req.params.id, async (err, user) => {
+            if (user) {
+                if ((req.headers['authorization'] == user.token) && (user.state != -1)) {
+                    let coursesList = []
+                    let result = []
+                    const browser = await puppeteer.launch({ headless: true });
+                    const page = await browser.newPage();
+                    const urls = [
+                        "https://www.edx.org/search?tab=program",
+                        "https://www.edx.org/search?tab=program&page=2",
+                        "https://www.edx.org/search?tab=program&page=3",
+                    ]
+                    for (let i = 0; i < urls.length; i++) {
+
+                        const promise = page.waitForNavigation({ waitUntil: 'networkidle2' });
+                        await page.goto(`${urls[i]}`);
+                        await promise;
+                        let courses = await page.evaluate(() => {
+                            let cours = [];
+                            let elements = document.querySelectorAll('div.discovery-card');
+
+                            for (elem of elements) {
+                                titre = elem.querySelector('h3.card-title').querySelector('span').querySelector('span').textContent.trim().match(/[A-Z][a-z]+/g),
+                                    cours.push({
+                                        title: titre.join(' '),
+                                        img: elem.querySelector('img.hero-bg-image').src,
+                                        link: 'https://www.edx.org/' + elem.querySelector('a.discovery-card-link').getAttribute("href"),
+                                    })
+                            }
+                            return cours;
+                        })
+                        coursesList.push.apply(coursesList, courses)
+                    }
+                    await browser.close();
+                    for (let j = 0; j < coursesList.length; j++) {
+                        for (let k = 0; k < user.coursepreferences.length; k++) {
+                            if (coursesList[j].title.toUpperCase().indexOf(user.coursepreferences[k].toString().toUpperCase()) > -1) {
+                                if (!result.includes(coursesList[j])) {
+                                    result.push(coursesList[j])
+                                }
+                            }
+                        }
+                    }
+
+                    if (result.length == 0) {
+                        let number = Math.floor(Math.random() * (coursesList.length - 6))
+                        res.send(coursesList.slice(number, number + 6))
+                    }
+                    else if (result.length < 6) {
+                        res.send(result)
+                    }
+                    else {
+                        let number = Math.floor(Math.random() * (result.length - 6))
+                        res.send(result.slice(number, number + 6))
+                    }
+                }
+                else {
+                    res.status(401).send()
+                }
+            }
+        })
+    } catch (err) {
+        res.send(err)
+    }
+
+}
+
+
+
+
+
 const deleteFriend = async (user, friend) => {
-    for(let i in friend.reffriends){
-        await FriendModel.findById(friend.reffriends[i],(err,fr) => {
-            if(fr.iduser == user._id){
+    for (let i in friend.reffriends) {
+        await FriendModel.findById(friend.reffriends[i], (err, fr) => {
+            if (fr.iduser == user._id) {
                 fr.remove()
                 friend.reffriends.pull(friend.reffriends[i])
                 friend.save()

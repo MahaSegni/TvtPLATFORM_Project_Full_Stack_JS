@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import { queryApi } from "../../utils/queryApi"
 import { useHistory } from "react-router-dom";
-
+import Cookies from 'js-cookie';
+import { selectConnectedUser } from '../../Redux/slices/sessionSlice';
+import { useSelector } from 'react-redux';
 export default function Signup(props) {
-
+   
     const history = useHistory();
+    var connectedUser = useSelector(selectConnectedUser);
+    useEffect(() => {
+        if (connectedUser.type != "disconnected") {
+            history.push('/profile')
+        }
+    }, [])
     const [errorDisplay, setErrorDisplay] = useState("");
     const [formErrors, setFormErrors] = useState({})
 

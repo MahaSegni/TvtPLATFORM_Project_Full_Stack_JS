@@ -74,13 +74,12 @@ function Admincategory() {
 
     return result
   }
-  const OnDelete = (id__) => {
+  const OnDelete =async (id__) => {
     if (window.confirm("are you sure to delete this category")) {
-
-      axios.delete(`http://localhost:3000/api/category/delete/${id__}`)
-        .then(res => {
+      await queryApi('category/delete/' + id__, null, 'DELETE', false);
+      
           window.location.reload(true);
-        })
+      
     }
   }
   const [uploadImage, setUploadImage] = useState({
@@ -92,7 +91,7 @@ function Admincategory() {
   }
   
   useEffect(async () => {
-    await axios.get("http://localhost:3000/api/category/get").then((res) => {
+    await axios.get(`${process.env.REACT_APP_API_URL}/category/get`).then((res) => {
       setCategory(res.data);
       setShowStat(true)
     })
@@ -148,20 +147,17 @@ function Admincategory() {
           <section id="courses" class="courses">
             <div class="container" data-aos="fade-up">
               <div class="row" data-aos="zoom-in" data-aos-delay="100">
-
                 {currentPosts.map(({ _id, label, image, modules }) => {
                   return (
-
                     <>
-
                       <div class="card cardCategory mb-3">
                         <div class="card-body">
                           <div class="d-flex flex-column flex-lg-row">
                             {image != null &&
-                              <img class="img-fluid rounded-3 me-4 mb-2" alt="..." src={require('../../assets/uploads/module/' + image)} style={{ height: "70px", width: "90px" }} />
+                              <img class="img-fluid rounded-3 me-4 mb-2" alt="..." src={image} style={{ height: "70px", width: "90px" }} />
                             }
                             {image == null &&
-                              <img class="img-fluid rounded-3 me-4 mb-2" src={require('../../assets/img/Courses.jpg')} alt="" style={{ height: "70px", width: "90px" }} />}
+                              <img class="img-fluid rounded-3 me-4 mb-2" src="https://res.cloudinary.com/tvtplatform/image/upload/v1651755026/jqozldif65ylqudwzm2u.jpg" alt="" style={{ height: "70px", width: "90px" }} />}
 
                             <div class="row flex-fill">
                               <div class="col-sm-5">

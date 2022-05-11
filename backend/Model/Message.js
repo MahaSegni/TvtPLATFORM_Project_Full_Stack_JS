@@ -16,6 +16,9 @@ var Message = new Schema({
     text : {
         type:String
     },
+    seen:{
+        type:Boolean
+    },
     createdAt:{
         type:Date,
         default: Date.now

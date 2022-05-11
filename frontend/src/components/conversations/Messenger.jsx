@@ -10,12 +10,14 @@ import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { selectConnectedUser } from "../../Redux/slices/sessionSlice";
 import { Dropdown } from 'react-bootstrap';
-import $ from 'jquery'
+import $, { data } from 'jquery'
 import { queryApi } from "../../utils/queryApi";
 import Picker from 'emoji-picker-react';
-export default function Messenger({ setMessenger }) {
-
+export default function Messenger({setMessenger }) {
+  
+ 
   const [uploadImage, setUploadImage] = useState({image:""})
+ 
 
   const [friend, setFriend] = useState(null);
   const [needrl, setNeedrl] = useState(false);
@@ -28,21 +30,87 @@ export default function Messenger({ setMessenger }) {
   const id = useSelector(selectConnectedUser).id
   const user = useSelector(selectConnectedUser)
   const scrollRef = useRef();
+  let [haveCurrent,setHaveCurrent]=useState(null) 
   const[emojiActive,setemojiActive]=useState(false)
   let [conversationFriend, setConversationFriend] = useState(null);
   const [fileuploaded,setfileuploaded]=useState(false)
+ 
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const ref = useRef();
+  let [dataId,setDataId]=useState(null)
+  useEffect(async() => {
+  await axios.get(
+    `${process.env.REACT_APP_API_URL}/conversations/getnotif/`+id)
+  .then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))});
+  },[])
+
+  
   useEffect(() => {
+  
     socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) => {
+   
+    socket.current.on("getCurrent",(data)=>{
+   
+      setHaveCurrent(data.iscurrent)});
+    socket.current.on("getMessage",  (data)  => {
+      setDataId(data.conversationId)
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
-        image:data.image
+        image:data.image,
+        seen:data.seen,
+        conversationId:data.conversationId
       });
-    });}, []);
+       }); 
+    }, []);
+    useEffect(()=>{
+      
+   socket.current.on("getRequestCurrent",  (data)  => {
+    if (currentChat){
+    if(data.conversationId==currentChat._id){
+      socket.current.emit("sendcurrent", {
+        sender:data.sender,
+        iscurrent:true,
+        })
+    }  else{
+      socket.current.emit("sendcurrent", {
+        sender:data.sender,
+        iscurrent:false,
+        })
+    }}else{
+      socket.current.emit("sendcurrent", {
+        sender:data.sender,
+        iscurrent:false,
+        })
+
+    }     
+  });
+
+ 
+    })
+
+     useEffect(async() => {
+      
+        
+      dataId && currentChat&&  currentChat._id!=dataId &&
+      await axios.get
+      (`${process.env.REACT_APP_API_URL}/conversations/getnotif/`+id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
+    
+
+
+    });
+ 
+    dataId && !currentChat &&
+    await axios.get(`${process.env.REACT_APP_API_URL}/conversations/getnotif/`+id).then( res => { window.localStorage.setItem("notif",JSON.stringify(res.data ))
+
+  } );   
+        
+   }, [ arrivalMessage, currentChat]);
+  
+
+      
+
 
 
  //---getConversations---//
@@ -79,7 +147,8 @@ const onChangeFile = (e) => {  setfileuploaded(true)
 
   useEffect(() => {if (currentChat){const friendId = currentChat.members.find((m) => m !== user.id );
                                     const getUser = async () => {try {
-                                                                      const res = await axios.get("http://localhost:3000/api/user/getGeneralInfo/" + friendId)
+                                                                      const res = await axios.get(
+                                                                        `${process.env.REACT_APP_API_URL}/user/getGeneralInfo/`+friendId)
                                                                       .then( res => { setFriend(res.data) });
                                                                       } catch (err) {console.log(err);}
                                                                 };
@@ -92,15 +161,21 @@ const onChangeFile = (e) => {  setfileuploaded(true)
 
   //---getMessages---//
   
+  
+  useEffect(async() => {
+    
+   arrivalMessage &&
+     currentChat?.members.includes(arrivalMessage.sender) &&
+    
+  
+    
+     setMessages((prev) => [...prev, arrivalMessage]);  
+
  
-  useEffect(() => {
-    arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage.sender) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
-    const getMessages = async () => {try {const res = await axios.get("http://localhost:3000/api/messages/" + currentChat?._id);
+    const getMessages = async () => {try {const res = await axios.get(`${process.env.REACT_APP_API_URL}/messages/` + currentChat?._id);
                                           setMessages(res.data);
                                          } catch (err) {console.log(err);}
                                     };
@@ -111,31 +186,52 @@ const onChangeFile = (e) => {  setfileuploaded(true)
   const handleKeyPress = (e) => {if (e.key === 'Enter') { handleSubmit(e);}}
 
   const handleSubmit = async (e) => 
-  { const message = {sender: id,text: newMessage, conversationId: currentChat._id,};
-    const receiverId =await  currentChat.members.find((member) => member !== id);
+  {const receiverId =await  currentChat.members.find((member) => member !== id);
+    socket.current.emit("sendrequestcurrent", {senderId: id,receiverId: receiverId,conversationId: currentChat._id});
+    
+    if(haveCurrent!=null)
+    {
+      const message = {sender: id,text: newMessage, conversationId: currentChat._id,seen:haveCurrent};
+     
+      
     if (fileuploaded)
     {const data = new FormData() 
 
        data.append('image', uploadImage["image"])
-      axios.post("http://localhost:3000/api/messages", message).then(
+      axios.post( `${process.env.REACT_APP_API_URL}/messages` ,message).then(
         res=>{
           ref.current.value = "";
 
-        axios.post("http://localhost:3000/api/messages/upload/"+res.data._id,data,
+        axios.post(`${process.env.REACT_APP_API_URL}/messages/upload/` +res.data._id,data,
         {headers: {'Content-Type': 'form-data'}
       }).then(res=>{setNewMessage("");
                     setUploadImage({ ...uploadImage, image: ""})
                     setfileuploaded(false)
                     setMessages(prev => [...prev, res.data]);
-                    socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: res.data.text,image:res.data.image,})
-                  })
+                    setHaveCurrent(null);
+                    socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: res.data.text,image:res.data.image,seen:haveCurrent,conversationId: currentChat._id })
+                   })
              })
     }
     else 
-    {socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: newMessage,image:null,});
-        try {await axios.post("http://localhost:3000/api/messages", message).then(res => {setMessages([...messages, res.data]);setNewMessage("");});}
-        catch (err) {console.log(err);}}
-  };
+    { 
+   
+  
+      
+      try {await axios.post(`${process.env.REACT_APP_API_URL}/messages`,message).then(res => {setMessages([...messages, res.data]);setNewMessage("");});
+      socket.current.emit("sendMessage", {senderId: id,receiverId: receiverId,text: newMessage,image:null,seen:haveCurrent,conversationId: currentChat._id});
+      }
+      catch (err) {console.log(err);}
+      setHaveCurrent(null);
+    }
+   }
+
+         
+    };
+  
+
+
+    
    //----scroll ---- //
   useEffect(() => {scrollRef.current?.scrollIntoView({ behavior: "smooth" });}, [messages]);
 
@@ -152,8 +248,30 @@ const onChangeFile = (e) => {  setfileuploaded(true)
                 </span>
               </div>
               {conversations.map((c) => (
-                <div onClick={() => { rload();  setCurrentChat(c);  }}>
-                  <Conversation id="mydiv" conversation={c} currentUser={user}  />
+
+                <div onClick={async() => {
+                  let j=null;
+                  if(JSON.parse(localStorage.getItem('notif'))!=null){ 
+                  let disnotif=[]
+                
+                  disnotif=JSON.parse(localStorage.getItem('notif'))
+               
+                  let testnotif=false;
+                  for(let i in disnotif)
+                  { if (disnotif[i].conversationId==c._id )
+                    {testnotif=true ; 
+                      j=i;
+                    }
+                  }
+
+                  
+                  if(testnotif==true){ 
+                 await queryApi('conversations/markasseen/', c, 'put', false)
+                 disnotif.splice(j,1)
+                 localStorage.setItem("notif",JSON.stringify (disnotif))
+                  };} rload();  setCurrentChat(c);   }
+                  }>
+                  <Conversation id="mydiv"   conversation={c} currentUser={user}    />
                 </div>
               ))}
             </div>
@@ -219,9 +337,7 @@ const onChangeFile = (e) => {  setfileuploaded(true)
                       </div>
                       <div >
                         <Dropdown  >
-                          <button class="btn btn-template btn-lg mr-1 px-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-phone feather-lg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button>
-                          <button class="btn btn-lg mr-1 px-3 d-none d-md-inline-block" style={{ backgroundColor: "rgb(5, 68, 104)", color: "white" }} ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-video feather-lg"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg></button>
-                          <Dropdown.Toggle variant="light" class="btn btn-light border btn-lg px-3  "><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="dropdown" aria-haspopup="true" id="dropdownMenuLink" aria-expanded="false" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                           <Dropdown.Toggle style={{ borderColor: "rgb(5, 68, 104)", color: "rgb(5, 68, 104)" }}  variant="light" class="btn btn-light border btn-lg px-3  "><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="dropdown" aria-haspopup="true" id="dropdownMenuLink" aria-expanded="false" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
                             <Dropdown.Item  data-toggle="modal" data-target={`#exampleModal${currentChat._id}`} >updateConversation</Dropdown.Item>
@@ -234,7 +350,8 @@ const onChangeFile = (e) => {  setfileuploaded(true)
                   <div className="chatBoxTop" style={{ marginTop: "15%" }}>
                     {messages.map((m,indexm) => (
                       <div ref={scrollRef}>
-                        <Message index={indexm} message={m} own={m.sender === id} user={user} friend={friend} />
+
+                        <Message index={indexm} cchat={currentChat} messages={setMessages}  rl={rload}message={m} own={m.sender === id} user={user} friend={friend} />
                       </div>
                     ))}
                   </div>

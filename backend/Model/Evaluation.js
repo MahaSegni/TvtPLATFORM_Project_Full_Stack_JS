@@ -41,7 +41,6 @@ var Evaluation = new Schema({
             idSubmitter: String,
             nameSubmitter: String,
             result: Number,
-          
           }
         ],
       }

@@ -7,14 +7,15 @@
 .divname {
  
   margin-left: 5%;
+
 }
 
 .conversation:hover {
   background-color: #5fcf80 ;
   opacity: 0.8;
-  color:white;
-  
+ 
 }
+
 
 
 .conversationImg {
@@ -27,6 +28,7 @@
 
 .conversationName {
   font-weight: 500;
+  
 }
 
 @media screen and (max-width: 768px) {
@@ -55,4 +57,46 @@
   right: 2px;
 }
 
+.badge-notification i {
+  width: 100px!important;
+  height: 100px!important;
+    display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+}
+
+
+.badge-notification .badge:after {
+  content: "100";
+  position: absolute;
+  background: blue !important;
+  height: 3rem;
+  top: 1rem;
+  right: 1.5rem;
+  width: 3rem;
+  text-align: center;
+  line-height: 2rem;
+  font-size: 1rem;
+  border-radius: 50%;
+  color: white !important;
+  border: 1px solid blue !important;
+}
+
+
+#notif .fa-stack[data-count]:after {
+  position: absolute;
+  right: 0%;
+  top: 1%;
+  content: attr(data-count);
+  font-size: 50%;
+  padding: .6em;
+  border-radius: 999px;
+  line-height: .75em;
+  color: white;
+  background: rgba(255, 0, 0, 0.85);
+  text-align: center;
+  min-width: 2em;
+  font-weight: bold;
+}
 

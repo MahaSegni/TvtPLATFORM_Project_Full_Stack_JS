@@ -1,8 +1,9 @@
 const categoryModel = require("../Model/CategorieModule");
 const ObjectID = require("mongoose").Types.ObjectId;
 
+const cloudinary = require("../utils/cloudinary");
 const ModuleModel = require("../Model/Module.js");
-module.exports.readPost = (req, res) => {
+module.exports.get = (req, res) => {
     categoryModel.find((err, docs) => {
     if (!err) res.send(docs);
     else console.log("Error to get data : " + err);
@@ -21,20 +22,35 @@ module.exports.getModuleById= async (req, res) => {
   }
 },
 module.exports.uploadPicture = async (req, res) => {
-  let modul=await categoryModel.findById(req.params.id)
-  modul.image = req.file.filename
-  modul.save()
-       res.send("err")
+       try {
+        categoryModel.findById(req.params.id, async (err, cat) => {
+          const result = await cloudinary.uploader.upload(req.file.path);
+          if (result) {
+            cat.image = result.secure_url
+            cat.save()
+            res.status(200).send(cat.image)
+          }
+          else {
+            res.status(500).send()
+          }
+        })
+      } catch (err) {
+        res.send(err)
+      }
 },
 module.exports.updateCategory= async (req, res) => {
-  console.log(req.body);
+ // console.log(req.body);
    let category=await categoryModel.findById(req.body._id);
 
    category.label= req.body.label
    category.image = req.body.image
     const modul = await category.save();
-    return  res.send(modul)
-  
+    return  res.status(201).json({
+      statue: true,
+      message: "Module Added Succefully",
+      result: modul,
+    });
+   
 },
 module.exports.createCategory = async (req, res) => {
  
@@ -56,27 +72,6 @@ module.exports.createCategory = async (req, res) => {
     return res.status(400).send(err);
   }
 };
-/*
-module.exports.updatePost = (req, res) => {
-  if (!ObjectID.isValid(req.params.id))
-    return res.status(400).send("ID unknown : " + req.params.id);
-
-  const updatedRecord = {
-    label: req.body.label,
-  };
-
-  categoryModel.findByIdAndUpdate(
-    req.params.id,
-    { $set: updatedRecord },
-    { new: true },
-    (err, docs) => {
-      if (!err) res.send(docs);
-      else console.log("Update error : " + err);
-    }
-  );
-};
-*/
-
 module.exports.deletePost = (req, res) => {
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("ID unknown : " + req.params.id);

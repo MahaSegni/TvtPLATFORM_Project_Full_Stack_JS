@@ -9,6 +9,8 @@ router.get("/find/:id",quizController.findQuizByID)
 router.get("/deleteQuestion/:id/:idQuestion",quizController.DeleteQuestion)
 router.patch("/addResponseScore",quizController.addScore);
 router.patch("/addResponse",quizController.addReponse);
-
+router.get("/findStudent/:studentid",quizController.findStudent);
+router.post("/runScriptPython",quizController.runScriptPython);
+router.patch("/updateBehavior",quizController.updateBehavior);
 
 module.exports=router;

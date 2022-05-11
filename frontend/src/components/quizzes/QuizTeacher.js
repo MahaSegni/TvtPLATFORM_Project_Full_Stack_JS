@@ -101,15 +101,31 @@ const QuizTeacher = () => {
     }
     }
     }
-   async function AddQuestionEvent(data,responses){
-    const [q, err] =  await queryApi('quiz/addQuestion/'+Quizselected._id ,{
+   async function AddQuestionEvent(data,responses,code,language){
+     if(code!=""){
+      const [q, err] =  await queryApi('quiz/addQuestion/'+Quizselected._id ,{
        
-      texte:data.texte,
-      QuestionType:data.QuestionType,
-      Responses:responses
-    }
-    , 'PATCH', false,connectedUser.token);
-setQuizselected(q)
+        texte:data.texte,
+        code:code,
+        language:language,
+        QuestionType:data.QuestionType,
+        Responses:responses
+      }
+      , 'PATCH', false,connectedUser.token);
+      setQuizselected(q)
+
+     }else{
+      const [q, err] =  await queryApi('quiz/addQuestion/'+Quizselected._id ,{
+       
+        texte:data.texte,
+        QuestionType:data.QuestionType,
+        Responses:responses
+      }
+      , 'PATCH', false,connectedUser.token);
+      setQuizselected(q)
+
+     }
+   
    }
     async function addQuizFn(data,timer){
     console.log(data)
@@ -211,7 +227,9 @@ setQuizselected(q)
      </Card>
      </Collapse>
      
-     <a class="btn  col-12 btncustom mb-3">Show Results</a>
+     <a class="btn  col-12 btncustom mb-3" onClick={()=>{
+       history.push("/module/"+idModule+"/QuizResults");
+     }}>Show Results</a>
      <Collapse in={ShowAddQuestion}>
      <Card className="mb-3">
        <Card.Header>{Quizselected&& <Card.Title style={{"textAlign":"center"}}>{Quizselected.title}</Card.Title>}</Card.Header>

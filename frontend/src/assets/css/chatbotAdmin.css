@@ -1,0 +1,235 @@
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #5fcf80; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #5ac279; 
+  }
+
+.modalBackground {
+    width: 100vw;
+    height: 100%;
+    background-color: rgba(184, 174, 174, 0.247);
+    position: fixed;
+    display: block;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalContainer {
+    height: 88%;
+    overflow-y: auto ;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-bottom: 50px;
+    padding-top: 50px;
+  }
+  
+  .modalContainer .title {
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .titleCloseBtn {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .titleCloseBtn button {
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  
+  .modalContainer .body {
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.7rem;
+    text-align: center;
+  }
+  
+  .modalContainer .footer {
+    flex: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #cancelBtn {
+    background-color: white;
+    color:red;
+    border:red 1px solid;
+  }
+
+  .myBtn{
+    background: #5fcf80;
+    color: white;
+    transition: 0.3s;
+    border-radius:15px ;
+    font-size: 14px;
+    padding: 1% 1.5%;
+    margin-bottom: 0;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+  }
+
+  .greenRadio{
+    background-color:white;
+  }
+  
+  .greenRadio:checked{
+    background-color:#5FCF80;
+  }
+  /*-------------------------------------aff tab --------------------*/
+  
+.customTable{
+  font-family: Helvetica;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Table Styles */
+
+.table-wrapper{
+  box-shadow: 0px 10px 20px rgba( 0, 0, 0, 0.2 );
+}
+
+.fl-tableBot {
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: normal;
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  background-color: white;
+}
+
+.fl-tableBot td, .fl-tableBot th {
+  text-align: center;
+  padding: 8px;
+}
+
+.fl-tableBot td {
+  border-right: 1px solid #f8f8f8;
+  font-size: 12px;
+}
+
+.fl-tableBot thead th {
+  color: #ffffff;
+  background: #5fcf80;
+}
+
+
+.fl-tableBot thead th:nth-child(odd) {
+  color: #ffffff;
+  background: #324960;
+}
+
+.fl-tableBot tr:nth-child(even) {
+  background: #F8F8F8;
+}
+
+/* Responsive */
+
+@media (max-width: 767px) {
+  .fl-tableBot {
+      display: block;
+      width: 100%;
+  }
+  .table-wrapper:before{
+      content: "Scroll horizontally >";
+      display: block;
+      text-align: right;
+      font-size: 11px;
+      color: white;
+      padding: 0 0 10px;
+  }
+  .fl-tableBot thead, .fl-tableBot tbody, .fl-tableBot thead th {
+      display: block;
+  }
+  .fl-tableBot thead th:last-child{
+      border-bottom: none;
+  }
+  .fl-tableBot thead {
+      float: left;
+  }
+  .fl-tableBot tbody {
+      width: auto;
+      position: relative;
+      overflow-x: auto;
+  }
+  .fl-tableBot td, .fl-tableBot th {
+      padding: 20px .625em .625em .625em;
+      height: 60px;
+      vertical-align: middle;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 120px;
+      font-size: 13px;
+      text-overflow: ellipsis;
+  }
+  .fl-tableBot thead th {
+      text-align: left;
+      border-bottom: 1px solid #f7f7f9;
+  }
+  .fl-tableBot tbody tr {
+      display: table-cell;
+  }
+  .fl-tableBot tbody tr:nth-child(odd) {
+      background: none;
+  }
+  .fl-tableBot tr:nth-child(even) {
+      background: transparent;
+  }
+  .fl-tableBot tr td:nth-child(odd) {
+      background: #F8F8F8;
+      border-right: 1px solid #E6E4E4;
+  }
+  .fl-tableBot tr td:nth-child(even) {
+      border-right: 1px solid #E6E4E4;
+  }
+  .fl-tableBot tbody td {
+      display: block;
+      text-align: left;
+  }
+}
+
+
+
+  

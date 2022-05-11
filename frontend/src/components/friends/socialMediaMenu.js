@@ -12,15 +12,20 @@ import { useHistory } from "react-router-dom";
 import Messenger from "../conversations/Messenger";
 
 
-const SocialMediaMenu = (props) => {
+export default function SocialMediaMenu ({})  {
+   
+
     const history = useHistory();
-    const [messenger, setMessenger] = useState(false);
+    const [messenger, setMessenger] = useState(true);
     const [friendList, setFriendList] = useState(false);
     const [friendRequests, setFriendRequests] = useState(false);
     const [suggestions, setSuggestions] = useState(false);
     let user = useSelector(selectConnectedUser)
     if (user.id == null) {
-        history.push("/signin")
+        Cookies.remove('connected')
+        localStorage.removeItem('chatbotsession');
+        localStorage.removeItem('notif');
+        history.push("/Home")
     }
 
     $('a').click(function () {
@@ -103,4 +108,3 @@ const SocialMediaMenu = (props) => {
     )
 }
 
-export default SocialMediaMenu;

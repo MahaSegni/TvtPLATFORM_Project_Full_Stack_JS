@@ -17,6 +17,7 @@ export default function UpdateEvaluation({props, update, idU, reload}){
   const [fileuploaded,setfileuploaded]=useState(false)
   const [uploadImage, setUploadImage] = useState({image:""})
   const [imgSrc,setimgSrc]=useState()
+  const [formErrors, setFormErrors] = useState({})
   
   const onChangeFile = (e) => {  setfileuploaded(true)
     var file =  e.target.files[0];
@@ -50,12 +51,31 @@ export default function UpdateEvaluation({props, update, idU, reload}){
          
           setEvaluation({...evaluation,[e.target.name]:e.target.value})
        }
-       
-    
-       const onSubmit = async (e) =>{
+       const validate = (values) => {
+        const errors = {};
+        const isValidLength = /^.{6,50}$/;
+        let err = false;
+        if (!values.title) {
+            errors.title = "Title is required";
+            err = true;
+        }
+        else if (!isValidLength.test(values.title)) {
+          errors.title = "Title length must be between 6 and 50 caracters";
+          err = true;
+          }
+        if (!err) {
+          EditEvaluation()
+        }
+        return errors;
+    }
         
+         const onSubmit =  (e) =>{
           e.preventDefault();
-          
+          setFormErrors(validate(evaluation))
+        
+         }
+    
+       const EditEvaluation = async () =>{
           await fetch(`${process.env.REACT_APP_API_URL}/evaluation/update`, { method: 'POST',   headers: {
             'Content-Type': 'application/json'
         },
@@ -81,6 +101,9 @@ export default function UpdateEvaluation({props, update, idU, reload}){
                   value={title}
                   onChange={(e)=>onChange(e)} />
         </div>
+        <div class="form-group">
+          <div style={{ color: "red" }}>{formErrors.title}</div>
+        </div>
         <FormGroup>
         <label for="file" class="label-file">Choose image</label>
         <input id="file" class="input-file" 
@@ -92,8 +115,8 @@ export default function UpdateEvaluation({props, update, idU, reload}){
             <center><img src={imgSrc} style={{height:"40%", width:"50%"}} /></center>}
         </FormGroup>
         <div className="mt-3 text-center" >
-          <button type="submit" className="btn btn-md btn-template" style={{marginRight:"2%"}}>Save</button>
           <button className="btn btn-md btn-template" id="cancelBtn" type="reset" onClick={()=> update(false)}>Cancel</button>
+          <button type="submit" className="btn btn-md btn-template" style={{marginLeft:"2%"}}>Save</button>
         </div>
     </Form>
   </Wrapper>

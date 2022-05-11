@@ -84,14 +84,12 @@ const Evaluations = (props) => {
             <div class="row" style={{marginBottom:"2%"}}>
               <div class="col-lg-12">
                 <div class="panel panel-default">
-                  <div class="panel-body p-t-0">
                     <div class="input-group">
                       <input type="text" id="search" name="example-input1-group2" class="form-control" placeholder="Search" />
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-effect-ripple btn-template"><i class="fa fa-search" ></i></button>
                       </span>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -105,7 +103,7 @@ const Evaluations = (props) => {
             </label>  
           }
           {add==true &&
-          <AddEvaluation add={setAdd} reload={reloadEv}/>
+          <AddEvaluation idModule={idModule} add={setAdd} reload={reloadEv}/>
           }
           <div class="row">
             <div class="table-responsive">

@@ -1,0 +1,92 @@
+.file_manager .file a:hover .hover,
+.file_manager .file .file-name small{
+    display: block
+}
+.file_manager .file {
+    padding: 0 !important
+}
+
+.file_manager .file .icon{
+    text-align: center
+}
+
+
+.file_manager .file {
+    position: relative;
+    border-radius: .55rem;
+    overflow: hidden
+}
+
+.file_manager .file .image,
+.file_manager .file .icon {
+    max-height: 180px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: top
+}
+
+.file_manager .file .hover {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: none;
+    transition: all 0.2s ease-in-out
+}
+
+.file_manager .file a:hover .hover {
+    transition: all 0.2s ease-in-out
+}
+
+.file_manager .file .icon {
+    padding: 15px 10px;
+    display: table;
+    width: 100%
+}
+
+.file_manager .file .icon i {
+    display: table-cell;
+    font-size: 30px;
+    vertical-align: middle;
+    color: #777;
+    line-height: 100px
+}
+
+.file_manager .file .file-name {
+    padding: 10px;
+    border-top: 1px solid #f7f7f7
+}
+
+.file_manager .file .file-name small .date {
+    float: right
+}
+
+.folder {
+    padding: 20px;
+    display: block;
+    color: #777
+}
+
+@media only screen and (max-width: 992px) {
+    .file_manager .nav-tabs {
+        padding-left: 0;
+        padding-right: 0
+    }
+    .file_manager .nav-tabs .nav-item {
+        display: inline-block
+    }
+}
+
+.cardForFile {
+    background: #fff;
+    transition: .5s;
+    border: 0;
+    margin-bottom: 30px;
+    border-radius: .55rem;
+    position: relative;
+    width: 100%;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+}
+
+a:hover {
+    text-decoration:none;
+}

@@ -5,8 +5,14 @@ import { selectConnectedUser } from "../../../Redux/slices/sessionSlice";
 import $, { map } from 'jquery';
 import { queryApi } from "../../../utils/queryApi";
 import { useApi } from "../../../utils/useApi";
+import { faX } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencil } from '@fortawesome/free-solid-svg-icons'
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
 
 export default function Questions({ props, owner, evq, consult, rlEv }) {
+  const [formErrors, setFormErrors] = useState({})
   const [typeQuestion, settypeQuestion] = useState("satisfaction");
   const [typeQuestionUpdate, settypeQuestionUpdate] = useState("satisfaction");
   let connectedUser = useSelector(selectConnectedUser)
@@ -61,18 +67,60 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
     onChangeUpdate(e)
   };
 
-  const onAdd = async (e) => {
+  const validate = (values) => {
+    const errors = {};
+    const isValidLength = /^.{6,500}$/;
+    let err = false;
+    if (!values.text) {
+        errors.text = "Question is required";
+        err = true;
+    }
+    else if (!isValidLength.test(values.text)) {
+      errors.text = "Question length must be between 6 and 500 caracters";
+      err = true;
+      }
+    if (!err) {
+      AddQuestion()
+    }
+    return errors;
+}
+
+const validateUpdate = (values) => {
+  const errors = {};
+  const isValidLength = /^.{6,500}$/;
+  let err = false;
+  if (!values.textu) {
+      errors.textu = "Question is required";
+      err = true;
+  }
+  else if (!isValidLength.test(values.textu)) {
+    errors.textu = "Question length must be between 6 and 500 caracters";
+    err = true;
+    }
+  if (!err) {
+    UpdateQuestion()
+  }
+  return errors;
+}
+
+  const onAdd = (e)=>{
     e.preventDefault();
+    setFormErrors(validate(formData))
+  }
+
+  const AddQuestion = async () =>{
     const [result, err] = await queryApi('evquestion/add/' + evq._id, formData, "POST", false);
     reloadQ();
-  }
+   }
+
+
   const onSub=async() =>{
      const [result, err] = await queryApi('evquestion/submit/'+connectedUser.id+'/'+ evq._id , formDataSubmit, "POST", false);
      rlEv() ;
      consult(false); 
   }
+
   const onSubmit= async(e) =>{
-   
    await questions.map((question) => 
       {question.responses.map((response)=>
     {if(document.getElementById(response._id).checked)
@@ -80,9 +128,11 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
     })})
   } 
 
-
-  const onUpdate = async () => {
-    console.log(formDataUpdate)
+  const onUpdate = (e)=>{
+    setFormErrors(validateUpdate(formDataUpdate))
+  }
+  
+  const UpdateQuestion = async () => {
     const [result, err] = await queryApi('evquestion/update/' , formDataUpdate, "PUT", false);
     reloadQ()
   }
@@ -94,7 +144,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
 
   const { text, type } = formData;
   const { id, textu, typeu } = formDataUpdate;
-
+  
   return (
     <>
       {questions &&
@@ -130,7 +180,10 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                               name="text"
                               onChange={(e) => onChange(e)} />
                           </div>
-                          <h5 style={{ color: "red" }}></h5>
+                          <div class="form-group">
+                            <div style={{ color: "red", float: "left", fontSize:17 }}>{formErrors.text}</div><br/>
+                          </div>
+                          
                           <div class="form-group">
                             <label style={{ float: "left" }}><h5>Type:</h5></label>
                             <br />
@@ -151,8 +204,8 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                           <h5 style={{ color: "red" }}></h5>
                           <h5 style={{ textAlign: "center", color: "red" }}></h5>
                           <div className="mt-3">
-                            <button className="btn get-started-btn" id="cancelBtn" type="reset" data-toggle="collapse" data-target="#collapseOne">Cancel</button>
-                            <button type="submit" className="btn get-started-btn" data-toggle="collapse" data-target="#collapseOne">Submit</button>
+                            <button className="btn get-started-btn" id="cancelBtn" type="reset" data-toggle="collapse" data-target="#collapseOne" style={{color:"white"}}>Cancel</button>
+                            <button type="submit" className="btn get-started-btn" >Submit</button>
                           </div>
                         </form >
                       </div>
@@ -165,9 +218,10 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                     questions.map((question, index) => (
                       <>
                         <div style={{ marginTop: "2%", marginBottom: "2%" }}>
+    
                           <p>
                             <strong class="text-capitalize" style={{ color: "rgb(5, 68, 104)" }}>Q{index + 1}. {question.text}</strong>
-                            {owner == true &&
+                            {owner == true && 
                               <div class="pull-right">
                                 {evq.public == false && <>
                                   <a  href={`#collapse${index}`} data-toggle="collapse" onClick={
@@ -219,13 +273,13 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                           }
                           {index < questions.length - 1 && <hr />}
                         </div>
+                        {/* ----------------------------------------updateForm------------------------------------------------- */}
                         {owner == true &&
                         <div id={`collapse${index}`} class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                           <div class="card-body">
                             <div className="body">
                               <div class="w-75 mx-auto"  >
-                              
-                                  <input type="text" class="form-control" name="idQuestion" hidden Value={question._id}/>
+                                <input type="text" class="form-control" name="idQuestion" hidden Value={question._id}/>
                                 <div class="form-group">
                                   <label id="inputAddQuestion" style={{ float: "left" }}><h5>Question:</h5></label>
                                   <input type="text" class="form-control"
@@ -233,7 +287,9 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                                     defaultValue={question.text}
                                     onChange={(e) => onChangeUpdate(e)} />
                                 </div>
-                                <h5 style={{ color: "red" }}></h5>
+                                <div class="form-group">
+                                  <div style={{ color: "red", float: "left", fontSize:17 }}>{formErrors.textu}</div><br/>
+                                </div>
                                 <div class="form-group">
                                   <label style={{ float: "left" }}><h5>Type:</h5></label>
                                   <br />
@@ -255,7 +311,7 @@ export default function Questions({ props, owner, evq, consult, rlEv }) {
                                 <h5 style={{ textAlign: "center", color: "red" }}></h5>
                                 <div className="mt-3">
                                   <button className="btn get-started-btn" id="cancelBtn" type="reset" data-toggle="collapse" data-target={`#collapse${index}`}>Cancel</button>
-                                  <button onClick={()=>{onUpdate()}} className="btn get-started-btn" data-toggle="collapse" data-target={`#collapse${index}`}>Submit</button>
+                                  <button onClick={()=>{onUpdate()}} className="btn get-started-btn" >Submit</button>
                                 </div>
                               </div >
                             </div>
